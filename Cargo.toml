@@ -1,0 +1,17 @@
+[package]
+name = "hibou"
+version = "0.1.0"
+authors = ["tadashi-aikawa <syou.maman@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = "3.0.0-beta.2"
+csv = "1.1.5"
+serde = { version = "1", features = ["derive"] }
+log = "0.4.14"
+env_logger = "0.8.3"
+anyhow = "1.0.38"
+rusqlite = { version = "0.24.2", features = ["bundled"] }
+indicatif = "0.15.0"
