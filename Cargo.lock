@@ -222,6 +222,8 @@ dependencies = [
  "log",
  "rusqlite",
  "serde",
+ "serde_repr",
+ "serde_rusqlite",
  "thiserror",
 ]
 
@@ -429,6 +431,27 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "serde_repr"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2dc6b7951b17b051f3210b063f12cc17320e2fe30ae05b0fe2a3abb068551c76"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "serde_rusqlite"
+version = "0.26.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1023b4e2409dc2daa72310e80f81627d7e499416f00d1d1d6a1f3f5eac133b14"
+dependencies = [
+ "rusqlite",
+ "serde",
 ]
 
 [[package]]

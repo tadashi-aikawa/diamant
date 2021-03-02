@@ -1,55 +1,79 @@
-use log::{debug, trace};
+use anyhow::Result;
+use log::{debug, info, trace};
+use rusqlite::Connection;
 use rusqlite::NO_PARAMS;
-use rusqlite::{params, Connection};
 use serde::{Deserialize, Serialize};
+use serde_repr::{Deserialize_repr, Serialize_repr};
+use serde_rusqlite::{from_rows, to_params_named};
 
-const COLUMNS: &str = "
-    route_id,
-    service_id,
-    trip_id,
-    trip_headsign,
-    trip_short_name,
-    direction_id,
-    block_id,
-    shape_id,
-    wheelchair_accessible,
-    bikes_allowed,
-    jp_trip_desc,
-    jp_trip_desc_symbol,
-    jp_office_id
-";
+#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[repr(u8)]
+enum Direction {
+    /// 往路
+    OUTBOUND = 0,
+    /// 復路
+    INBOUND = 1,
+}
+
+#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[repr(u8)]
+enum WheelchairAccessible {
+    /// 車いすによる乗車可否の情報なし
+    UNKNOWN = 0,
+    /// 少なくとも1台の車いすによる乗車可能
+    ALLOW = 1,
+    /// 車いすによる乗車不可
+    DENY = 2,
+}
+
+#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[repr(u8)]
+enum BikesAllowed {
+    /// 自転車の持込可否の情報なし
+    UNKNOWN = 0,
+    /// 少なくとも1台の自転車の持込可能
+    ALLOW = 1,
+    /// 自転車の持込不可
+    DENY = 2,
+}
+
+/// 便ID (ex: 1001_WD_001)
+type TripId = String;
+
+/// 経路ID (ex: 1001)
+type RouteId = String;
+/// 運行ID (ex: 平日(月～金))
+type ServiceId = String;
+/// 営業所ID (ex: S)
+type JpOfficeId = String;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Trip {
-    /// 経路ID (ex: 1001)
-    route_id: String,
-    /// 運行ID (ex: 平日(月～金))
-    service_id: String,
-    /// 便ID (ex: 1001_WD_001)
-    trip_id: String,
+    route_id: RouteId,
+    service_id: ServiceId,
+    trip_id: TripId,
     /// 便行き先 (ex: 東京ビッグサイト（月島駅経由）)
     trip_headsign: Option<String>,
     /// 便名称
     trip_short_name: Option<String>,
-    /// 上下区分 (0：復路　1：往路)
-    direction_id: Option<i32>,
+    /// 上下区分
+    direction_id: Option<Direction>,
     /// 便結合区分
     block_id: Option<String>,
     /// 描画ID (ex: S_1001)
     shape_id: Option<String>,
-    /// 車いす利用区分 (0: 車いすによる乗車可否の情報なし　1: 少なくとも1台の車いすによる乗車可能　2: 車いすによる乗車不可)
-    wheelchair_accessible: Option<i32>,
-    /// 自転車持込区分 (0: 自転車の持込可否の情報なし　1: 少なくとも1台の自転車の持込可能　2: 自転車の持込不可)
-    bikes_allowed: Option<i32>,
+    /// 車いす利用区分
+    wheelchair_accessible: Option<WheelchairAccessible>,
+    /// 自転車持込区分
+    bikes_allowed: Option<BikesAllowed>,
     /// 便情報
     jp_trip_desc: Option<String>,
     /// 便記号
     jp_trip_desc_symbol: Option<String>,
-    /// 営業所ID (ex: S)
-    jp_office_id: Option<String>,
+    jp_office_id: Option<JpOfficeId>,
 }
 
-pub fn create(conn: &Connection) -> rusqlite::Result<()> {
+pub fn create(conn: &Connection) -> Result<()> {
     conn.execute(
         "CREATE TABLE IF NOT EXISTS trips (
             route_id text not null,
@@ -72,69 +96,59 @@ pub fn create(conn: &Connection) -> rusqlite::Result<()> {
     Ok(())
 }
 
-pub fn drop(conn: &Connection) -> rusqlite::Result<()> {
-    conn.execute("DROP TABLE IF EXISTS trips", NO_PARAMS)?;
-    debug!("Drop table `trips`");
-    Ok(())
-}
-
-pub fn select(conn: &mut Connection) -> rusqlite::Result<Vec<Trip>> {
-    let mut stmt = conn.prepare(format!("SELECT {} FROM trips", COLUMNS).as_str())?;
-    let trip_iter = stmt
-        .query_map(params![], |row| {
-            Ok(Trip {
-                route_id: row.get(0)?,
-                service_id: row.get(1)?,
-                trip_id: row.get(2)?,
-                trip_headsign: row.get(3)?,
-                trip_short_name: row.get(4)?,
-                direction_id: row.get(5)?,
-                block_id: row.get(6)?,
-                shape_id: row.get(7)?,
-                wheelchair_accessible: row.get(8)?,
-                bikes_allowed: row.get(9)?,
-                jp_trip_desc: row.get(10)?,
-                jp_trip_desc_symbol: row.get(11)?,
-                jp_office_id: row.get(12)?,
-            })
-        })?
-        .collect();
-    trip_iter
-}
-
-pub fn insert(conn: &mut Connection, trips: &[Trip]) -> rusqlite::Result<()> {
+pub fn insert(conn: &mut Connection, trips: &[Trip]) -> Result<()> {
     let tx = conn.transaction()?;
 
     debug!("Insert {} records to trips", trips.len());
     for trip in trips {
         trace!("Insert {:?}", trip);
-        tx.execute(
-            format!(
-                "INSERT INTO trips ({}) VALUES (
-            ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13
-            )",
-                COLUMNS
-            )
-            .as_str(),
-            params![
-                trip.route_id,
-                trip.service_id,
-                trip.trip_id,
-                trip.trip_headsign,
-                trip.trip_short_name,
-                trip.direction_id,
-                trip.block_id,
-                trip.shape_id,
-                trip.wheelchair_accessible,
-                trip.bikes_allowed,
-                trip.jp_trip_desc,
-                trip.jp_trip_desc_symbol,
-                trip.jp_office_id,
-            ],
+        tx.execute_named(
+            "INSERT INTO trips (
+            route_id,
+            service_id,
+            trip_id,
+            trip_headsign,
+            trip_short_name,
+            direction_id,
+            block_id,
+            shape_id,
+            wheelchair_accessible,
+            bikes_allowed,
+            jp_trip_desc,
+            jp_trip_desc_symbol,
+            jp_office_id
+        ) VALUES (
+            :route_id,
+            :service_id,
+            :trip_id,
+            :trip_headsign,
+            :trip_short_name,
+            :direction_id,
+            :block_id,
+            :shape_id,
+            :wheelchair_accessible,
+            :bikes_allowed,
+            :jp_trip_desc,
+            :jp_trip_desc_symbol,
+            :jp_office_id
+        )",
+            &to_params_named(&trip).unwrap().to_slice(),
         )?;
     }
 
     tx.commit()?;
 
     Ok(())
+}
+
+pub fn drop(conn: &Connection) -> Result<()> {
+    conn.execute("DROP TABLE IF EXISTS trips", NO_PARAMS)?;
+    debug!("Drop table `trips`");
+    Ok(())
+}
+
+pub fn select(conn: &mut Connection) -> serde_rusqlite::Result<Vec<Trip>> {
+    let mut stmt = conn.prepare("SELECT * FROM trips WHERE route_id = '549'")?;
+    let result = from_rows::<Trip>(stmt.query(NO_PARAMS)?).collect();
+    result
 }

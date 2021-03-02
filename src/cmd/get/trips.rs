@@ -13,7 +13,7 @@ pub struct Opts {
 }
 
 pub fn run(op: &Opts) -> Result<()> {
-    let mut gtfs = external::gtfs::create(&op.database)?;
+    let mut gtfs = external::gtfs::init(&op.database)?;
     let trips = gtfs.select_trips()?;
     external::gtfs::write(&trips)?;
     Ok(())

@@ -18,7 +18,7 @@ pub struct Opts {
 }
 
 pub fn run(op: &Opts) -> Result<()> {
-    let mut gtfs = external::gtfs::create(&op.database)?;
+    let mut gtfs = external::gtfs::init(&op.database)?;
 
     info!("ℹ️ Initialize.");
     gtfs.drop_all()?;

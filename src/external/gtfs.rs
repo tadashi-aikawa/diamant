@@ -21,7 +21,7 @@ pub trait Gtfs {
     fn select_trips(&mut self) -> Result<Vec<Trip>>;
 }
 
-pub fn create(path: &PathBuf) -> Result<impl Gtfs> {
+pub fn init(path: &PathBuf) -> Result<impl Gtfs> {
     let ins = GtfsDb::new(path)?;
     Ok(ins)
 }
