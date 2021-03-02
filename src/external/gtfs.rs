@@ -42,7 +42,9 @@ where
     T: Serialize,
 {
     let mut wtr = csv::Writer::from_writer(io::stdout());
-    records.iter().try_for_each(|r| wtr.serialize(r))?;
-    wtr.flush()?;
+    for r in records {
+        wtr.serialize(r)?;
+        wtr.flush()?;
+    }
     Ok(())
 }

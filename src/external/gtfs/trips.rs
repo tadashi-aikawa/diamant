@@ -79,7 +79,7 @@ pub fn drop(conn: &Connection) -> rusqlite::Result<()> {
 }
 
 pub fn select(conn: &mut Connection) -> rusqlite::Result<Vec<Trip>> {
-    let mut stmt = conn.prepare(format!("SELECT {} FROM trips LIMIT 10", COLUMNS).as_str())?;
+    let mut stmt = conn.prepare(format!("SELECT {} FROM trips", COLUMNS).as_str())?;
     let trip_iter = stmt
         .query_map(params![], |row| {
             Ok(Trip {
