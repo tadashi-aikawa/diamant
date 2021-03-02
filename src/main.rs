@@ -4,7 +4,6 @@ mod external;
 use anyhow::Result;
 use clap::Clap;
 use env_logger::Env;
-use log::{debug, info};
 
 #[derive(Clap, Debug)]
 #[clap(version = "0.1", author = "tadashi-aikawa")]
@@ -22,18 +21,19 @@ struct Opts {
 enum SubCommand {
     /// Test command
     MakeDb(cmd::make_db::Opts),
+    /// get
+    Get(cmd::get::Opts),
 }
 
 fn main() -> Result<()> {
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
 
     let opts: Opts = Opts::parse();
-    debug!("Options: {:?}", opts);
     match opts.subcmd {
-        SubCommand::MakeDb(op) => {
-            info!("Execute test commands");
-            cmd::make_db::run(&op)?
-        }
+        SubCommand::MakeDb(op) => cmd::make_db::run(&op)?,
+        SubCommand::Get(op) => match op.subcmd {
+            cmd::get::SubCommand::Trips(op) => cmd::get::trips::run(&op)?,
+        },
     }
 
     Ok(())

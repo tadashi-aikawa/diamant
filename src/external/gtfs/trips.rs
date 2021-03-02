@@ -1,9 +1,25 @@
 use log::{debug, trace};
 use rusqlite::NO_PARAMS;
 use rusqlite::{params, Connection};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize)]
+const COLUMNS: &str = "
+    route_id,
+    service_id,
+    trip_id,
+    trip_headsign,
+    trip_short_name,
+    direction_id,
+    block_id,
+    shape_id,
+    wheelchair_accessible,
+    bikes_allowed,
+    jp_trip_desc,
+    jp_trip_desc_symbol,
+    jp_office_id
+";
+
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Trip {
     /// 経路ID (ex: 1001)
     route_id: String,
@@ -62,6 +78,30 @@ pub fn drop(conn: &Connection) -> rusqlite::Result<()> {
     Ok(())
 }
 
+pub fn select(conn: &mut Connection) -> rusqlite::Result<Vec<Trip>> {
+    let mut stmt = conn.prepare(format!("SELECT {} FROM trips LIMIT 10", COLUMNS).as_str())?;
+    let trip_iter = stmt
+        .query_map(params![], |row| {
+            Ok(Trip {
+                route_id: row.get(0)?,
+                service_id: row.get(1)?,
+                trip_id: row.get(2)?,
+                trip_headsign: row.get(3)?,
+                trip_short_name: row.get(4)?,
+                direction_id: row.get(5)?,
+                block_id: row.get(6)?,
+                shape_id: row.get(7)?,
+                wheelchair_accessible: row.get(8)?,
+                bikes_allowed: row.get(9)?,
+                jp_trip_desc: row.get(10)?,
+                jp_trip_desc_symbol: row.get(11)?,
+                jp_office_id: row.get(12)?,
+            })
+        })?
+        .collect();
+    trip_iter
+}
+
 pub fn insert(conn: &mut Connection, trips: &[Trip]) -> rusqlite::Result<()> {
     let tx = conn.transaction()?;
 
@@ -69,21 +109,13 @@ pub fn insert(conn: &mut Connection, trips: &[Trip]) -> rusqlite::Result<()> {
     for trip in trips {
         trace!("Insert {:?}", trip);
         tx.execute(
-            "INSERT INTO trips (
-            route_id,
-            service_id,
-            trip_id,
-            trip_headsign,
-            trip_short_name,
-            direction_id,
-            block_id,
-            shape_id,
-            wheelchair_accessible,
-            bikes_allowed,
-            jp_trip_desc,
-            jp_trip_desc_symbol,
-            jp_office_id
-        ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+            format!(
+                "INSERT INTO trips ({}) VALUES (
+            ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13
+            )",
+                COLUMNS
+            )
+            .as_str(),
             params![
                 trip.route_id,
                 trip.service_id,

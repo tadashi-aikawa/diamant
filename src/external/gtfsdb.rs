@@ -51,4 +51,9 @@ impl Gtfs for GtfsDb {
         gtfs::trips::insert(&mut self.connection, &trips)?;
         Ok(())
     }
+
+    fn select_trips(&mut self) -> Result<Vec<Trip>> {
+        let h = gtfs::trips::select(&mut self.connection)?;
+        Ok(h)
+    }
 }
