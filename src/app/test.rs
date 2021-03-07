@@ -1,7 +1,7 @@
 use anyhow::Result;
 
 use crate::external;
-use crate::external::gtfs::agency::Agency;
+use crate::external::gtfs::stops::Stop;
 
 pub struct TestService {
     gtfs: Box<dyn external::gtfs::Gtfs>,
@@ -14,7 +14,11 @@ impl TestService {
         Self { gtfs }
     }
 
-    pub fn fetch(&mut self) -> Result<Vec<Agency>> {
-        self.gtfs.select_agencies()
+    // pub fn fetch_agencies(&mut self) -> Result<Vec<Agency>> {
+    //     self.gtfs.select_agencies()
+    // }
+
+    pub fn fetch_stops(&mut self) -> Result<Vec<Stop>> {
+        self.gtfs.select_stops()
     }
 }

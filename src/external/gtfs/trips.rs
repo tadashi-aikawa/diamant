@@ -1,12 +1,12 @@
 use crate::external::gtfs::routes::RouteId;
 use anyhow::Result;
-use log::{debug, trace};
+use log::debug;
 use rusqlite::named_params;
 use rusqlite::Connection;
 use rusqlite::NO_PARAMS;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
-use serde_rusqlite::{from_rows, to_params_named};
+use serde_rusqlite::from_rows;
 
 #[derive(Debug, Deserialize_repr, Serialize_repr)]
 #[repr(u8)]
@@ -46,6 +46,23 @@ pub type TripId = String;
 type ServiceId = String;
 /// 営業所ID (ex: S)
 type JpOfficeId = String;
+
+pub const TABLE_NAME: &str = "trips";
+pub const COLUMNS: &[&str] = &[
+    "route_id",
+    "service_id",
+    "trip_id",
+    "trip_headsign",
+    "trip_short_name",
+    "direction_id",
+    "block_id",
+    "shape_id",
+    "wheelchair_accessible",
+    "bikes_allowed",
+    "jp_trip_desc",
+    "jp_trip_desc_symbol",
+    "jp_office_id",
+];
 
 /// 便情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#trips
@@ -100,63 +117,6 @@ pub fn create(conn: &Connection) -> Result<()> {
     )?;
     debug!("Create table `trips`");
     Ok(())
-}
-
-pub fn insert(conn: &mut Connection, trips: &[Trip]) -> Result<()> {
-    let tx = conn.transaction()?;
-
-    debug!("Insert {} records to trips", trips.len());
-    for trip in trips {
-        trace!("Insert {:?}", trip);
-        tx.execute_named(
-            "INSERT INTO trips (
-            route_id,
-            service_id,
-            trip_id,
-            trip_headsign,
-            trip_short_name,
-            direction_id,
-            block_id,
-            shape_id,
-            wheelchair_accessible,
-            bikes_allowed,
-            jp_trip_desc,
-            jp_trip_desc_symbol,
-            jp_office_id
-        ) VALUES (
-            :route_id,
-            :service_id,
-            :trip_id,
-            :trip_headsign,
-            :trip_short_name,
-            :direction_id,
-            :block_id,
-            :shape_id,
-            :wheelchair_accessible,
-            :bikes_allowed,
-            :jp_trip_desc,
-            :jp_trip_desc_symbol,
-            :jp_office_id
-        )",
-            &to_params_named(&trip).unwrap().to_slice(),
-        )?;
-    }
-
-    tx.commit()?;
-
-    Ok(())
-}
-
-pub fn drop(conn: &Connection) -> Result<()> {
-    conn.execute("DROP TABLE IF EXISTS trips", NO_PARAMS)?;
-    debug!("Drop table `trips`");
-    Ok(())
-}
-
-pub fn select_all(conn: &mut Connection) -> serde_rusqlite::Result<Vec<Trip>> {
-    let mut stmt = conn.prepare("SELECT * FROM trips")?;
-    let result = from_rows::<Trip>(stmt.query(NO_PARAMS)?).collect();
-    result
 }
 
 pub fn select_by_route_id(

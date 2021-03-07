@@ -21,10 +21,10 @@ where
     T: DeserializeOwned,
 {
     let r: Result<Vec<_>, _> = csv::Reader::from_path(path)
-        .with_context(|| format!("Could not read file {:?}", &path.to_str()))?
+        .with_context(|| format!("{:?} が読み込めませんでした", &path.to_str()))?
         .deserialize()
         .collect();
-    r.with_context(|| "エラー")
+    r.with_context(|| format!("{:?} のパースに問題が発生しました", &path.to_str()))
 }
 
 pub fn write<T>(records: &[T], format: &Format) -> Result<()>

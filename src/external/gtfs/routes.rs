@@ -1,10 +1,10 @@
-use log::{debug, trace};
+use log::debug;
 use rusqlite::named_params;
 use rusqlite::Connection;
 use rusqlite::NO_PARAMS;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
-use serde_rusqlite::{from_rows, to_params_named};
+use serde_rusqlite::from_rows;
 
 use crate::external::gtfs::agency::AgencyId;
 use crate::external::gtfs::Color;
@@ -19,6 +19,20 @@ enum RouteType {
     /// バス
     BUS = 3,
 }
+
+pub const TABLE_NAME: &str = "routes";
+pub const COLUMNS: &[&str] = &[
+    "route_id",
+    "agency_id",
+    "route_short_name",
+    "route_long_name",
+    "route_desc",
+    "route_type",
+    "route_url",
+    "route_color",
+    "route_text_color",
+    "jp_parent_route_id",
+];
 
 /// 経路情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#routes
@@ -66,57 +80,6 @@ pub fn create(conn: &Connection) -> rusqlite::Result<()> {
     )?;
     debug!("Create table `routes`");
     Ok(())
-}
-
-pub fn drop(conn: &Connection) -> rusqlite::Result<()> {
-    conn.execute("DROP TABLE IF EXISTS routes", NO_PARAMS)?;
-    debug!("Drop table `routes`");
-    Ok(())
-}
-
-pub fn insert(conn: &mut Connection, routes: &[Route]) -> rusqlite::Result<()> {
-    let tx = conn.transaction()?;
-
-    debug!("Insert {} records to routes", routes.len());
-    for route in routes {
-        trace!("Insert {:?}", route);
-        tx.execute_named(
-            "INSERT INTO routes (
-            route_id,
-            agency_id,
-            route_short_name,
-            route_long_name,
-            route_desc,
-            route_type,
-            route_url,
-            route_color,
-            route_text_color,
-            jp_parent_route_id
-        ) VALUES (
-            :route_id,
-            :agency_id,
-            :route_short_name,
-            :route_long_name,
-            :route_desc,
-            :route_type,
-            :route_url,
-            :route_color,
-            :route_text_color,
-            :jp_parent_route_id
-        )",
-            &to_params_named(&route).unwrap().to_slice(),
-        )?;
-    }
-
-    tx.commit()?;
-
-    Ok(())
-}
-
-pub fn select_all(conn: &mut Connection) -> serde_rusqlite::Result<Vec<Route>> {
-    let mut stmt = conn.prepare("SELECT * FROM routes")?;
-    let result = from_rows::<Route>(stmt.query(NO_PARAMS)?).collect();
-    result
 }
 
 pub fn select_by_route_id(

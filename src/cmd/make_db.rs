@@ -3,6 +3,7 @@ use std::path::PathBuf;
 use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::stop_times::StopTime;
+use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::trips::Trip;
 use crate::{external, io};
 use anyhow::Result;
@@ -28,6 +29,11 @@ pub fn run(op: &Opts) -> Result<()> {
     let agencies = io::read::<Agency>(&op.gtfs_dir.join("agency.txt"))?;
     info!("ℹ️ Add {} agencies.", agencies.len());
     gtfs.insert_agencies(&agencies)?;
+    info!("  ✨ Success");
+
+    let stops = io::read::<Stop>(&op.gtfs_dir.join("stops.txt"))?;
+    info!("ℹ️ Add {} stops.", stops.len());
+    gtfs.insert_stops(&stops)?;
     info!("  ✨ Success");
 
     let routes = io::read::<Route>(&op.gtfs_dir.join("routes.txt"))?;

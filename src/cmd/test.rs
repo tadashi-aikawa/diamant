@@ -20,7 +20,7 @@ pub struct Opts {
 /// プロダクションでも使うコマンドは別途きちんと作成すること
 pub fn run(op: &Opts) -> Result<()> {
     let gtfs = external::gtfsdb::init(&op.database)?;
-    let routes = TestService::new(gtfs).fetch()?;
-    io::write(&routes, &op.format)?;
+    let results = TestService::new(gtfs).fetch_stops()?;
+    io::write(&results, &op.format)?;
     Ok(())
 }

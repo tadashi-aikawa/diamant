@@ -1,11 +1,11 @@
+use crate::external::gtfs::stops::StopId;
 use crate::external::gtfs::trips::TripId;
-use crate::external::gtfs::{Meter, Sequence, StopId};
-use log::{debug, trace};
+use crate::external::gtfs::{Meter, Sequence};
+use log::debug;
 use rusqlite::Connection;
 use rusqlite::NO_PARAMS;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
-use serde_rusqlite::to_params_named;
 
 #[derive(Debug, Deserialize_repr, Serialize_repr)]
 #[repr(u8)]
@@ -59,6 +59,20 @@ pub struct StopTime {
     timepoint: Option<i32>,
 }
 
+pub const TABLE_NAME: &str = "stop_times";
+pub const COLUMNS: &[&str] = &[
+    "trip_id",
+    "arrival_time",
+    "departure_time",
+    "stop_id",
+    "stop_sequence",
+    "stop_headsign",
+    "pickup_type",
+    "drop_off_type",
+    "shape_dist_traveled",
+    "timepoint",
+];
+
 pub fn create(conn: &Connection) -> rusqlite::Result<()> {
     conn.execute(
         "CREATE TABLE IF NOT EXISTS stop_times (
@@ -77,50 +91,5 @@ pub fn create(conn: &Connection) -> rusqlite::Result<()> {
         NO_PARAMS,
     )?;
     debug!("Create table `stop_times`");
-    Ok(())
-}
-
-pub fn drop(conn: &Connection) -> rusqlite::Result<()> {
-    conn.execute("DROP TABLE IF EXISTS stop_times", NO_PARAMS)?;
-    debug!("Drop table `stop_times`");
-    Ok(())
-}
-
-pub fn insert(conn: &mut Connection, stop_times: &[StopTime]) -> rusqlite::Result<()> {
-    let tx = conn.transaction()?;
-
-    debug!("Insert {} records to stop_times", stop_times.len());
-    for stop_time in stop_times {
-        tx.execute_named(
-            "INSERT INTO stop_times (
-            trip_id,
-            arrival_time,
-            departure_time,
-            stop_id,
-            stop_sequence,
-            stop_headsign,
-            pickup_type,
-            drop_off_type,
-            shape_dist_traveled,
-            timepoint
-        ) VALUES (
-            :trip_id,
-            :arrival_time,
-            :departure_time,
-            :stop_id,
-            :stop_sequence,
-            :stop_headsign,
-            :pickup_type,
-            :drop_off_type,
-            :shape_dist_traveled,
-            :timepoint
-        )",
-            &to_params_named(&stop_time).unwrap().to_slice(),
-        )?;
-    }
-
-    tx.commit()?;
-
-    trace!("Insert {:?}", stop_times);
     Ok(())
 }
