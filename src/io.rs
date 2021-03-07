@@ -3,13 +3,11 @@ use strum_macros::{EnumString, EnumVariantNames};
 
 use anyhow::{Context, Result};
 use serde::de::DeserializeOwned;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use std::path::PathBuf;
 
 #[derive(Debug, EnumString, EnumVariantNames)]
 #[strum(serialize_all = "lowercase")]
-// #[derive(Debug, Serialize, Deserialize)]
-// #[serde(rename_all = "lowercase")]
 pub enum Format {
     CSV,
     TSV,
