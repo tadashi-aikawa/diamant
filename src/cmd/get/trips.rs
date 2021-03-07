@@ -4,8 +4,9 @@ use anyhow::Result;
 use clap::Clap;
 
 use crate::app::trip::TripService;
-use crate::io::IOType;
+use crate::io::Format;
 use crate::{external, io};
+use strum::VariantNames;
 
 #[derive(Clap, Debug)]
 pub struct Opts {
@@ -13,14 +14,13 @@ pub struct Opts {
     database: PathBuf,
     #[clap(short, long)]
     route_id: Option<String>,
-    /// One of (csv, tsv, json, yaml).
-    #[clap(short, long, default_value = "csv")]
-    output_type: IOType,
+    #[clap(short, long, default_value = "csv", possible_values(Format::VARIANTS))]
+    format: Format,
 }
 
 pub fn run(op: &Opts) -> Result<()> {
     let gtfs = external::gtfsdb::init(&op.database)?;
     let trips = TripService::new(gtfs).fetch(&op.route_id)?;
-    io::write(&trips, &op.output_type)?;
+    io::write(&trips, &op.format)?;
     Ok(())
 }

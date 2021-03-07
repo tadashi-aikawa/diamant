@@ -1,14 +1,14 @@
 use std::io;
-use strum_macros::EnumString;
+use strum_macros::{EnumString, EnumVariantNames};
 
 use anyhow::{Context, Result};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::path::PathBuf;
 
-#[derive(Debug, EnumString)]
+#[derive(Debug, EnumString, EnumVariantNames)]
 #[strum(serialize_all = "snake_case")]
-pub enum IOType {
+pub enum Format {
     CSV,
     TSV,
     JSON,
@@ -27,16 +27,16 @@ where
     r.with_context(|| "エラー")
 }
 
-pub fn write<T>(records: &[T], output_type: &IOType) -> Result<()>
+pub fn write<T>(records: &[T], format: &Format) -> Result<()>
 where
     T: Serialize,
 {
-    match output_type {
-        IOType::CSV => write_csv(records, b','),
-        IOType::TSV => write_csv(records, b'\t'),
-        IOType::JSON => write_json(records),
-        IOType::PJSON => write_pretty_json(records),
-        IOType::YAML => write_yaml(records),
+    match format {
+        Format::CSV => write_csv(records, b','),
+        Format::TSV => write_csv(records, b'\t'),
+        Format::JSON => write_json(records),
+        Format::PJSON => write_pretty_json(records),
+        Format::YAML => write_yaml(records),
     }?;
     Ok(())
 }
