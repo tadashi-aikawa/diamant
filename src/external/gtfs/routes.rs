@@ -6,10 +6,8 @@ use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use serde_rusqlite::{from_rows, to_params_named};
 
+use crate::external::gtfs::agency::AgencyId;
 use crate::external::gtfs::Color;
-
-/// 事業者ID  (ex: 8000020130001)
-pub type AgencyId = String;
 
 /// 経路ID (ex: 1001)
 pub type RouteId = String;

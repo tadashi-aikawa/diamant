@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::trips::Trip;
@@ -22,6 +23,11 @@ pub fn run(op: &Opts) -> Result<()> {
     info!("ℹ️ Initialize.");
     gtfs.drop_all()?;
     gtfs.create_all()?;
+    info!("  ✨ Success");
+
+    let agencies = io::read::<Agency>(&op.gtfs_dir.join("agency.txt"))?;
+    info!("ℹ️ Add {} agencies.", agencies.len());
+    gtfs.insert_agencies(&agencies)?;
     info!("  ✨ Success");
 
     let routes = io::read::<Route>(&op.gtfs_dir.join("routes.txt"))?;

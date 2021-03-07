@@ -21,10 +21,12 @@ struct Opts {
 
 #[derive(Clap, Debug)]
 enum SubCommand {
-    /// Test command
+    /// GTFS-JPからデータベースを作成します
     MakeDb(cmd::make_db::Opts),
-    /// get
+    /// データベースからデータを取得します
     Get(cmd::get::Opts),
+    /// 開発用のテストコマンド
+    Test(cmd::test::Opts),
 }
 
 fn main() -> Result<()> {
@@ -34,6 +36,7 @@ fn main() -> Result<()> {
     match opts.subcmd {
         SubCommand::MakeDb(op) => cmd::make_db::run(&op)?,
         SubCommand::Get(op) => cmd::get::run(&op)?,
+        SubCommand::Test(op) => cmd::test::run(&op)?,
     }
 
     Ok(())
