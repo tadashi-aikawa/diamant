@@ -12,6 +12,7 @@ pub enum IOType {
     CSV,
     TSV,
     JSON,
+    PJSON,
     YAML,
 }
 
@@ -34,6 +35,7 @@ where
         IOType::CSV => write_csv(records, b','),
         IOType::TSV => write_csv(records, b'\t'),
         IOType::JSON => write_json(records),
+        IOType::PJSON => write_pretty_json(records),
         IOType::YAML => write_yaml(records),
     }?;
     Ok(())
@@ -58,6 +60,14 @@ where
     T: Serialize,
 {
     serde_json::to_writer(io::stdout(), records)?;
+    Ok(())
+}
+
+fn write_pretty_json<T>(records: &[T]) -> Result<()>
+where
+    T: Serialize,
+{
+    serde_json::to_writer_pretty(io::stdout(), records)?;
     Ok(())
 }
 
