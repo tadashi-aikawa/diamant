@@ -1,31 +1,31 @@
 Hibou
 =====
 
-Hibou is GTFS-JP parser.
+Hibou is a CLI tool for GTFS-JP.
 
 
 TODO
 ----
 
-| file                  | insert | select |
-| --------------------- | ------ | ------ |
-| [agency.txt]          |        |        |
-| [agency_jp.txt]       |        |        |
-| [stops.txt]           |        |        |
-| [routes.txt]          | 🦉   |        |
-| [routes_jp.txt]       |        |        |
-| [trips.txt]           | 🦉   | 🦉   |
-| [office_jp.txt]       |        |        |
-| [stop_times.txt]      | 🦉   |        |
-| [calendar.txt]        |        |        |
-| [calendar_dates.txt]  |        |        |
-| [fare_attributes.txt] |        |        |
-| [fare_rules.txt]      |        |        |
-| [shapes.txt]          |        |        |
-| [frequencies.txt]     |        |        |
-| [transfers.txt]       |        |        |
-| [feed_info.txt]       |        |        |
-| [translations.txt]    |        |        |
+| file                  | insert | select | correct table definition |
+| --------------------- | ------ | ------ | ------------------------ |
+| [agency.txt]          |        |        |                          |
+| [agency_jp.txt]       |        |        |                          |
+| [stops.txt]           |        |        |                          |
+| [routes.txt]          | 🦉   | 🦉   |                          |
+| [routes_jp.txt]       |        |        |                          |
+| [trips.txt]           | 🦉   | 🦉   |                          |
+| [office_jp.txt]       |        |        |                          |
+| [stop_times.txt]      | 🦉   |        |                          |
+| [calendar.txt]        |        |        |                          |
+| [calendar_dates.txt]  |        |        |                          |
+| [fare_attributes.txt] |        |        |                          |
+| [fare_rules.txt]      |        |        |                          |
+| [shapes.txt]          |        |        |                          |
+| [frequencies.txt]     |        |        |                          |
+| [transfers.txt]       |        |        |                          |
+| [feed_info.txt]       |        |        |                          |
+| [translations.txt]    |        |        |                          |
 
 [agency.txt]: https://www.gtfs.jp/developpers-guide/format-reference.html#agency
 [agency_jp.txt]: https://www.gtfs.jp/developpers-guide/format-reference.html#agency
