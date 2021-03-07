@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 use rusqlite::Connection;
 
 use crate::external::gtfs;
@@ -13,9 +13,9 @@ pub struct GtfsDb {
     connection: Connection,
 }
 
-pub fn init(path: &PathBuf) -> Result<impl Gtfs> {
+pub fn init(path: &PathBuf) -> Result<Box<dyn Gtfs>> {
     let ins = GtfsDb::new(path)?;
-    Ok(ins)
+    Ok(Box::new(ins))
 }
 
 impl GtfsDb {
@@ -57,8 +57,11 @@ impl Gtfs for GtfsDb {
         Ok(())
     }
 
-    fn select_trips_by_route_id(&mut self, route_id: &RouteId) -> Result<Vec<Trip>> {
-        let h = gtfs::trips::select_by_route_id(&mut self.connection, route_id)?;
-        Ok(h)
+    fn select_trips(&mut self, route_id: &Option<RouteId>) -> Result<Vec<Trip>> {
+        match route_id {
+            Some(id) => gtfs::trips::select_by_route_id(&mut self.connection, id),
+            None => gtfs::trips::select_all(&mut self.connection),
+        }
+        .context("Fail to select_trips")
     }
 }

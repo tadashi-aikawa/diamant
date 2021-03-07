@@ -3,7 +3,6 @@ use std::path::PathBuf;
 use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::trips::Trip;
-use crate::external::gtfs::Gtfs;
 use crate::{external, io};
 use anyhow::Result;
 use clap::Clap;

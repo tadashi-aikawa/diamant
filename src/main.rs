@@ -2,6 +2,7 @@ use anyhow::Result;
 use clap::Clap;
 use env_logger::Env;
 
+mod app;
 mod cmd;
 mod external;
 mod io;

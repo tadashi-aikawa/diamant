@@ -14,5 +14,5 @@ pub trait Gtfs {
     fn insert_routes(&mut self, routes: &[Route]) -> Result<()>;
     fn insert_stop_times(&mut self, stop_times: &[StopTime]) -> Result<()>;
     fn insert_trips(&mut self, trips: &[Trip]) -> Result<()>;
-    fn select_trips_by_route_id(&mut self, route_id: &RouteId) -> Result<Vec<Trip>>;
+    fn select_trips(&mut self, route_id: &Option<RouteId>) -> Result<Vec<Trip>>;
 }
