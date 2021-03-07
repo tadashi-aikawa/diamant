@@ -1,10 +1,12 @@
 use anyhow::Result;
-use log::{debug, info, trace};
+use log::{debug, trace};
+use rusqlite::named_params;
 use rusqlite::Connection;
 use rusqlite::NO_PARAMS;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use serde_rusqlite::{from_rows, to_params_named};
+use serde_with::skip_serializing_none;
 
 #[derive(Debug, Deserialize_repr, Serialize_repr)]
 #[repr(u8)]
@@ -41,12 +43,13 @@ enum BikesAllowed {
 type TripId = String;
 
 /// 経路ID (ex: 1001)
-type RouteId = String;
+pub type RouteId = String;
 /// 運行ID (ex: 平日(月～金))
 type ServiceId = String;
 /// 営業所ID (ex: S)
 type JpOfficeId = String;
 
+#[skip_serializing_none]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Trip {
     route_id: RouteId,
@@ -147,8 +150,12 @@ pub fn drop(conn: &Connection) -> Result<()> {
     Ok(())
 }
 
-pub fn select(conn: &mut Connection) -> serde_rusqlite::Result<Vec<Trip>> {
-    let mut stmt = conn.prepare("SELECT * FROM trips WHERE route_id = '549'")?;
-    let result = from_rows::<Trip>(stmt.query(NO_PARAMS)?).collect();
+pub fn select_by_route_id(
+    conn: &mut Connection,
+    route_id: &RouteId,
+) -> serde_rusqlite::Result<Vec<Trip>> {
+    let mut stmt = conn.prepare("SELECT * FROM trips WHERE route_id = :route_id")?;
+    let result =
+        from_rows::<Trip>(stmt.query_named(named_params! {":route_id": route_id})?).collect();
     result
 }

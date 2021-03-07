@@ -6,7 +6,7 @@ use rusqlite::Connection;
 use crate::external::gtfs;
 use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::stop_times::StopTime;
-use crate::external::gtfs::trips::Trip;
+use crate::external::gtfs::trips::{RouteId, Trip};
 use crate::external::gtfs::Gtfs;
 
 pub struct GtfsDb {
@@ -52,8 +52,8 @@ impl Gtfs for GtfsDb {
         Ok(())
     }
 
-    fn select_trips(&mut self) -> Result<Vec<Trip>> {
-        let h = gtfs::trips::select(&mut self.connection)?;
+    fn select_trips_by_route_id(&mut self, route_id: &RouteId) -> Result<Vec<Trip>> {
+        let h = gtfs::trips::select_by_route_id(&mut self.connection, route_id)?;
         Ok(h)
     }
 }
