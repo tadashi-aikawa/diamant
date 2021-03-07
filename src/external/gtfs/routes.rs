@@ -8,6 +8,7 @@ use serde_rusqlite::from_rows;
 
 use crate::external::gtfs::agency::AgencyId;
 use crate::external::gtfs::Color;
+use crate::external::gtfsdb::Table;
 
 /// 経路ID (ex: 1001)
 pub type RouteId = String;
@@ -19,20 +20,6 @@ enum RouteType {
     /// バス
     BUS = 3,
 }
-
-pub const TABLE_NAME: &str = "routes";
-pub const COLUMNS: &[&str] = &[
-    "route_id",
-    "agency_id",
-    "route_short_name",
-    "route_long_name",
-    "route_desc",
-    "route_type",
-    "route_url",
-    "route_color",
-    "route_text_color",
-    "jp_parent_route_id",
-];
 
 /// 経路情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#routes
@@ -60,6 +47,27 @@ pub struct Route {
     route_text_color: Option<Color>,
     /// 路線ID
     jp_parent_route_id: Option<String>,
+}
+
+impl Table for Route {
+    fn table_name() -> &'static str {
+        "routes"
+    }
+
+    fn column_names() -> &'static [&'static str] {
+        &[
+            "route_id",
+            "agency_id",
+            "route_short_name",
+            "route_long_name",
+            "route_desc",
+            "route_type",
+            "route_url",
+            "route_color",
+            "route_text_color",
+            "jp_parent_route_id",
+        ]
+    }
 }
 
 pub fn create(conn: &Connection) -> rusqlite::Result<()> {

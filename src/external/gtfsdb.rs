@@ -18,34 +18,34 @@ pub struct GtfsDb {
     connection: Connection,
 }
 
+pub trait Table {
+    fn table_name() -> &'static str;
+    fn column_names() -> &'static [&'static str];
+}
+
 pub fn init(path: &PathBuf) -> Result<Box<dyn Gtfs>> {
     let ins = GtfsDb::new(path)?;
     Ok(Box::new(ins))
 }
 
-pub fn insert<T>(
-    conn: &mut Connection,
-    records: &[T],
-    table_name: &str,
-    column_names: &[&str],
-) -> rusqlite::Result<()>
+pub fn insert<T>(conn: &mut Connection, records: &[T]) -> rusqlite::Result<()>
 where
-    T: serde::ser::Serialize + Debug,
+    T: serde::ser::Serialize + Debug + Table,
 {
     let tx = conn.transaction()?;
 
     let sql = format!(
         "INSERT INTO {} ({}) VALUES ({})",
-        table_name,
-        column_names.join(","),
-        column_names
+        T::table_name(),
+        T::column_names().join(","),
+        T::column_names()
             .iter()
             .map(|x| format!(":{}", x))
             .collect::<Vec<_>>()
             .join(","),
     );
 
-    debug!("Insert {} records to {}", records.len(), table_name);
+    debug!("Insert {} records to {}", records.len(), T::table_name());
     for record in records {
         tx.execute_named(sql.as_str(), &to_params_named(&record).unwrap().to_slice())?;
     }
@@ -56,20 +56,23 @@ where
     Ok(())
 }
 
-pub fn drop(conn: &Connection, table_name: &str) -> Result<()> {
+pub fn drop<T>(conn: &Connection) -> Result<()>
+where
+    T: Table,
+{
     conn.execute(
-        format!("DROP TABLE IF EXISTS {}", table_name).as_str(),
+        format!("DROP TABLE IF EXISTS {}", T::table_name()).as_str(),
         NO_PARAMS,
     )?;
-    debug!("Drop table `{}`", table_name);
+    debug!("Drop table `{}`", T::table_name());
     Ok(())
 }
 
-fn select_all<T>(conn: &mut Connection, table_name: &str) -> serde_rusqlite::Result<Vec<T>>
+fn select_all<T>(conn: &mut Connection) -> serde_rusqlite::Result<Vec<T>>
 where
-    T: serde::de::DeserializeOwned,
+    T: serde::de::DeserializeOwned + Table,
 {
-    let mut stmt = conn.prepare(format!("SELECT * FROM {}", table_name).as_str())?;
+    let mut stmt = conn.prepare(format!("SELECT * FROM {}", T::table_name()).as_str())?;
     let result = from_rows::<T>(stmt.query(NO_PARAMS)?).collect();
     result
 }
@@ -94,86 +97,59 @@ impl Gtfs for GtfsDb {
     }
 
     fn drop_all(&self) -> Result<()> {
-        drop(&self.connection, gtfs::agency::TABLE_NAME)?;
-        drop(&self.connection, gtfs::routes::TABLE_NAME)?;
-        drop(&self.connection, gtfs::stop_times::TABLE_NAME)?;
-        drop(&self.connection, gtfs::stops::TABLE_NAME)?;
-        drop(&self.connection, gtfs::trips::TABLE_NAME)?;
+        drop::<Agency>(&self.connection)?;
+        drop::<Route>(&self.connection)?;
+        drop::<StopTime>(&self.connection)?;
+        drop::<Stop>(&self.connection)?;
+        drop::<Trip>(&self.connection)?;
         Ok(())
     }
 
     fn insert_agencies(&mut self, agencies: &[Agency]) -> Result<()> {
-        insert(
-            &mut self.connection,
-            agencies,
-            gtfs::agency::TABLE_NAME,
-            gtfs::agency::COLUMNS,
-        )?;
+        insert(&mut self.connection, agencies)?;
         Ok(())
     }
 
     fn select_agencies(&mut self) -> Result<Vec<Agency>> {
-        select_all::<Agency>(&mut self.connection, gtfs::agency::TABLE_NAME)
-            .context("Fail to select agency")
+        select_all::<Agency>(&mut self.connection).context("Fail to select agency")
     }
 
     fn insert_stops(&mut self, stops: &[Stop]) -> Result<()> {
-        insert(
-            &mut self.connection,
-            stops,
-            gtfs::stops::TABLE_NAME,
-            gtfs::stops::COLUMNS,
-        )?;
+        insert(&mut self.connection, stops)?;
         Ok(())
     }
 
     fn select_stops(&mut self) -> Result<Vec<Stop>> {
-        select_all::<Stop>(&mut self.connection, gtfs::stops::TABLE_NAME)
-            .context("Fail to select stops")
+        select_all::<Stop>(&mut self.connection).context("Fail to select stops")
     }
 
     fn insert_routes(&mut self, routes: &[Route]) -> Result<()> {
-        insert(
-            &mut self.connection,
-            routes,
-            gtfs::routes::TABLE_NAME,
-            gtfs::routes::COLUMNS,
-        )?;
+        insert(&mut self.connection, routes)?;
         Ok(())
     }
 
     fn select_routes(&mut self, route_id: &Option<RouteId>) -> Result<Vec<Route>> {
         match route_id {
             Some(id) => gtfs::routes::select_by_route_id(&mut self.connection, id),
-            None => select_all::<Route>(&mut self.connection, gtfs::routes::TABLE_NAME),
+            None => select_all::<Route>(&mut self.connection),
         }
         .context("Fail to select_routes")
     }
 
     fn insert_stop_times(&mut self, stop_times: &[StopTime]) -> Result<()> {
-        insert(
-            &mut self.connection,
-            stop_times,
-            gtfs::stop_times::TABLE_NAME,
-            gtfs::stop_times::COLUMNS,
-        )?;
+        insert(&mut self.connection, stop_times)?;
         Ok(())
     }
 
     fn insert_trips(&mut self, trips: &[Trip]) -> Result<()> {
-        insert(
-            &mut self.connection,
-            trips,
-            gtfs::trips::TABLE_NAME,
-            gtfs::trips::COLUMNS,
-        )?;
+        insert(&mut self.connection, trips)?;
         Ok(())
     }
 
     fn select_trips(&mut self, route_id: &Option<RouteId>) -> Result<Vec<Trip>> {
         match route_id {
             Some(id) => gtfs::trips::select_by_route_id(&mut self.connection, id),
-            None => select_all::<Trip>(&mut self.connection, gtfs::trips::TABLE_NAME),
+            None => select_all::<Trip>(&mut self.connection),
         }
         .context("Fail to select_trips")
     }

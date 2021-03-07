@@ -1,4 +1,5 @@
 use crate::external::gtfs::routes::RouteId;
+use crate::external::gtfsdb::Table;
 use anyhow::Result;
 use log::debug;
 use rusqlite::named_params;
@@ -47,23 +48,6 @@ type ServiceId = String;
 /// 営業所ID (ex: S)
 type JpOfficeId = String;
 
-pub const TABLE_NAME: &str = "trips";
-pub const COLUMNS: &[&str] = &[
-    "route_id",
-    "service_id",
-    "trip_id",
-    "trip_headsign",
-    "trip_short_name",
-    "direction_id",
-    "block_id",
-    "shape_id",
-    "wheelchair_accessible",
-    "bikes_allowed",
-    "jp_trip_desc",
-    "jp_trip_desc_symbol",
-    "jp_office_id",
-];
-
 /// 便情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#trips
 #[derive(Debug, Deserialize, Serialize)]
@@ -94,6 +78,30 @@ pub struct Trip {
     jp_trip_desc_symbol: Option<String>,
     /// 営業所ID
     jp_office_id: Option<JpOfficeId>,
+}
+
+impl Table for Trip {
+    fn table_name() -> &'static str {
+        "trips"
+    }
+
+    fn column_names() -> &'static [&'static str] {
+        &[
+            "route_id",
+            "service_id",
+            "trip_id",
+            "trip_headsign",
+            "trip_short_name",
+            "direction_id",
+            "block_id",
+            "shape_id",
+            "wheelchair_accessible",
+            "bikes_allowed",
+            "jp_trip_desc",
+            "jp_trip_desc_symbol",
+            "jp_office_id",
+        ]
+    }
 }
 
 pub fn create(conn: &Connection) -> Result<()> {

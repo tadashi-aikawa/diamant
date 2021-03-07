@@ -1,6 +1,7 @@
 use crate::external::gtfs::stops::StopId;
 use crate::external::gtfs::trips::TripId;
 use crate::external::gtfs::{Meter, Sequence};
+use crate::external::gtfsdb::Table;
 use log::debug;
 use rusqlite::Connection;
 use rusqlite::NO_PARAMS;
@@ -59,19 +60,26 @@ pub struct StopTime {
     timepoint: Option<i32>,
 }
 
-pub const TABLE_NAME: &str = "stop_times";
-pub const COLUMNS: &[&str] = &[
-    "trip_id",
-    "arrival_time",
-    "departure_time",
-    "stop_id",
-    "stop_sequence",
-    "stop_headsign",
-    "pickup_type",
-    "drop_off_type",
-    "shape_dist_traveled",
-    "timepoint",
-];
+impl Table for StopTime {
+    fn table_name() -> &'static str {
+        "stop_times"
+    }
+
+    fn column_names() -> &'static [&'static str] {
+        &[
+            "trip_id",
+            "arrival_time",
+            "departure_time",
+            "stop_id",
+            "stop_sequence",
+            "stop_headsign",
+            "pickup_type",
+            "drop_off_type",
+            "shape_dist_traveled",
+            "timepoint",
+        ]
+    }
+}
 
 pub fn create(conn: &Connection) -> rusqlite::Result<()> {
     conn.execute(

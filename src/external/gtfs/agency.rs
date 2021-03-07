@@ -1,4 +1,5 @@
 use crate::external::gtfs::{Lang, MailAddress, TelephoneNumber, Timezone, Url};
+use crate::external::gtfsdb::Table;
 use log::debug;
 use rusqlite::Connection;
 use rusqlite::NO_PARAMS;
@@ -15,18 +16,6 @@ enum RouteType {
     /// バス
     BUS = 3,
 }
-
-pub const TABLE_NAME: &str = "agency";
-pub const COLUMNS: &[&str] = &[
-    "agency_id",
-    "agency_name",
-    "agency_url",
-    "agency_timezone",
-    "agency_lang",
-    "agency_phone",
-    "agency_fare_url",
-    "agency_email",
-];
 
 /// 経路情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#agency
@@ -48,6 +37,25 @@ pub struct Agency {
     agency_fare_url: Option<Url>,
     /// 事業者Eメール
     agency_email: Option<MailAddress>,
+}
+
+impl Table for Agency {
+    fn table_name() -> &'static str {
+        "agency"
+    }
+
+    fn column_names() -> &'static [&'static str] {
+        &[
+            "agency_id",
+            "agency_name",
+            "agency_url",
+            "agency_timezone",
+            "agency_lang",
+            "agency_phone",
+            "agency_fare_url",
+            "agency_email",
+        ]
+    }
 }
 
 pub fn create(conn: &Connection) -> rusqlite::Result<()> {

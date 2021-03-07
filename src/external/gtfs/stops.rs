@@ -1,4 +1,5 @@
 use crate::external::gtfs::{Timezone, Url, ZoneId};
+use crate::external::gtfsdb::Table;
 use anyhow::Result;
 use log::debug;
 use rusqlite::Connection;
@@ -20,23 +21,6 @@ enum LocationType {
     /// 停留所
     Stop = 1,
 }
-
-pub const TABLE_NAME: &str = "stops";
-pub const COLUMNS: &[&str] = &[
-    "stop_id",
-    "stop_code",
-    "stop_name",
-    "stop_desc",
-    "stop_lat",
-    "stop_lon",
-    "zone_id",
-    "stop_url",
-    "location_type",
-    "parent_station",
-    "stop_timezone",
-    "wheelchair_boarding",
-    "platform_code",
-];
 
 /// 停留所・標柱情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#stops
@@ -70,6 +54,30 @@ pub struct Stop {
     platform_code: Option<PlatformCode>,
 }
 
+impl Table for Stop {
+    fn table_name() -> &'static str {
+        "stops"
+    }
+
+    fn column_names() -> &'static [&'static str] {
+        &[
+            "stop_id",
+            "stop_code",
+            "stop_name",
+            "stop_desc",
+            "stop_lat",
+            "stop_lon",
+            "zone_id",
+            "stop_url",
+            "location_type",
+            "parent_station",
+            "stop_timezone",
+            "wheelchair_boarding",
+            "platform_code",
+        ]
+    }
+}
+
 pub fn create(conn: &Connection) -> Result<()> {
     conn.execute(
         format!(
@@ -88,7 +96,7 @@ pub fn create(conn: &Connection) -> Result<()> {
             wheelchair_boarding int,
             platform_code text
         )",
-            TABLE_NAME
+            Stop::table_name()
         )
         .as_str(),
         NO_PARAMS,
