@@ -22,32 +22,34 @@ pub fn run(op: &Opts) -> Result<()> {
     let mut gtfs = external::gtfsdb::init(&op.database)?;
 
     info!("ℹ️ Initialize.");
+    info!("  ℹ️ Drop all tables.");
     gtfs.drop_all()?;
+    info!("  ℹ️ Create all tables.");
     gtfs.create_all()?;
     info!("  ✨ Success");
 
     let agencies = io::read::<Agency>(&op.gtfs_dir.join("agency.txt"))?;
-    info!("ℹ️ Add {} agencies.", agencies.len());
+    info!("ℹ️ [agencies] {} records", agencies.len());
     gtfs.insert_agencies(&agencies)?;
     info!("  ✨ Success");
 
     let stops = io::read::<Stop>(&op.gtfs_dir.join("stops.txt"))?;
-    info!("ℹ️ Add {} stops.", stops.len());
+    info!("ℹ️ [stops] {} records", stops.len());
     gtfs.insert_stops(&stops)?;
     info!("  ✨ Success");
 
     let routes = io::read::<Route>(&op.gtfs_dir.join("routes.txt"))?;
-    info!("ℹ️ Add {} routes.", routes.len());
+    info!("ℹ️ [routes] {} records", routes.len());
     gtfs.insert_routes(&routes)?;
     info!("  ✨ Success");
 
     let trips = io::read::<Trip>(&op.gtfs_dir.join("trips.txt"))?;
-    info!("ℹ️ Add {} trips.", trips.len());
+    info!("ℹ️ [trips] {} records", trips.len());
     gtfs.insert_trips(&trips)?;
     info!("  ✨ Success");
 
     let stop_times = io::read::<StopTime>(&op.gtfs_dir.join("stop_times.txt"))?;
-    info!("ℹ️ Add {} stop_times.", stop_times.len());
+    info!("ℹ️ [stop_times] {} records", stop_times.len());
     gtfs.insert_stop_times(&stop_times)?;
     info!("  ✨ Success");
 
