@@ -1,9 +1,10 @@
-mod cmd;
-mod external;
-
 use anyhow::Result;
 use clap::Clap;
 use env_logger::Env;
+
+mod cmd;
+mod external;
+mod io;
 
 #[derive(Clap, Debug)]
 #[clap(version = "0.1", author = "tadashi-aikawa")]
@@ -13,8 +14,8 @@ struct Opts {
     config: String,
     #[clap(subcommand)]
     subcmd: SubCommand,
-    #[clap(short, long, parse(from_occurrences), global = true)]
-    verbose: i32,
+    // #[clap(short, long, parse(from_occurrences), global = true)]
+    // verbose: i32,
 }
 
 #[derive(Clap, Debug)]

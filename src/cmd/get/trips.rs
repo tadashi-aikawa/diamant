@@ -3,8 +3,9 @@ use std::path::PathBuf;
 use anyhow::Result;
 use clap::Clap;
 
-use crate::external;
-use crate::external::gtfs::{Gtfs, WriterType};
+use crate::external::gtfs::Gtfs;
+use crate::io::IOType;
+use crate::{external, io};
 
 #[derive(Clap, Debug)]
 pub struct Opts {
@@ -14,12 +15,12 @@ pub struct Opts {
     route_id: String,
     /// One of (csv, tsv, json, yaml).
     #[clap(short, long, default_value = "csv")]
-    output_type: WriterType,
+    output_type: IOType,
 }
 
 pub fn run(op: &Opts) -> Result<()> {
-    let mut gtfs = external::gtfs::init(&op.database)?;
+    let mut gtfs = external::gtfsdb::init(&op.database)?;
     let trips = gtfs.select_trips_by_route_id(&op.route_id)?;
-    external::gtfs::write(&trips, &op.output_type)?;
+    io::write(&trips, &op.output_type)?;
     Ok(())
 }

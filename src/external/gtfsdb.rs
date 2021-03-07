@@ -13,6 +13,11 @@ pub struct GtfsDb {
     connection: Connection,
 }
 
+pub fn init(path: &PathBuf) -> Result<impl Gtfs> {
+    let ins = GtfsDb::new(path)?;
+    Ok(ins)
+}
+
 impl GtfsDb {
     pub fn new(db: &PathBuf) -> Result<Self> {
         let db_file = db.to_str().unwrap();
