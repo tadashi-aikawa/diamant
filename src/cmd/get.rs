@@ -2,6 +2,7 @@ pub mod routes;
 pub mod trips;
 
 use crate::cmd;
+use anyhow::Result;
 use clap::Clap;
 
 #[derive(Clap, Debug)]
@@ -16,4 +17,11 @@ pub enum SubCommand {
     Routes(cmd::get::routes::Opts),
     /// trips
     Trips(cmd::get::trips::Opts),
+}
+
+pub fn run(opts: &Opts) -> Result<()> {
+    match &opts.subcmd {
+        SubCommand::Trips(op) => cmd::get::trips::run(&op),
+        SubCommand::Routes(op) => cmd::get::routes::run(&op),
+    }
 }
