@@ -1,3 +1,4 @@
+use crate::external::gtfs::routes::RouteId;
 use anyhow::Result;
 use log::{debug, trace};
 use rusqlite::named_params;
@@ -11,48 +12,50 @@ use serde_rusqlite::{from_rows, to_params_named};
 #[repr(u8)]
 enum Direction {
     /// 往路
-    OUTBOUND = 0,
+    Outbound = 0,
     /// 復路
-    INBOUND = 1,
+    Inbound = 1,
 }
 
 #[derive(Debug, Deserialize_repr, Serialize_repr)]
 #[repr(u8)]
 enum WheelchairAccessible {
     /// 車いすによる乗車可否の情報なし
-    UNKNOWN = 0,
+    Unknown = 0,
     /// 少なくとも1台の車いすによる乗車可能
-    ALLOW = 1,
+    Allow = 1,
     /// 車いすによる乗車不可
-    DENY = 2,
+    Deny = 2,
 }
 
 #[derive(Debug, Deserialize_repr, Serialize_repr)]
 #[repr(u8)]
 enum BikesAllowed {
     /// 自転車の持込可否の情報なし
-    UNKNOWN = 0,
+    Unknown = 0,
     /// 少なくとも1台の自転車の持込可能
-    ALLOW = 1,
+    Allow = 1,
     /// 自転車の持込不可
-    DENY = 2,
+    Deny = 2,
 }
 
 /// 便ID (ex: 1001_WD_001)
-type TripId = String;
+pub type TripId = String;
 
-/// 経路ID (ex: 1001)
-pub type RouteId = String;
-/// 運行ID (ex: 平日(月～金))
+/// 運行日ID (ex: 平日(月～金))
 type ServiceId = String;
 /// 営業所ID (ex: S)
 type JpOfficeId = String;
 
-// #[skip_serializing_none]
+/// 便情報
+/// https://www.gtfs.jp/developpers-guide/format-reference.html#trips
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Trip {
+    /// 経路ID
     route_id: RouteId,
+    /// 運行日ID
     service_id: ServiceId,
+    /// 便ID
     trip_id: TripId,
     /// 便行き先 (ex: 東京ビッグサイト（月島駅経由）)
     trip_headsign: Option<String>,
@@ -72,6 +75,7 @@ pub struct Trip {
     jp_trip_desc: Option<String>,
     /// 便記号
     jp_trip_desc_symbol: Option<String>,
+    /// 営業所ID
     jp_office_id: Option<JpOfficeId>,
 }
 

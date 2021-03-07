@@ -4,9 +4,9 @@ use anyhow::{Context, Result};
 use rusqlite::Connection;
 
 use crate::external::gtfs;
-use crate::external::gtfs::routes::Route;
+use crate::external::gtfs::routes::{Route, RouteId};
 use crate::external::gtfs::stop_times::StopTime;
-use crate::external::gtfs::trips::{RouteId, Trip};
+use crate::external::gtfs::trips::Trip;
 use crate::external::gtfs::Gtfs;
 
 pub struct GtfsDb {

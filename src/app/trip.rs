@@ -1,7 +1,8 @@
 use anyhow::Result;
 
 use crate::external;
-use crate::external::gtfs::trips::{RouteId, Trip};
+use crate::external::gtfs::routes::RouteId;
+use crate::external::gtfs::trips::Trip;
 
 pub struct TripService {
     gtfs: Box<dyn external::gtfs::Gtfs>,

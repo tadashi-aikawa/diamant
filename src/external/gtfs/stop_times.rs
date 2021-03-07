@@ -1,19 +1,61 @@
+use crate::external::gtfs::trips::TripId;
+use crate::external::gtfs::{Meter, Sequence, StopId};
 use log::{debug, trace};
+use rusqlite::Connection;
 use rusqlite::NO_PARAMS;
-use rusqlite::{params, Connection};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
+use serde_repr::{Deserialize_repr, Serialize_repr};
+use serde_rusqlite::to_params_named;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[repr(u8)]
+enum PickupType {
+    /// 通常の乗車地
+    Usual = 0,
+    /// 乗車不可能
+    Deny = 1,
+    /// 交通機関に乗車予約の電話が必要
+    NeedOfficeReservation = 2,
+    /// 運転手への事前連絡が必要
+    NeedDriverReservation = 3,
+}
+
+#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[repr(u8)]
+enum DropOffType {
+    /// 通常の降車地 (ブザーを押して申告する一般的な停留所を含む)
+    Usual = 0,
+    /// 降車不可能
+    Deny = 1,
+    /// 交通機関に降車予約の電話が必要
+    NeedOfficeReservation = 2,
+    /// 乗車時に運転手への事前連絡が必要
+    NeedDriverReservation = 3,
+}
+
+/// 通過時刻情報
+/// https://www.gtfs.jp/developpers-guide/format-reference.html#stop_times
+#[derive(Debug, Deserialize, Serialize)]
 pub struct StopTime {
-    trip_id: String,
+    /// 便ID
+    trip_id: TripId,
+    /// 到着時刻 (ex: 7:00:00)
     arrival_time: String,
+    /// 出発時刻 (ex: 7:00:00)
     departure_time: String,
-    stop_id: String,
-    stop_sequence: i32,
+    /// 標柱ID (location_type=0のstopのみ結合可) (ex: 100_10)
+    stop_id: StopId,
+    /// 通過順位 (ex: 0)
+    stop_sequence: Sequence,
+    /// 停留所行先 (ex: 東京ビッグサイト（月島駅経由）)
     stop_headsign: Option<String>,
-    pickup_type: Option<i32>,
-    drop_off_type: Option<i32>,
-    shape_dist_traveled: Option<i32>,
+    /// 乗車区分 (ex: 0)
+    pickup_type: Option<PickupType>,
+    /// 降車区分 (ex: 0)
+    drop_off_type: Option<DropOffType>,
+    /// 通算距離 (メートル) (ex: 0)
+    shape_dist_traveled: Option<Meter>,
+    /// 発着時間精度 (日本では使用しない)
     timepoint: Option<i32>,
 }
 
@@ -48,8 +90,8 @@ pub fn insert(conn: &mut Connection, stop_times: &[StopTime]) -> rusqlite::Resul
     let tx = conn.transaction()?;
 
     debug!("Insert {} records to stop_times", stop_times.len());
-    for stop_times in stop_times {
-        tx.execute(
+    for stop_time in stop_times {
+        tx.execute_named(
             "INSERT INTO stop_times (
             trip_id,
             arrival_time,
@@ -61,19 +103,19 @@ pub fn insert(conn: &mut Connection, stop_times: &[StopTime]) -> rusqlite::Resul
             drop_off_type,
             shape_dist_traveled,
             timepoint
-        ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
-            params![
-                stop_times.trip_id,
-                stop_times.arrival_time,
-                stop_times.departure_time,
-                stop_times.stop_id,
-                stop_times.stop_sequence,
-                stop_times.stop_headsign,
-                stop_times.pickup_type,
-                stop_times.drop_off_type,
-                stop_times.shape_dist_traveled,
-                stop_times.timepoint,
-            ],
+        ) VALUES (
+            :trip_id,
+            :arrival_time,
+            :departure_time,
+            :stop_id,
+            :stop_sequence,
+            :stop_headsign,
+            :pickup_type,
+            :drop_off_type,
+            :shape_dist_traveled,
+            :timepoint
+        )",
+            &to_params_named(&stop_time).unwrap().to_slice(),
         )?;
     }
 

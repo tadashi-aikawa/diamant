@@ -1,12 +1,22 @@
 use anyhow::Result;
 
-use crate::external::gtfs::routes::Route;
+use crate::external::gtfs::routes::{Route, RouteId};
 use crate::external::gtfs::stop_times::StopTime;
-use crate::external::gtfs::trips::{RouteId, Trip};
+use crate::external::gtfs::trips::Trip;
 
 pub mod routes;
 pub mod stop_times;
 pub mod trips;
+
+/// GTFS-JPで使う色. 00FFFF など 6 桁の 16 進数
+pub type Color = String;
+/// メートル
+pub type Meter = u32;
+/// 順序
+pub type Sequence = u32;
+
+/// TODO
+pub type StopId = String;
 
 pub trait Gtfs {
     fn create_all(&self) -> Result<()>;

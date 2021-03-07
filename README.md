@@ -14,7 +14,7 @@ TODO
 | [stops.txt]           |        |        |
 | [routes.txt]          | 🦉   |        |
 | [routes_jp.txt]       |        |        |
-| [trips.txt]           | 🦉   |        |
+| [trips.txt]           | 🦉   | 🦉   |
 | [office_jp.txt]       |        |        |
 | [stop_times.txt]      | 🦉   |        |
 | [calendar.txt]        |        |        |
