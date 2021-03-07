@@ -35,6 +35,7 @@ fn main() -> Result<()> {
         SubCommand::MakeDb(op) => cmd::make_db::run(&op)?,
         SubCommand::Get(op) => match op.subcmd {
             cmd::get::SubCommand::Trips(op) => cmd::get::trips::run(&op)?,
+            cmd::get::SubCommand::Routes(op) => cmd::get::routes::run(&op)?,
         },
     }
 

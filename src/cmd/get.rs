@@ -1,3 +1,4 @@
+pub mod routes;
 pub mod trips;
 
 use crate::cmd;
@@ -11,6 +12,8 @@ pub struct Opts {
 
 #[derive(Clap, Debug)]
 pub enum SubCommand {
+    /// routes
+    Routes(cmd::get::routes::Opts),
     /// trips
     Trips(cmd::get::trips::Opts),
 }

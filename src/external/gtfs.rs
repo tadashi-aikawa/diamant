@@ -22,6 +22,7 @@ pub trait Gtfs {
     fn create_all(&self) -> Result<()>;
     fn drop_all(&self) -> Result<()>;
     fn insert_routes(&mut self, routes: &[Route]) -> Result<()>;
+    fn select_routes(&mut self, route_id: &Option<RouteId>) -> Result<Vec<Route>>;
     fn insert_stop_times(&mut self, stop_times: &[StopTime]) -> Result<()>;
     fn insert_trips(&mut self, trips: &[Trip]) -> Result<()>;
     fn select_trips(&mut self, route_id: &Option<RouteId>) -> Result<Vec<Trip>>;

@@ -1,9 +1,10 @@
 use log::{debug, trace};
+use rusqlite::named_params;
 use rusqlite::Connection;
 use rusqlite::NO_PARAMS;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
-use serde_rusqlite::to_params_named;
+use serde_rusqlite::{from_rows, to_params_named};
 
 use crate::external::gtfs::Color;
 
@@ -57,7 +58,7 @@ pub fn create(conn: &Connection) -> rusqlite::Result<()> {
             route_short_name text,
             route_long_name text,
             route_desc text,
-            route_type text not null,
+            route_type int not null,
             route_url text,
             route_color text,
             route_text_color text,
@@ -112,4 +113,20 @@ pub fn insert(conn: &mut Connection, routes: &[Route]) -> rusqlite::Result<()> {
     tx.commit()?;
 
     Ok(())
+}
+
+pub fn select_all(conn: &mut Connection) -> serde_rusqlite::Result<Vec<Route>> {
+    let mut stmt = conn.prepare("SELECT * FROM routes")?;
+    let result = from_rows::<Route>(stmt.query(NO_PARAMS)?).collect();
+    result
+}
+
+pub fn select_by_route_id(
+    conn: &mut Connection,
+    route_id: &RouteId,
+) -> serde_rusqlite::Result<Vec<Route>> {
+    let mut stmt = conn.prepare("SELECT * FROM routes WHERE route_id = :route_id")?;
+    let result =
+        from_rows::<Route>(stmt.query_named(named_params! {":route_id": route_id})?).collect();
+    result
 }

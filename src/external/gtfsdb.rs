@@ -47,6 +47,14 @@ impl Gtfs for GtfsDb {
         Ok(())
     }
 
+    fn select_routes(&mut self, route_id: &Option<RouteId>) -> Result<Vec<Route>> {
+        match route_id {
+            Some(id) => gtfs::routes::select_by_route_id(&mut self.connection, id),
+            None => gtfs::routes::select_all(&mut self.connection),
+        }
+        .context("Fail to select_routes")
+    }
+
     fn insert_stop_times(&mut self, stop_times: &[StopTime]) -> Result<()> {
         gtfs::stop_times::insert(&mut self.connection, &stop_times)?;
         Ok(())
