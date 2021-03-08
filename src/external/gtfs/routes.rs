@@ -1,5 +1,5 @@
-use rusqlite::named_params;
 use rusqlite::Connection;
+use rusqlite::named_params;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use serde_rusqlite::from_rows;

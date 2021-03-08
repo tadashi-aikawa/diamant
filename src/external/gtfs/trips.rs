@@ -1,10 +1,12 @@
-use crate::external::gtfs::routes::RouteId;
-use crate::external::gtfsdb::Table;
-use rusqlite::named_params;
 use rusqlite::Connection;
+use rusqlite::named_params;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use serde_rusqlite::from_rows;
+
+use crate::external::gtfs::calendar::ServiceId;
+use crate::external::gtfs::routes::RouteId;
+use crate::external::gtfsdb::Table;
 
 #[derive(Debug, Deserialize_repr, Serialize_repr)]
 #[repr(u8)]
@@ -40,8 +42,6 @@ enum BikesAllowed {
 /// 便ID (ex: 1001_WD_001)
 pub type TripId = String;
 
-/// 運行日ID (ex: 平日(月～金))
-type ServiceId = String;
 /// 営業所ID (ex: S)
 type JpOfficeId = String;
 

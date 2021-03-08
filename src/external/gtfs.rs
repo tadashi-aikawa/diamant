@@ -2,12 +2,14 @@ use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
 use crate::external::gtfs::agency::Agency;
+use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::routes::{Route, RouteId};
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::trips::Trip;
 
 pub mod agency;
+pub mod calendar;
 pub mod routes;
 pub mod stop_times;
 pub mod stops;
@@ -52,7 +54,9 @@ pub trait Gtfs {
     fn select_stops(&mut self) -> Result<Vec<Stop>>;
     fn insert_routes(&mut self, routes: &[Route]) -> Result<()>;
     fn select_routes(&mut self, route_id: &Option<RouteId>) -> Result<Vec<Route>>;
-    fn insert_stop_times(&mut self, stop_times: &[StopTime]) -> Result<()>;
     fn insert_trips(&mut self, trips: &[Trip]) -> Result<()>;
     fn select_trips(&mut self, route_id: &Option<RouteId>) -> Result<Vec<Trip>>;
+    fn insert_stop_times(&mut self, stop_times: &[StopTime]) -> Result<()>;
+    fn insert_calendars(&mut self, calendars: &[Calendar]) -> Result<()>;
+    fn select_calendars(&mut self) -> Result<Vec<Calendar>>;
 }

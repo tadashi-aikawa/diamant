@@ -2,11 +2,11 @@ use std::path::PathBuf;
 
 use anyhow::Result;
 use clap::Clap;
+use strum::VariantNames;
 
 use crate::app::test::TestService;
 use crate::io::Format;
 use crate::{external, io};
-use strum::VariantNames;
 
 #[derive(Clap, Debug)]
 pub struct Opts {
@@ -20,7 +20,7 @@ pub struct Opts {
 /// プロダクションでも使うコマンドは別途きちんと作成すること
 pub fn run(op: &Opts) -> Result<()> {
     let gtfs = external::gtfsdb::init(&op.database)?;
-    let results = TestService::new(gtfs).fetch_stops()?;
+    let results = TestService::new(gtfs).fetch()?;
     io::write(&results, &op.format)?;
     Ok(())
 }

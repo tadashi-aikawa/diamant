@@ -1,9 +1,10 @@
-use crate::external::gtfs::stops::StopId;
-use crate::external::gtfs::trips::TripId;
-use crate::external::gtfs::{Meter, Sequence};
-use crate::external::gtfsdb::Table;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
+
+use crate::external::gtfs::{Meter, Sequence};
+use crate::external::gtfs::stops::StopId;
+use crate::external::gtfs::trips::TripId;
+use crate::external::gtfsdb::Table;
 
 #[derive(Debug, Deserialize_repr, Serialize_repr)]
 #[repr(u8)]

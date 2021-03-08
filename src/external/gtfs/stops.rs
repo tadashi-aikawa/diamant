@@ -1,7 +1,8 @@
-use crate::external::gtfs::{Timezone, Url, ZoneId};
-use crate::external::gtfsdb::Table;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
+
+use crate::external::gtfs::{Timezone, Url, ZoneId};
+use crate::external::gtfsdb::Table;
 
 /// 停留所・標柱ID (ex: ①100 ②100_10)
 pub type StopId = String;

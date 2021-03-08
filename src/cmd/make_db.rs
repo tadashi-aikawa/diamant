@@ -1,14 +1,15 @@
 use std::path::PathBuf;
 
-use crate::external::gtfs::agency::Agency;
-use crate::external::gtfs::routes::Route;
-use crate::external::gtfs::stop_times::StopTime;
-use crate::external::gtfs::stops::Stop;
-use crate::external::gtfs::trips::Trip;
-use crate::{external, io};
 use anyhow::Result;
 use clap::Clap;
 use log::info;
+
+use crate::external::gtfs::agency::Agency;
+use crate::external::gtfs::calendar::Calendar;
+use crate::external::gtfs::routes::Route;
+use crate::external::gtfs::stops::Stop;
+use crate::external::gtfs::trips::Trip;
+use crate::{external, io};
 
 #[derive(Clap, Debug)]
 pub struct Opts {
@@ -48,9 +49,14 @@ pub fn run(op: &Opts) -> Result<()> {
     gtfs.insert_trips(&trips)?;
     info!("  ✨ Success");
 
-    let stop_times = io::read::<StopTime>(&op.gtfs_dir.join("stop_times.txt"))?;
-    info!("ℹ️ [stop_times] {} records", stop_times.len());
-    gtfs.insert_stop_times(&stop_times)?;
+    // let stop_times = io::read::<StopTime>(&op.gtfs_dir.join("stop_times.txt"))?;
+    // info!("ℹ️ [stop_times] {} records", stop_times.len());
+    // gtfs.insert_stop_times(&stop_times)?;
+    // info!("  ✨ Success");
+
+    let calendars = io::read::<Calendar>(&op.gtfs_dir.join("calendar.txt"))?;
+    info!("ℹ️ [calendar] {} records", calendars.len());
+    gtfs.insert_calendars(&calendars)?;
     info!("  ✨ Success");
 
     Ok(())

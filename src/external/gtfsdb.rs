@@ -1,18 +1,19 @@
-use log::{debug, trace};
 use std::path::PathBuf;
 
 use anyhow::{Context, Result};
+use log::{debug, trace};
 use rusqlite::{Connection, NO_PARAMS};
+use serde::__private::fmt::Debug;
+use serde_rusqlite::{from_rows, to_params_named};
 
 use crate::external::gtfs;
 use crate::external::gtfs::agency::Agency;
+use crate::external::gtfs::calendar::Calendar;
+use crate::external::gtfs::Gtfs;
 use crate::external::gtfs::routes::{Route, RouteId};
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::trips::Trip;
-use crate::external::gtfs::Gtfs;
-use serde::__private::fmt::Debug;
-use serde_rusqlite::{from_rows, to_params_named};
 
 pub struct GtfsDb {
     connection: Connection,
@@ -108,18 +109,20 @@ impl Gtfs for GtfsDb {
     fn create_all(&self) -> Result<()> {
         create::<Agency>(&self.connection)?;
         create::<Route>(&self.connection)?;
-        create::<StopTime>(&self.connection)?;
         create::<Stop>(&self.connection)?;
         create::<Trip>(&self.connection)?;
+        create::<StopTime>(&self.connection)?;
+        create::<Calendar>(&self.connection)?;
         Ok(())
     }
 
     fn drop_all(&self) -> Result<()> {
         drop::<Agency>(&self.connection)?;
         drop::<Route>(&self.connection)?;
-        drop::<StopTime>(&self.connection)?;
         drop::<Stop>(&self.connection)?;
         drop::<Trip>(&self.connection)?;
+        drop::<StopTime>(&self.connection)?;
+        drop::<Calendar>(&self.connection)?;
         Ok(())
     }
 
@@ -170,5 +173,14 @@ impl Gtfs for GtfsDb {
             None => select_all::<Trip>(&mut self.connection),
         }
         .context("Fail to select_trips")
+    }
+
+    fn insert_calendars(&mut self, calendars: &[Calendar]) -> Result<()> {
+        insert(&mut self.connection, calendars)?;
+        Ok(())
+    }
+
+    fn select_calendars(&mut self) -> Result<Vec<Calendar>> {
+        select_all::<Calendar>(&mut self.connection).context("Fail to select calendars")
     }
 }

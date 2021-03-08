@@ -6,6 +6,7 @@ mod app;
 mod cmd;
 mod external;
 mod io;
+mod serde_chrono_custom;
 
 #[derive(Clap, Debug)]
 #[clap(version = "0.1", author = "tadashi-aikawa")]

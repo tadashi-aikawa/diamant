@@ -2,11 +2,11 @@ use std::path::PathBuf;
 
 use anyhow::Result;
 use clap::Clap;
+use strum::VariantNames;
 
+use crate::{external, io};
 use crate::app::trip::TripService;
 use crate::io::Format;
-use crate::{external, io};
-use strum::VariantNames;
 
 #[derive(Clap, Debug)]
 pub struct Opts {

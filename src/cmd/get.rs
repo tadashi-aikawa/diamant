@@ -1,9 +1,10 @@
-pub mod routes;
-pub mod trips;
-
-use crate::cmd;
 use anyhow::Result;
 use clap::Clap;
+
+use crate::cmd;
+
+pub mod routes;
+pub mod trips;
 
 #[derive(Clap, Debug)]
 pub struct Opts {

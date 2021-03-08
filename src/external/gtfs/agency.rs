@@ -1,7 +1,8 @@
-use crate::external::gtfs::{Lang, MailAddress, TelephoneNumber, Timezone, Url};
-use crate::external::gtfsdb::Table;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
+
+use crate::external::gtfs::{Lang, MailAddress, TelephoneNumber, Timezone, Url};
+use crate::external::gtfsdb::Table;
 
 /// 事業者ID  (ex: 8000020130001, 8000020130001_1)
 pub type AgencyId = String;

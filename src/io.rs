@@ -1,10 +1,10 @@
 use std::io;
-use strum_macros::{EnumString, EnumVariantNames};
+use std::path::PathBuf;
 
 use anyhow::{Context, Result};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
-use std::path::PathBuf;
+use strum_macros::{EnumString, EnumVariantNames};
 
 #[derive(Debug, EnumString, EnumVariantNames)]
 #[strum(serialize_all = "lowercase")]
