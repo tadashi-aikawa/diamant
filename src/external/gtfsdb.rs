@@ -21,11 +21,41 @@ pub struct GtfsDb {
 pub trait Table {
     fn table_name() -> &'static str;
     fn column_names() -> &'static [&'static str];
+    fn create_sql() -> &'static str;
 }
 
 pub fn init(path: &PathBuf) -> Result<Box<dyn Gtfs>> {
     let ins = GtfsDb::new(path)?;
     Ok(Box::new(ins))
+}
+
+pub fn create<T>(conn: &Connection) -> Result<()>
+where
+    T: Table,
+{
+    conn.execute(
+        format!(
+            "CREATE TABLE IF NOT EXISTS {} ({})",
+            T::table_name(),
+            T::create_sql()
+        )
+        .as_str(),
+        NO_PARAMS,
+    )?;
+    debug!("Create table `{}`", T::table_name());
+    Ok(())
+}
+
+pub fn drop<T>(conn: &Connection) -> Result<()>
+where
+    T: Table,
+{
+    conn.execute(
+        format!("DROP TABLE IF EXISTS {}", T::table_name()).as_str(),
+        NO_PARAMS,
+    )?;
+    debug!("Drop table `{}`", T::table_name());
+    Ok(())
 }
 
 pub fn insert<T>(conn: &mut Connection, records: &[T]) -> rusqlite::Result<()>
@@ -56,18 +86,6 @@ where
     Ok(())
 }
 
-pub fn drop<T>(conn: &Connection) -> Result<()>
-where
-    T: Table,
-{
-    conn.execute(
-        format!("DROP TABLE IF EXISTS {}", T::table_name()).as_str(),
-        NO_PARAMS,
-    )?;
-    debug!("Drop table `{}`", T::table_name());
-    Ok(())
-}
-
 fn select_all<T>(conn: &mut Connection) -> serde_rusqlite::Result<Vec<T>>
 where
     T: serde::de::DeserializeOwned + Table,
@@ -88,11 +106,11 @@ impl GtfsDb {
 
 impl Gtfs for GtfsDb {
     fn create_all(&self) -> Result<()> {
-        gtfs::agency::create(&self.connection)?;
-        gtfs::stops::create(&self.connection)?;
-        gtfs::routes::create(&self.connection)?;
-        gtfs::trips::create(&self.connection)?;
-        gtfs::stop_times::create(&self.connection)?;
+        create::<Agency>(&self.connection)?;
+        create::<Route>(&self.connection)?;
+        create::<StopTime>(&self.connection)?;
+        create::<Stop>(&self.connection)?;
+        create::<Trip>(&self.connection)?;
         Ok(())
     }
 

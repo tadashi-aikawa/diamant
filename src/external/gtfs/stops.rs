@@ -1,9 +1,5 @@
 use crate::external::gtfs::{Timezone, Url, ZoneId};
 use crate::external::gtfsdb::Table;
-use anyhow::Result;
-use log::debug;
-use rusqlite::Connection;
-use rusqlite::NO_PARAMS;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
@@ -76,31 +72,22 @@ impl Table for Stop {
             "platform_code",
         ]
     }
-}
 
-pub fn create(conn: &Connection) -> Result<()> {
-    conn.execute(
-        format!(
-            "CREATE TABLE IF NOT EXISTS {} (
-            stop_id text primary key,
-            stop_code text,
-            stop_name text not null,
-            stop_desc text,
-            stop_lat double,
-            stop_lon double,
-            zone_id text,
-            stop_url text,
-            location_type int,
-            parent_station text,
-            stop_timezone text,
-            wheelchair_boarding int,
-            platform_code text
-        )",
-            Stop::table_name()
-        )
-        .as_str(),
-        NO_PARAMS,
-    )?;
-    debug!("Create table `stops`");
-    Ok(())
+    fn create_sql() -> &'static str {
+        "
+        stop_id text primary key,
+        stop_code text,
+        stop_name text not null,
+        stop_desc text,
+        stop_lat double,
+        stop_lon double,
+        zone_id text,
+        stop_url text,
+        location_type int,
+        parent_station text,
+        stop_timezone text,
+        wheelchair_boarding int,
+        platform_code text
+        "
+    }
 }

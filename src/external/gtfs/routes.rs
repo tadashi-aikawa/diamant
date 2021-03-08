@@ -1,7 +1,5 @@
-use log::debug;
 use rusqlite::named_params;
 use rusqlite::Connection;
-use rusqlite::NO_PARAMS;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use serde_rusqlite::from_rows;
@@ -68,26 +66,21 @@ impl Table for Route {
             "jp_parent_route_id",
         ]
     }
-}
 
-pub fn create(conn: &Connection) -> rusqlite::Result<()> {
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS routes (
-            route_id text primary key,
-            agency_id text not null,
-            route_short_name text,
-            route_long_name text,
-            route_desc text,
-            route_type int not null,
-            route_url text,
-            route_color text,
-            route_text_color text,
-            jp_parent_route_id text
-        )",
-        NO_PARAMS,
-    )?;
-    debug!("Create table `routes`");
-    Ok(())
+    fn create_sql() -> &'static str {
+        "
+        route_id text primary key,
+        agency_id text not null,
+        route_short_name text,
+        route_long_name text,
+        route_desc text,
+        route_type int not null,
+        route_url text,
+        route_color text,
+        route_text_color text,
+        jp_parent_route_id text
+        "
+    }
 }
 
 pub fn select_by_route_id(

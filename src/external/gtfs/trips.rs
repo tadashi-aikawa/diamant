@@ -1,10 +1,7 @@
 use crate::external::gtfs::routes::RouteId;
 use crate::external::gtfsdb::Table;
-use anyhow::Result;
-use log::debug;
 use rusqlite::named_params;
 use rusqlite::Connection;
-use rusqlite::NO_PARAMS;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use serde_rusqlite::from_rows;
@@ -102,29 +99,24 @@ impl Table for Trip {
             "jp_office_id",
         ]
     }
-}
 
-pub fn create(conn: &Connection) -> Result<()> {
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS trips (
-            route_id text not null,
-            service_id text not null,
-            trip_id text primary key,
-            trip_headsign text,
-            trip_short_name text,
-            direction_id int,
-            block_id text,
-            shape_id text,
-            wheelchair_accessible int,
-            bikes_allowed int,
-            jp_trip_desc text,
-            jp_trip_desc_symbol text,
-            jp_office_id text
-        )",
-        NO_PARAMS,
-    )?;
-    debug!("Create table `trips`");
-    Ok(())
+    fn create_sql() -> &'static str {
+        "
+         route_id text not null,
+         service_id text not null,
+         trip_id text primary key,
+         trip_headsign text,
+         trip_short_name text,
+         direction_id int,
+         block_id text,
+         shape_id text,
+         wheelchair_accessible int,
+         bikes_allowed int,
+         jp_trip_desc text,
+         jp_trip_desc_symbol text,
+         jp_office_id text
+        "
+    }
 }
 
 pub fn select_by_route_id(

@@ -1,8 +1,5 @@
 use crate::external::gtfs::{Lang, MailAddress, TelephoneNumber, Timezone, Url};
 use crate::external::gtfsdb::Table;
-use log::debug;
-use rusqlite::Connection;
-use rusqlite::NO_PARAMS;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
@@ -56,22 +53,17 @@ impl Table for Agency {
             "agency_email",
         ]
     }
-}
 
-pub fn create(conn: &Connection) -> rusqlite::Result<()> {
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS agency (
-            agency_id text primary key,
-            agency_name text not null,
-            agency_url text not null,
-            agency_timezone text not null,
-            agency_lang text not null,
-            agency_phone text,
-            agency_fare_url text,
-            agency_email text
-        )",
-        NO_PARAMS,
-    )?;
-    debug!("Create table `agency`");
-    Ok(())
+    fn create_sql() -> &'static str {
+        "
+        agency_id text primary key,
+        agency_name text not null,
+        agency_url text not null,
+        agency_timezone text not null,
+        agency_lang text not null,
+        agency_phone text,
+        agency_fare_url text,
+        agency_email text
+        "
+    }
 }

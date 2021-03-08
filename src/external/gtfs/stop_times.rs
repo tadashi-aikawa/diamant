@@ -2,9 +2,6 @@ use crate::external::gtfs::stops::StopId;
 use crate::external::gtfs::trips::TripId;
 use crate::external::gtfs::{Meter, Sequence};
 use crate::external::gtfsdb::Table;
-use log::debug;
-use rusqlite::Connection;
-use rusqlite::NO_PARAMS;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
@@ -79,25 +76,20 @@ impl Table for StopTime {
             "timepoint",
         ]
     }
-}
 
-pub fn create(conn: &Connection) -> rusqlite::Result<()> {
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS stop_times (
-            trip_id text,
-            arrival_time datetime not null,
-            departure_time datetime not null,
-            stop_id text not null,
-            stop_sequence int,
-            stop_headsign text,
-            pickup_type int,
-            drop_off_type int,
-            shape_dist_traveled int,
-            timepoint int,
-            PRIMARY KEY(trip_id, stop_sequence)
-        )",
-        NO_PARAMS,
-    )?;
-    debug!("Create table `stop_times`");
-    Ok(())
+    fn create_sql() -> &'static str {
+        "
+        trip_id text,
+        arrival_time datetime not null,
+        departure_time datetime not null,
+        stop_id text not null,
+        stop_sequence int,
+        stop_headsign text,
+        pickup_type int,
+        drop_off_type int,
+        shape_dist_traveled int,
+        timepoint int,
+        PRIMARY KEY(trip_id, stop_sequence)
+        "
+    }
 }
