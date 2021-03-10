@@ -5,6 +5,7 @@ use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::fare_attributes::FareAttribute;
+use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::routes::{Route, RouteId};
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
@@ -14,6 +15,7 @@ pub mod agency;
 pub mod calendar;
 pub mod calendar_dates;
 pub mod fare_attributes;
+pub mod fare_rules;
 pub mod routes;
 pub mod stop_times;
 pub mod stops;
@@ -69,4 +71,6 @@ pub trait Gtfs {
     fn select_calendar_dates(&mut self) -> Result<Vec<CalendarDate>>;
     fn insert_fare_attributes(&mut self, fare_attributes: &[FareAttribute]) -> Result<()>;
     fn select_fare_attributes(&mut self) -> Result<Vec<FareAttribute>>;
+    fn insert_fare_rules(&mut self, fare_rules: &[FareRule]) -> Result<()>;
+    fn select_fare_rules(&mut self) -> Result<Vec<FareRule>>;
 }

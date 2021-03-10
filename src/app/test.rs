@@ -3,6 +3,7 @@ use anyhow::Result;
 use crate::external;
 use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::fare_attributes::FareAttribute;
+use crate::external::gtfs::fare_rules::FareRule;
 
 pub struct TestService {
     gtfs: Box<dyn external::gtfs::Gtfs>,
@@ -15,7 +16,7 @@ impl TestService {
         Self { gtfs }
     }
 
-    pub fn fetch(&mut self) -> Result<Vec<FareAttribute>> {
-        self.gtfs.select_fare_attributes()
+    pub fn fetch(&mut self) -> Result<Vec<FareRule>> {
+        self.gtfs.select_fare_rules()
     }
 }

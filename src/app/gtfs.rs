@@ -5,6 +5,7 @@ use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::fare_attributes::FareAttribute;
+use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::trips::Trip;
@@ -67,6 +68,11 @@ impl GtfsService {
         let fare_attributes = io::read::<FareAttribute>(&gtfs_dir.join("fare_attributes.txt"))?;
         info!("ℹ️ [fare_attributes] {} records", fare_attributes.len());
         self.gtfs.insert_fare_attributes(&fare_attributes)?;
+        info!("  ✨ Success");
+
+        let fare_rules = io::read::<FareRule>(&gtfs_dir.join("fare_rules.txt"))?;
+        info!("ℹ️ [fare_rules] {} records", fare_rules.len());
+        self.gtfs.insert_fare_rules(&fare_rules)?;
         info!("  ✨ Success");
 
         Ok(())
