@@ -12,6 +12,7 @@ use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
+use crate::external::gtfs::feed_info::Feed;
 use crate::external::gtfs::frequencies::Frequency;
 use crate::external::gtfs::routes::{Route, RouteId};
 use crate::external::gtfs::shapes::Shape;
@@ -125,6 +126,7 @@ impl Gtfs for GtfsDb {
         create::<Shape>(&self.connection)?;
         create::<Frequency>(&self.connection)?;
         create::<Transfer>(&self.connection)?;
+        create::<Feed>(&self.connection)?;
         Ok(())
     }
 
@@ -141,6 +143,7 @@ impl Gtfs for GtfsDb {
         drop::<Shape>(&self.connection)?;
         drop::<Frequency>(&self.connection)?;
         drop::<Transfer>(&self.connection)?;
+        drop::<Feed>(&self.connection)?;
         Ok(())
     }
 
@@ -254,5 +257,14 @@ impl Gtfs for GtfsDb {
 
     fn select_transfers(&mut self) -> Result<Vec<Transfer>> {
         select_all::<Transfer>(&mut self.connection).context("Fail to select transfers")
+    }
+
+    fn insert_feeds(&mut self, feeds: &[Feed]) -> Result<()> {
+        insert(&mut self.connection, feeds)?;
+        Ok(())
+    }
+
+    fn select_feeds(&mut self) -> Result<Vec<Feed>> {
+        select_all::<Feed>(&mut self.connection).context("Fail to select feed_info")
     }
 }

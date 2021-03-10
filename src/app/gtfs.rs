@@ -6,9 +6,9 @@ use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
+use crate::external::gtfs::feed_info::Feed;
 use crate::external::gtfs::frequencies::Frequency;
 use crate::external::gtfs::routes::Route;
-use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::transfers::Transfer;
 use crate::external::gtfs::trips::Trip;
@@ -78,10 +78,10 @@ impl GtfsService {
         self.gtfs.insert_fare_rules(&fare_rules)?;
         info!("  ✨ Success");
 
-        let shapes = io::read::<Shape>(&gtfs_dir.join("shapes.txt"))?;
-        info!("ℹ️ [shapes] {} records", shapes.len());
-        self.gtfs.insert_shapes(&shapes)?;
-        info!("  ✨ Success");
+        // let shapes = io::read::<Shape>(&gtfs_dir.join("shapes.txt"))?;
+        // info!("ℹ️ [shapes] {} records", shapes.len());
+        // self.gtfs.insert_shapes(&shapes)?;
+        // info!("  ✨ Success");
 
         let frequencies = io::read::<Frequency>(&gtfs_dir.join("frequencies.txt"))?;
         info!("ℹ️ [frequencies] {} records", frequencies.len());
@@ -91,6 +91,11 @@ impl GtfsService {
         let transfers = io::read::<Transfer>(&gtfs_dir.join("transfers.txt"))?;
         info!("ℹ️ [transfers] {} records", transfers.len());
         self.gtfs.insert_transfers(&transfers)?;
+        info!("  ✨ Success");
+
+        let feeds = io::read::<Feed>(&gtfs_dir.join("feed_info.txt"))?;
+        info!("ℹ️ [feed_info] {} records", feeds.len());
+        self.gtfs.insert_feeds(&feeds)?;
         info!("  ✨ Success");
 
         Ok(())
