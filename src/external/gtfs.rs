@@ -13,6 +13,7 @@ use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::transfers::Transfer;
+use crate::external::gtfs::translations::Translation;
 use crate::external::gtfs::trips::Trip;
 
 pub mod agency;
@@ -27,6 +28,7 @@ pub mod shapes;
 pub mod stop_times;
 pub mod stops;
 pub mod transfers;
+pub mod translations;
 pub mod trips;
 
 /// 色. 00FFFF など 6 桁の 16 進数
@@ -65,8 +67,16 @@ pub enum Timezone {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Lang {
-    /// 日本語
     Ja,
+    En,
+    Ko,
+    #[serde(rename = "zh-CN")]
+    ZhCn,
+    #[serde(rename = "zh-TW")]
+    ZhTw,
+    /// ふりがな
+    #[serde(rename = "ja-Hrkt")]
+    JaHrkt,
 }
 
 pub trait Gtfs {
@@ -97,4 +107,6 @@ pub trait Gtfs {
     fn select_transfers(&mut self) -> Result<Vec<Transfer>>;
     fn insert_feeds(&mut self, feeds: &[Feed]) -> Result<()>;
     fn select_feeds(&mut self) -> Result<Vec<Feed>>;
+    fn insert_translations(&mut self, translations: &[Translation]) -> Result<()>;
+    fn select_translations(&mut self) -> Result<Vec<Translation>>;
 }

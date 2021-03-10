@@ -11,6 +11,7 @@ use crate::external::gtfs::frequencies::Frequency;
 use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::transfers::Transfer;
+use crate::external::gtfs::translations::Translation;
 use crate::external::gtfs::trips::Trip;
 use crate::{external, io};
 use std::path::PathBuf;
@@ -83,20 +84,34 @@ impl GtfsService {
         // self.gtfs.insert_shapes(&shapes)?;
         // info!("  ✨ Success");
 
-        let frequencies = io::read::<Frequency>(&gtfs_dir.join("frequencies.txt"))?;
-        info!("ℹ️ [frequencies] {} records", frequencies.len());
-        self.gtfs.insert_frequencies(&frequencies)?;
-        info!("  ✨ Success");
+        let path = gtfs_dir.join("frequencies.txt");
+        if path.exists() {
+            let frequencies = io::read::<Frequency>(&path)?;
+            info!("ℹ️ [frequencies] {} records", frequencies.len());
+            self.gtfs.insert_frequencies(&frequencies)?;
+            info!("  ✨ Success");
+        }
 
-        let transfers = io::read::<Transfer>(&gtfs_dir.join("transfers.txt"))?;
-        info!("ℹ️ [transfers] {} records", transfers.len());
-        self.gtfs.insert_transfers(&transfers)?;
-        info!("  ✨ Success");
+        let path = gtfs_dir.join("transfers.txt");
+        if path.exists() {
+            let transfers = io::read::<Transfer>(&path)?;
+            info!("ℹ️ [transfers] {} records", transfers.len());
+            self.gtfs.insert_transfers(&transfers)?;
+            info!("  ✨ Success");
+        }
 
         let feeds = io::read::<Feed>(&gtfs_dir.join("feed_info.txt"))?;
         info!("ℹ️ [feed_info] {} records", feeds.len());
         self.gtfs.insert_feeds(&feeds)?;
         info!("  ✨ Success");
+
+        let path = gtfs_dir.join("translations.txt");
+        if path.exists() {
+            let translations = io::read::<Translation>(&path)?;
+            info!("ℹ️ [translations] {} records", translations.len());
+            self.gtfs.insert_translations(&translations)?;
+            info!("  ✨ Success");
+        }
 
         Ok(())
     }

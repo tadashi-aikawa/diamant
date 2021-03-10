@@ -19,6 +19,7 @@ use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::transfers::Transfer;
+use crate::external::gtfs::translations::Translation;
 use crate::external::gtfs::trips::Trip;
 use crate::external::gtfs::Gtfs;
 
@@ -127,6 +128,7 @@ impl Gtfs for GtfsDb {
         create::<Frequency>(&self.connection)?;
         create::<Transfer>(&self.connection)?;
         create::<Feed>(&self.connection)?;
+        create::<Translation>(&self.connection)?;
         Ok(())
     }
 
@@ -144,6 +146,7 @@ impl Gtfs for GtfsDb {
         drop::<Frequency>(&self.connection)?;
         drop::<Transfer>(&self.connection)?;
         drop::<Feed>(&self.connection)?;
+        drop::<Translation>(&self.connection)?;
         Ok(())
     }
 
@@ -266,5 +269,14 @@ impl Gtfs for GtfsDb {
 
     fn select_feeds(&mut self) -> Result<Vec<Feed>> {
         select_all::<Feed>(&mut self.connection).context("Fail to select feed_info")
+    }
+
+    fn insert_translations(&mut self, translations: &[Translation]) -> Result<()> {
+        insert(&mut self.connection, translations)?;
+        Ok(())
+    }
+
+    fn select_translations(&mut self) -> Result<Vec<Translation>> {
+        select_all::<Translation>(&mut self.connection).context("Fail to select translations")
     }
 }
