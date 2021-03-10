@@ -24,7 +24,7 @@ TODO
 | [shapes.txt]          | 🦉   |        |                          |
 | [frequencies.txt]     | 🦉   |        |                          |
 | [transfers.txt]       | 🦉   |        |                          |
-| [feed_info.txt]       |        |        |                          |
+| [feed_info.txt]       | 🦉   |        |                          |
 | [translations.txt]    |        |        |                          |
 
 [agency.txt]: https://www.gtfs.jp/developpers-guide/format-reference.html#agency
