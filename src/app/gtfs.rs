@@ -6,6 +6,7 @@ use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
+use crate::external::gtfs::frequencies::Frequency;
 use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stops::Stop;
@@ -79,6 +80,11 @@ impl GtfsService {
         let shapes = io::read::<Shape>(&gtfs_dir.join("shapes.txt"))?;
         info!("ℹ️ [shapes] {} records", shapes.len());
         self.gtfs.insert_shapes(&shapes)?;
+        info!("  ✨ Success");
+
+        let frequencies = io::read::<Frequency>(&gtfs_dir.join("frequencies.txt"))?;
+        info!("ℹ️ [frequencies] {} records", frequencies.len());
+        self.gtfs.insert_frequencies(&frequencies)?;
         info!("  ✨ Success");
 
         Ok(())

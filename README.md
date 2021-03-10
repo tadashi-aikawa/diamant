@@ -22,7 +22,7 @@ TODO
 | [fare_attributes.txt] | 🦉   |        |                          |
 | [fare_rules.txt]      | 🦉   |        |                          |
 | [shapes.txt]          | 🦉   |        |                          |
-| [frequencies.txt]     |        |        |                          |
+| [frequencies.txt]     | 🦉   |        |                          |
 | [transfers.txt]       |        |        |                          |
 | [feed_info.txt]       |        |        |                          |
 | [translations.txt]    |        |        |                          |

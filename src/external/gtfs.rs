@@ -6,6 +6,7 @@ use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
+use crate::external::gtfs::frequencies::Frequency;
 use crate::external::gtfs::routes::{Route, RouteId};
 use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stop_times::StopTime;
@@ -17,6 +18,7 @@ pub mod calendar;
 pub mod calendar_dates;
 pub mod fare_attributes;
 pub mod fare_rules;
+pub mod frequencies;
 pub mod routes;
 pub mod shapes;
 pub mod stop_times;
@@ -27,6 +29,8 @@ pub mod trips;
 pub type Color = String;
 /// メートル
 pub type Meter = u32;
+/// HH:mm:ss形式で28時などの表現も許容
+pub type UnlimitedTime = String;
 /// 秒
 pub type Second = u32;
 /// 順序 (ex: 0)
@@ -81,4 +85,6 @@ pub trait Gtfs {
     fn select_fare_rules(&mut self) -> Result<Vec<FareRule>>;
     fn insert_shapes(&mut self, shapes: &[Shape]) -> Result<()>;
     fn select_shapes(&mut self) -> Result<Vec<Shape>>;
+    fn insert_frequencies(&mut self, frequencies: &[Frequency]) -> Result<()>;
+    fn select_frequencies(&mut self) -> Result<Vec<Frequency>>;
 }

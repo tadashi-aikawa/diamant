@@ -12,6 +12,7 @@ use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
+use crate::external::gtfs::frequencies::Frequency;
 use crate::external::gtfs::routes::{Route, RouteId};
 use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stop_times::StopTime;
@@ -121,6 +122,7 @@ impl Gtfs for GtfsDb {
         create::<FareAttribute>(&self.connection)?;
         create::<FareRule>(&self.connection)?;
         create::<Shape>(&self.connection)?;
+        create::<Frequency>(&self.connection)?;
         Ok(())
     }
 
@@ -135,6 +137,7 @@ impl Gtfs for GtfsDb {
         drop::<FareAttribute>(&self.connection)?;
         drop::<FareRule>(&self.connection)?;
         drop::<Shape>(&self.connection)?;
+        drop::<Frequency>(&self.connection)?;
         Ok(())
     }
 
@@ -230,5 +233,14 @@ impl Gtfs for GtfsDb {
 
     fn select_shapes(&mut self) -> Result<Vec<Shape>> {
         select_all::<Shape>(&mut self.connection).context("Fail to select shapes")
+    }
+
+    fn insert_frequencies(&mut self, frequencies: &[Frequency]) -> Result<()> {
+        insert(&mut self.connection, frequencies)?;
+        Ok(())
+    }
+
+    fn select_frequencies(&mut self) -> Result<Vec<Frequency>> {
+        select_all::<Frequency>(&mut self.connection).context("Fail to select frequencies")
     }
 }
