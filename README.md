@@ -20,8 +20,8 @@ TODO
 | [calendar.txt]        | 🦉   |        |                          |
 | [calendar_dates.txt]  | 🦉   |        |                          |
 | [fare_attributes.txt] | 🦉   |        |                          |
-| [fare_rules.txt]      |        |        |                          |
-| [shapes.txt]          |        |        |                          |
+| [fare_rules.txt]      | 🦉   |        |                          |
+| [shapes.txt]          | 🦉   |        |                          |
 | [frequencies.txt]     |        |        |                          |
 | [transfers.txt]       |        |        |                          |
 | [feed_info.txt]       |        |        |                          |
