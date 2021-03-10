@@ -13,6 +13,7 @@ use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::routes::{Route, RouteId};
+use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::trips::Trip;
@@ -119,6 +120,7 @@ impl Gtfs for GtfsDb {
         create::<CalendarDate>(&self.connection)?;
         create::<FareAttribute>(&self.connection)?;
         create::<FareRule>(&self.connection)?;
+        create::<Shape>(&self.connection)?;
         Ok(())
     }
 
@@ -132,6 +134,7 @@ impl Gtfs for GtfsDb {
         drop::<CalendarDate>(&self.connection)?;
         drop::<FareAttribute>(&self.connection)?;
         drop::<FareRule>(&self.connection)?;
+        drop::<Shape>(&self.connection)?;
         Ok(())
     }
 
@@ -218,5 +221,14 @@ impl Gtfs for GtfsDb {
 
     fn select_fare_rules(&mut self) -> Result<Vec<FareRule>> {
         select_all::<FareRule>(&mut self.connection).context("Fail to select fare_rules")
+    }
+
+    fn insert_shapes(&mut self, shapes: &[Shape]) -> Result<()> {
+        insert(&mut self.connection, shapes)?;
+        Ok(())
+    }
+
+    fn select_shapes(&mut self) -> Result<Vec<Shape>> {
+        select_all::<Shape>(&mut self.connection).context("Fail to select shapes")
     }
 }

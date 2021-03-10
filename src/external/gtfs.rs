@@ -7,6 +7,7 @@ use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::routes::{Route, RouteId};
+use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::trips::Trip;
@@ -17,6 +18,7 @@ pub mod calendar_dates;
 pub mod fare_attributes;
 pub mod fare_rules;
 pub mod routes;
+pub mod shapes;
 pub mod stop_times;
 pub mod stops;
 pub mod trips;
@@ -35,6 +37,10 @@ pub type TelephoneNumber = String;
 pub type MailAddress = String;
 /// Url
 pub type Url = String;
+/// 緯度 (degree)
+pub type Latitude = f32;
+/// 経度 (degree)
+pub type Longitude = f32;
 
 // TODO (ex: Z_210)
 pub type ZoneId = String;
@@ -73,4 +79,6 @@ pub trait Gtfs {
     fn select_fare_attributes(&mut self) -> Result<Vec<FareAttribute>>;
     fn insert_fare_rules(&mut self, fare_rules: &[FareRule]) -> Result<()>;
     fn select_fare_rules(&mut self) -> Result<Vec<FareRule>>;
+    fn insert_shapes(&mut self, shapes: &[Shape]) -> Result<()>;
+    fn select_shapes(&mut self) -> Result<Vec<Shape>>;
 }

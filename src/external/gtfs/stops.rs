@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
-use crate::external::gtfs::{Timezone, Url, ZoneId};
+use crate::external::gtfs::{Latitude, Longitude, Timezone, Url, ZoneId};
 use crate::external::gtfsdb::Table;
 
 /// 停留所・標柱ID (ex: ①100 ②100_10)
@@ -32,9 +32,9 @@ pub struct Stop {
     /// 停留所・標柱付加情報
     stop_desc: Option<String>,
     /// 緯度 (ex: ①35.680515 ※ターミナル中心 ②35.679752 ※標柱位置)
-    stop_lat: f32,
+    stop_lat: Latitude,
     /// 経度 (ex: ①139.764698 ※ターミナル中心）②139.768330 ※標柱位置)
-    stop_lon: f32,
+    stop_lon: Longitude,
     /// 運賃エリアID (ex: ①設定しない ②Z_210　※都区内エリアID)
     zone_id: Option<ZoneId>,
     /// 停留所・標柱URL
