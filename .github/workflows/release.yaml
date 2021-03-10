@@ -17,10 +17,12 @@ jobs:
           default: true
           override: true
 
+      - uses: Swatinem/rust-cache@v1
+
       - name: Build
         run: cargo build --all --release
 
       - uses: actions/upload-artifact@v2
         with:
           name: hibou-x86_64-pc-windows
-          path: target
+          path: target/release/hibou.exe
