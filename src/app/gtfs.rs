@@ -9,6 +9,8 @@ use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::feed_info::Feed;
 use crate::external::gtfs::frequencies::Frequency;
 use crate::external::gtfs::routes::Route;
+use crate::external::gtfs::shapes::Shape;
+use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::transfers::Transfer;
 use crate::external::gtfs::translations::Translation;
@@ -54,35 +56,50 @@ impl GtfsService {
         self.gtfs.insert_trips(&trips)?;
         info!("  ✨ Success");
 
-        // let stop_times = io::read::<StopTime>(&gtfs_dir.join("stop_times.txt"))?;
-        // info!("ℹ️ [stop_times] {} records", stop_times.len());
-        // self.gtfs.insert_stop_times(&stop_times)?;
-        // info!("  ✨ Success");
-
-        let calendars = io::read::<Calendar>(&gtfs_dir.join("calendar.txt"))?;
-        info!("ℹ️ [calendar] {} records", calendars.len());
-        self.gtfs.insert_calendars(&calendars)?;
+        let stop_times = io::read::<StopTime>(&gtfs_dir.join("stop_times.txt"))?;
+        info!("ℹ️ [stop_times] {} records", stop_times.len());
+        self.gtfs.insert_stop_times(&stop_times)?;
         info!("  ✨ Success");
 
-        let calendar_dates = io::read::<CalendarDate>(&gtfs_dir.join("calendar_dates.txt"))?;
-        info!("ℹ️ [calendar_dates] {} records", calendar_dates.len());
-        self.gtfs.insert_calendar_dates(&calendar_dates)?;
-        info!("  ✨ Success");
+        let path = gtfs_dir.join("calendar.txt");
+        if path.exists() {
+            let calendars = io::read::<Calendar>(&path)?;
+            info!("ℹ️ [calendar] {} records", calendars.len());
+            self.gtfs.insert_calendars(&calendars)?;
+            info!("  ✨ Success");
+        }
 
-        let fare_attributes = io::read::<FareAttribute>(&gtfs_dir.join("fare_attributes.txt"))?;
-        info!("ℹ️ [fare_attributes] {} records", fare_attributes.len());
-        self.gtfs.insert_fare_attributes(&fare_attributes)?;
-        info!("  ✨ Success");
+        let path = gtfs_dir.join("calendar_dates.txt");
+        if path.exists() {
+            let calendar_dates = io::read::<CalendarDate>(&path)?;
+            info!("ℹ️ [calendar_dates] {} records", calendar_dates.len());
+            self.gtfs.insert_calendar_dates(&calendar_dates)?;
+            info!("  ✨ Success");
+        }
 
-        let fare_rules = io::read::<FareRule>(&gtfs_dir.join("fare_rules.txt"))?;
-        info!("ℹ️ [fare_rules] {} records", fare_rules.len());
-        self.gtfs.insert_fare_rules(&fare_rules)?;
-        info!("  ✨ Success");
+        let path = gtfs_dir.join("fare_attributes.txt");
+        if path.exists() {
+            let fare_attributes = io::read::<FareAttribute>(&path)?;
+            info!("ℹ️ [fare_attributes] {} records", fare_attributes.len());
+            self.gtfs.insert_fare_attributes(&fare_attributes)?;
+            info!("  ✨ Success");
+        }
 
-        // let shapes = io::read::<Shape>(&gtfs_dir.join("shapes.txt"))?;
-        // info!("ℹ️ [shapes] {} records", shapes.len());
-        // self.gtfs.insert_shapes(&shapes)?;
-        // info!("  ✨ Success");
+        let path = gtfs_dir.join("fare_rules.txt");
+        if path.exists() {
+            let fare_rules = io::read::<FareRule>(&path)?;
+            info!("ℹ️ [fare_rules] {} records", fare_rules.len());
+            self.gtfs.insert_fare_rules(&fare_rules)?;
+            info!("  ✨ Success");
+        }
+
+        let path = gtfs_dir.join("shapes.txt");
+        if path.exists() {
+            let shapes = io::read::<Shape>(&path)?;
+            info!("ℹ️ [shapes] {} records", shapes.len());
+            self.gtfs.insert_shapes(&shapes)?;
+            info!("  ✨ Success");
+        }
 
         let path = gtfs_dir.join("frequencies.txt");
         if path.exists() {
@@ -100,10 +117,13 @@ impl GtfsService {
             info!("  ✨ Success");
         }
 
-        let feeds = io::read::<Feed>(&gtfs_dir.join("feed_info.txt"))?;
-        info!("ℹ️ [feed_info] {} records", feeds.len());
-        self.gtfs.insert_feeds(&feeds)?;
-        info!("  ✨ Success");
+        let path = gtfs_dir.join("feed_info.txt");
+        if path.exists() {
+            let feeds = io::read::<Feed>(&path)?;
+            info!("ℹ️ [feed_info] {} records", feeds.len());
+            self.gtfs.insert_feeds(&feeds)?;
+            info!("  ✨ Success");
+        }
 
         let path = gtfs_dir.join("translations.txt");
         if path.exists() {

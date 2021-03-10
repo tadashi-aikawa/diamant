@@ -1,6 +1,6 @@
 name: Release
 
-on: workflow_dispatch
+on: push
 
 jobs:
   build:
@@ -22,5 +22,5 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: hibou
-          path: target/release/hibou.exe
+          name: hibou-x86_64-pc-windows
+          path: target
