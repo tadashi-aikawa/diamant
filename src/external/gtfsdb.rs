@@ -17,6 +17,7 @@ use crate::external::gtfs::routes::{Route, RouteId};
 use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
+use crate::external::gtfs::transfers::Transfer;
 use crate::external::gtfs::trips::Trip;
 use crate::external::gtfs::Gtfs;
 
@@ -123,6 +124,7 @@ impl Gtfs for GtfsDb {
         create::<FareRule>(&self.connection)?;
         create::<Shape>(&self.connection)?;
         create::<Frequency>(&self.connection)?;
+        create::<Transfer>(&self.connection)?;
         Ok(())
     }
 
@@ -138,6 +140,7 @@ impl Gtfs for GtfsDb {
         drop::<FareRule>(&self.connection)?;
         drop::<Shape>(&self.connection)?;
         drop::<Frequency>(&self.connection)?;
+        drop::<Transfer>(&self.connection)?;
         Ok(())
     }
 
@@ -242,5 +245,14 @@ impl Gtfs for GtfsDb {
 
     fn select_frequencies(&mut self) -> Result<Vec<Frequency>> {
         select_all::<Frequency>(&mut self.connection).context("Fail to select frequencies")
+    }
+
+    fn insert_transfers(&mut self, transfers: &[Transfer]) -> Result<()> {
+        insert(&mut self.connection, transfers)?;
+        Ok(())
+    }
+
+    fn select_transfers(&mut self) -> Result<Vec<Transfer>> {
+        select_all::<Transfer>(&mut self.connection).context("Fail to select transfers")
     }
 }

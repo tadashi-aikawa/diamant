@@ -11,6 +11,7 @@ use crate::external::gtfs::routes::{Route, RouteId};
 use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
+use crate::external::gtfs::transfers::Transfer;
 use crate::external::gtfs::trips::Trip;
 
 pub mod agency;
@@ -23,6 +24,7 @@ pub mod routes;
 pub mod shapes;
 pub mod stop_times;
 pub mod stops;
+pub mod transfers;
 pub mod trips;
 
 /// 色. 00FFFF など 6 桁の 16 進数
@@ -87,4 +89,6 @@ pub trait Gtfs {
     fn select_shapes(&mut self) -> Result<Vec<Shape>>;
     fn insert_frequencies(&mut self, frequencies: &[Frequency]) -> Result<()>;
     fn select_frequencies(&mut self) -> Result<Vec<Frequency>>;
+    fn insert_transfers(&mut self, transfers: &[Transfer]) -> Result<()>;
+    fn select_transfers(&mut self) -> Result<Vec<Transfer>>;
 }

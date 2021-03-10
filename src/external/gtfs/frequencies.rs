@@ -49,8 +49,8 @@ impl Table for Frequency {
     fn create_sql() -> &'static str {
         "
         trip_id text not null,
-        start_time string not null,
-        end_time string not null,
+        start_time text not null,
+        end_time text not null,
         headway_secs int not null,
         exact_times int,
         PRIMARY KEY(trip_id, start_time)

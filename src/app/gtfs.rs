@@ -10,6 +10,7 @@ use crate::external::gtfs::frequencies::Frequency;
 use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stops::Stop;
+use crate::external::gtfs::transfers::Transfer;
 use crate::external::gtfs::trips::Trip;
 use crate::{external, io};
 use std::path::PathBuf;
@@ -85,6 +86,11 @@ impl GtfsService {
         let frequencies = io::read::<Frequency>(&gtfs_dir.join("frequencies.txt"))?;
         info!("ℹ️ [frequencies] {} records", frequencies.len());
         self.gtfs.insert_frequencies(&frequencies)?;
+        info!("  ✨ Success");
+
+        let transfers = io::read::<Transfer>(&gtfs_dir.join("transfers.txt"))?;
+        info!("ℹ️ [transfers] {} records", transfers.len());
+        self.gtfs.insert_transfers(&transfers)?;
         info!("  ✨ Success");
 
         Ok(())
