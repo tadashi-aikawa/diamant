@@ -18,8 +18,8 @@ TODO
 | [office_jp.txt]       |        |        |                          |
 | [stop_times.txt]      | 🦉   |        |                          |
 | [calendar.txt]        | 🦉   |        |                          |
-| [calendar_dates.txt]  |        |        |                          |
-| [fare_attributes.txt] |        |        |                          |
+| [calendar_dates.txt]  | 🦉   |        |                          |
+| [fare_attributes.txt] | 🦉   |        |                          |
 | [fare_rules.txt]      |        |        |                          |
 | [shapes.txt]          |        |        |                          |
 | [frequencies.txt]     |        |        |                          |

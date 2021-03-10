@@ -10,6 +10,7 @@ use crate::external::gtfs;
 use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
+use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::routes::{Route, RouteId};
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
@@ -115,6 +116,7 @@ impl Gtfs for GtfsDb {
         create::<StopTime>(&self.connection)?;
         create::<Calendar>(&self.connection)?;
         create::<CalendarDate>(&self.connection)?;
+        create::<FareAttribute>(&self.connection)?;
         Ok(())
     }
 
@@ -126,6 +128,7 @@ impl Gtfs for GtfsDb {
         drop::<StopTime>(&self.connection)?;
         drop::<Calendar>(&self.connection)?;
         drop::<CalendarDate>(&self.connection)?;
+        drop::<FareAttribute>(&self.connection)?;
         Ok(())
     }
 
@@ -160,11 +163,6 @@ impl Gtfs for GtfsDb {
         .context("Fail to select_routes")
     }
 
-    fn insert_stop_times(&mut self, stop_times: &[StopTime]) -> Result<()> {
-        insert(&mut self.connection, stop_times)?;
-        Ok(())
-    }
-
     fn insert_trips(&mut self, trips: &[Trip]) -> Result<()> {
         insert(&mut self.connection, trips)?;
         Ok(())
@@ -176,6 +174,11 @@ impl Gtfs for GtfsDb {
             None => select_all::<Trip>(&mut self.connection),
         }
         .context("Fail to select_trips")
+    }
+
+    fn insert_stop_times(&mut self, stop_times: &[StopTime]) -> Result<()> {
+        insert(&mut self.connection, stop_times)?;
+        Ok(())
     }
 
     fn insert_calendars(&mut self, calendars: &[Calendar]) -> Result<()> {
@@ -194,5 +197,14 @@ impl Gtfs for GtfsDb {
 
     fn select_calendar_dates(&mut self) -> Result<Vec<CalendarDate>> {
         select_all::<CalendarDate>(&mut self.connection).context("Fail to select calendar_dates")
+    }
+
+    fn insert_fare_attributes(&mut self, fare_attributes: &[FareAttribute]) -> Result<()> {
+        insert(&mut self.connection, fare_attributes)?;
+        Ok(())
+    }
+
+    fn select_fare_attributes(&mut self) -> Result<Vec<FareAttribute>> {
+        select_all::<FareAttribute>(&mut self.connection).context("Fail to select fare_attributes")
     }
 }

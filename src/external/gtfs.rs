@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
+use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::routes::{Route, RouteId};
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
@@ -12,6 +13,7 @@ use crate::external::gtfs::trips::Trip;
 pub mod agency;
 pub mod calendar;
 pub mod calendar_dates;
+pub mod fare_attributes;
 pub mod routes;
 pub mod stop_times;
 pub mod stops;
@@ -21,6 +23,8 @@ pub mod trips;
 pub type Color = String;
 /// メートル
 pub type Meter = u32;
+/// 秒
+pub type Second = u32;
 /// 順序 (ex: 0)
 pub type Sequence = u32;
 /// 電話番号 (ex: 03-2816-5700)
@@ -63,4 +67,6 @@ pub trait Gtfs {
     fn select_calendars(&mut self) -> Result<Vec<Calendar>>;
     fn insert_calendar_dates(&mut self, calendar_dates: &[CalendarDate]) -> Result<()>;
     fn select_calendar_dates(&mut self) -> Result<Vec<CalendarDate>>;
+    fn insert_fare_attributes(&mut self, fare_attributes: &[FareAttribute]) -> Result<()>;
+    fn select_fare_attributes(&mut self) -> Result<Vec<FareAttribute>>;
 }
