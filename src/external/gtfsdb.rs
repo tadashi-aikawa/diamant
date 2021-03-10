@@ -9,11 +9,12 @@ use serde_rusqlite::{from_rows, to_params_named};
 use crate::external::gtfs;
 use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::calendar::Calendar;
-use crate::external::gtfs::Gtfs;
+use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::routes::{Route, RouteId};
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::trips::Trip;
+use crate::external::gtfs::Gtfs;
 
 pub struct GtfsDb {
     connection: Connection,
@@ -113,6 +114,7 @@ impl Gtfs for GtfsDb {
         create::<Trip>(&self.connection)?;
         create::<StopTime>(&self.connection)?;
         create::<Calendar>(&self.connection)?;
+        create::<CalendarDate>(&self.connection)?;
         Ok(())
     }
 
@@ -123,6 +125,7 @@ impl Gtfs for GtfsDb {
         drop::<Trip>(&self.connection)?;
         drop::<StopTime>(&self.connection)?;
         drop::<Calendar>(&self.connection)?;
+        drop::<CalendarDate>(&self.connection)?;
         Ok(())
     }
 
@@ -182,5 +185,14 @@ impl Gtfs for GtfsDb {
 
     fn select_calendars(&mut self) -> Result<Vec<Calendar>> {
         select_all::<Calendar>(&mut self.connection).context("Fail to select calendars")
+    }
+
+    fn insert_calendar_dates(&mut self, calendar_dates: &[CalendarDate]) -> Result<()> {
+        insert(&mut self.connection, calendar_dates)?;
+        Ok(())
+    }
+
+    fn select_calendar_dates(&mut self) -> Result<Vec<CalendarDate>> {
+        select_all::<CalendarDate>(&mut self.connection).context("Fail to select calendar_dates")
     }
 }

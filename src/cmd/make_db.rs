@@ -6,6 +6,7 @@ use log::info;
 
 use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::calendar::Calendar;
+use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::trips::Trip;
@@ -57,6 +58,11 @@ pub fn run(op: &Opts) -> Result<()> {
     let calendars = io::read::<Calendar>(&op.gtfs_dir.join("calendar.txt"))?;
     info!("ℹ️ [calendar] {} records", calendars.len());
     gtfs.insert_calendars(&calendars)?;
+    info!("  ✨ Success");
+
+    let calendar_dates = io::read::<CalendarDate>(&op.gtfs_dir.join("calendar_dates.txt"))?;
+    info!("ℹ️ [calendar_dates] {} records", calendar_dates.len());
+    gtfs.insert_calendar_dates(&calendar_dates)?;
     info!("  ✨ Success");
 
     Ok(())

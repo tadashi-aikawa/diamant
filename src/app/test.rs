@@ -1,7 +1,7 @@
 use anyhow::Result;
 
 use crate::external;
-use crate::external::gtfs::calendar::Calendar;
+use crate::external::gtfs::calendar_dates::CalendarDate;
 
 pub struct TestService {
     gtfs: Box<dyn external::gtfs::Gtfs>,
@@ -14,7 +14,7 @@ impl TestService {
         Self { gtfs }
     }
 
-    pub fn fetch(&mut self) -> Result<Vec<Calendar>> {
-        self.gtfs.select_calendars()
+    pub fn fetch(&mut self) -> Result<Vec<CalendarDate>> {
+        self.gtfs.select_calendar_dates()
     }
 }
