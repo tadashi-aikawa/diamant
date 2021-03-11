@@ -1,7 +1,6 @@
 use anyhow::Result;
 
 use crate::external;
-use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::shapes::Shape;
 
 pub struct TestService {

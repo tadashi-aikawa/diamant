@@ -1,7 +1,7 @@
 use anyhow::Result;
 
 use crate::external;
-use crate::external::gtfs::routes::{Route, RouteId};
+use crate::external::gtfs::routes::Route;
 
 pub struct RouteService {
     gtfs: Box<dyn external::gtfs::Gtfs>,
@@ -12,7 +12,7 @@ impl RouteService {
         Self { gtfs }
     }
 
-    pub fn fetch(&mut self, route_id: &Option<RouteId>) -> Result<Vec<Route>> {
-        self.gtfs.select_routes(route_id)
+    pub fn fetch(&mut self) -> Result<Vec<Route>> {
+        self.gtfs.select_routes()
     }
 }

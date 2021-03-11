@@ -6,7 +6,6 @@ use rusqlite::{Connection, NO_PARAMS};
 use serde::__private::fmt::Debug;
 use serde_rusqlite::{from_rows, to_params_named};
 
-use crate::external::gtfs;
 use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
@@ -14,7 +13,7 @@ use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::feed_info::Feed;
 use crate::external::gtfs::frequencies::Frequency;
-use crate::external::gtfs::routes::{Route, RouteId};
+use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
@@ -173,12 +172,8 @@ impl Gtfs for GtfsDb {
         Ok(())
     }
 
-    fn select_routes(&mut self, route_id: &Option<RouteId>) -> Result<Vec<Route>> {
-        match route_id {
-            Some(id) => gtfs::routes::select_by_route_id(&mut self.connection, id),
-            None => select_all::<Route>(&mut self.connection),
-        }
-        .context("Fail to select_routes")
+    fn select_routes(&mut self) -> Result<Vec<Route>> {
+        select_all::<Route>(&mut self.connection).context("Fail to select_routes")
     }
 
     fn insert_trips(&mut self, trips: &[Trip]) -> Result<()> {
@@ -186,17 +181,17 @@ impl Gtfs for GtfsDb {
         Ok(())
     }
 
-    fn select_trips(&mut self, route_id: &Option<RouteId>) -> Result<Vec<Trip>> {
-        match route_id {
-            Some(id) => gtfs::trips::select_by_route_id(&mut self.connection, id),
-            None => select_all::<Trip>(&mut self.connection),
-        }
-        .context("Fail to select_trips")
+    fn select_trips(&mut self) -> Result<Vec<Trip>> {
+        select_all::<Trip>(&mut self.connection).context("Fail to select_trips")
     }
 
     fn insert_stop_times(&mut self, stop_times: &[StopTime]) -> Result<()> {
         insert(&mut self.connection, stop_times)?;
         Ok(())
+    }
+
+    fn select_stop_times(&mut self) -> Result<Vec<StopTime>> {
+        select_all::<StopTime>(&mut self.connection).context("Fail to select stop_times")
     }
 
     fn insert_calendars(&mut self, calendars: &[Calendar]) -> Result<()> {

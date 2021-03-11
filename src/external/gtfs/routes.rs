@@ -1,8 +1,5 @@
-use rusqlite::Connection;
-use rusqlite::named_params;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
-use serde_rusqlite::from_rows;
 
 use crate::external::gtfs::agency::AgencyId;
 use crate::external::gtfs::Color;
@@ -81,14 +78,4 @@ impl Table for Route {
         jp_parent_route_id text
         "
     }
-}
-
-pub fn select_by_route_id(
-    conn: &mut Connection,
-    route_id: &RouteId,
-) -> serde_rusqlite::Result<Vec<Route>> {
-    let mut stmt = conn.prepare("SELECT * FROM routes WHERE route_id = :route_id")?;
-    let result =
-        from_rows::<Route>(stmt.query_named(named_params! {":route_id": route_id})?).collect();
-    result
 }

@@ -1,8 +1,5 @@
-use rusqlite::Connection;
-use rusqlite::named_params;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
-use serde_rusqlite::from_rows;
 
 use crate::external::gtfs::calendar::ServiceId;
 use crate::external::gtfs::routes::RouteId;
@@ -117,14 +114,4 @@ impl Table for Trip {
          jp_office_id text
         "
     }
-}
-
-pub fn select_by_route_id(
-    conn: &mut Connection,
-    route_id: &RouteId,
-) -> serde_rusqlite::Result<Vec<Trip>> {
-    let mut stmt = conn.prepare("SELECT * FROM trips WHERE route_id = :route_id")?;
-    let result =
-        from_rows::<Trip>(stmt.query_named(named_params! {":route_id": route_id})?).collect();
-    result
 }

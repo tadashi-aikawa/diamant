@@ -1,135 +1,134 @@
 use anyhow::Result;
 use log::info;
 
-use crate::external::gtfs::agency::Agency;
-use crate::external::gtfs::calendar::Calendar;
-use crate::external::gtfs::calendar_dates::CalendarDate;
-use crate::external::gtfs::fare_attributes::FareAttribute;
-use crate::external::gtfs::fare_rules::FareRule;
-use crate::external::gtfs::feed_info::Feed;
-use crate::external::gtfs::frequencies::Frequency;
-use crate::external::gtfs::routes::Route;
-use crate::external::gtfs::shapes::Shape;
-use crate::external::gtfs::stop_times::StopTime;
-use crate::external::gtfs::stops::Stop;
-use crate::external::gtfs::transfers::Transfer;
-use crate::external::gtfs::translations::Translation;
-use crate::external::gtfs::trips::Trip;
-use crate::{external, io};
+use crate::external;
 use std::path::PathBuf;
 
 pub struct GtfsService {
-    gtfs: Box<dyn external::gtfs::Gtfs>,
+    gtfs_db: Box<dyn external::gtfs::Gtfs>,
+    gtfs_csv: Box<dyn external::gtfs::Gtfs>,
 }
 
 /// GTFS全体を横断するアプリケーションサービス
 impl GtfsService {
-    pub fn new(gtfs: Box<dyn external::gtfs::Gtfs>) -> Self {
-        Self { gtfs }
+    pub fn new(
+        gtfs_db: Box<dyn external::gtfs::Gtfs>,
+        gtfs_csv: Box<dyn external::gtfs::Gtfs>,
+    ) -> Self {
+        Self { gtfs_db, gtfs_csv }
     }
 
     pub fn create_tables(&mut self) -> Result<()> {
         info!("ℹ️ Create all tables.");
-        self.gtfs.create_all()?;
+        self.gtfs_db.create_all()?;
         info!("  ✨ Success");
         Ok(())
     }
 
     pub fn insert_tables(&mut self, gtfs_dir: &PathBuf) -> Result<()> {
-        let agencies = io::read::<Agency>(&gtfs_dir.join("agency.txt"))?;
+        let agencies = self.gtfs_csv.select_agencies()?;
         info!("ℹ️ [agencies] {} records", agencies.len());
-        self.gtfs.insert_agencies(&agencies)?;
+        self.gtfs_db.insert_agencies(&agencies)?;
         info!("  ✨ Success");
 
-        let stops = io::read::<Stop>(&gtfs_dir.join("stops.txt"))?;
+        let stops = self.gtfs_csv.select_stops()?;
         info!("ℹ️ [stops] {} records", stops.len());
-        self.gtfs.insert_stops(&stops)?;
+        self.gtfs_db.insert_stops(&stops)?;
         info!("  ✨ Success");
 
-        let routes = io::read::<Route>(&gtfs_dir.join("routes.txt"))?;
+        let routes = self.gtfs_csv.select_routes()?;
         info!("ℹ️ [routes] {} records", routes.len());
-        self.gtfs.insert_routes(&routes)?;
+        self.gtfs_db.insert_routes(&routes)?;
         info!("  ✨ Success");
 
-        let trips = io::read::<Trip>(&gtfs_dir.join("trips.txt"))?;
+        let trips = self.gtfs_csv.select_trips()?;
         info!("ℹ️ [trips] {} records", trips.len());
-        self.gtfs.insert_trips(&trips)?;
+        self.gtfs_db.insert_trips(&trips)?;
         info!("  ✨ Success");
 
-        let stop_times = io::read::<StopTime>(&gtfs_dir.join("stop_times.txt"))?;
+        let stop_times = self.gtfs_csv.select_stop_times()?;
         info!("ℹ️ [stop_times] {} records", stop_times.len());
-        self.gtfs.insert_stop_times(&stop_times)?;
+        self.gtfs_db.insert_stop_times(&stop_times)?;
         info!("  ✨ Success");
 
+        // TODO: 判定処理をgtfsのIFで
         let path = gtfs_dir.join("calendar.txt");
         if path.exists() {
-            let calendars = io::read::<Calendar>(&path)?;
+            let calendars = self.gtfs_csv.select_calendars()?;
             info!("ℹ️ [calendar] {} records", calendars.len());
-            self.gtfs.insert_calendars(&calendars)?;
+            self.gtfs_db.insert_calendars(&calendars)?;
             info!("  ✨ Success");
         }
 
+        // TODO: 判定処理をgtfsのIFで
         let path = gtfs_dir.join("calendar_dates.txt");
         if path.exists() {
-            let calendar_dates = io::read::<CalendarDate>(&path)?;
+            let calendar_dates = self.gtfs_csv.select_calendar_dates()?;
             info!("ℹ️ [calendar_dates] {} records", calendar_dates.len());
-            self.gtfs.insert_calendar_dates(&calendar_dates)?;
+            self.gtfs_db.insert_calendar_dates(&calendar_dates)?;
             info!("  ✨ Success");
         }
 
+        // TODO: 判定処理をgtfsのIFで
         let path = gtfs_dir.join("fare_attributes.txt");
         if path.exists() {
-            let fare_attributes = io::read::<FareAttribute>(&path)?;
+            let fare_attributes = self.gtfs_csv.select_fare_attributes()?;
             info!("ℹ️ [fare_attributes] {} records", fare_attributes.len());
-            self.gtfs.insert_fare_attributes(&fare_attributes)?;
+            self.gtfs_db.insert_fare_attributes(&fare_attributes)?;
             info!("  ✨ Success");
         }
 
+        // TODO: 判定処理をgtfsのIFで
         let path = gtfs_dir.join("fare_rules.txt");
         if path.exists() {
-            let fare_rules = io::read::<FareRule>(&path)?;
+            let fare_rules = self.gtfs_csv.select_fare_rules()?;
             info!("ℹ️ [fare_rules] {} records", fare_rules.len());
-            self.gtfs.insert_fare_rules(&fare_rules)?;
+            self.gtfs_db.insert_fare_rules(&fare_rules)?;
             info!("  ✨ Success");
         }
 
+        // TODO: 判定処理をgtfsのIFで
         let path = gtfs_dir.join("shapes.txt");
         if path.exists() {
-            let shapes = io::read::<Shape>(&path)?;
+            let shapes = self.gtfs_csv.select_shapes()?;
             info!("ℹ️ [shapes] {} records", shapes.len());
-            self.gtfs.insert_shapes(&shapes)?;
+            self.gtfs_db.insert_shapes(&shapes)?;
             info!("  ✨ Success");
         }
 
+        // TODO: 判定処理をgtfsのIFで
         let path = gtfs_dir.join("frequencies.txt");
         if path.exists() {
-            let frequencies = io::read::<Frequency>(&path)?;
+            let frequencies = self.gtfs_csv.select_frequencies()?;
             info!("ℹ️ [frequencies] {} records", frequencies.len());
-            self.gtfs.insert_frequencies(&frequencies)?;
+            self.gtfs_db.insert_frequencies(&frequencies)?;
             info!("  ✨ Success");
         }
 
+        // TODO: 判定処理をgtfsのIFで
         let path = gtfs_dir.join("transfers.txt");
         if path.exists() {
-            let transfers = io::read::<Transfer>(&path)?;
+            let transfers = self.gtfs_csv.select_transfers()?;
             info!("ℹ️ [transfers] {} records", transfers.len());
-            self.gtfs.insert_transfers(&transfers)?;
+            self.gtfs_db.insert_transfers(&transfers)?;
             info!("  ✨ Success");
         }
 
+        // TODO: 判定処理をgtfsのIFで
         let path = gtfs_dir.join("feed_info.txt");
         if path.exists() {
-            let feeds = io::read::<Feed>(&path)?;
+            let feeds = self.gtfs_csv.select_feeds()?;
             info!("ℹ️ [feed_info] {} records", feeds.len());
-            self.gtfs.insert_feeds(&feeds)?;
+            self.gtfs_db.insert_feeds(&feeds)?;
             info!("  ✨ Success");
         }
 
+        // TODO: 判定処理をgtfsのIFで
         let path = gtfs_dir.join("translations.txt");
         if path.exists() {
-            let translations = io::read::<Translation>(&path)?;
+            let translations = self.gtfs_csv.select_translations()?;
             info!("ℹ️ [translations] {} records", translations.len());
-            self.gtfs.insert_translations(&translations)?;
+            self.gtfs_db.insert_translations(&translations)?;
             info!("  ✨ Success");
         }
 
@@ -138,7 +137,7 @@ impl GtfsService {
 
     pub fn drop_tables(&mut self) -> Result<()> {
         info!("ℹ️ Drop all tables.");
-        self.gtfs.drop_all()?;
+        self.gtfs_db.drop_all()?;
         info!("  ✨ Success");
         Ok(())
     }
