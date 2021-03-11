@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::Path;
 
 use anyhow::{Context, Result};
 use log::{debug, trace};
@@ -32,7 +32,7 @@ pub trait Table {
     fn create_sql() -> &'static str;
 }
 
-pub fn init(path: &PathBuf) -> Result<Box<dyn Gtfs>> {
+pub fn init(path: &Path) -> Result<Box<dyn Gtfs>> {
     let ins = GtfsDb::new(path)?;
     Ok(Box::new(ins))
 }
@@ -104,9 +104,8 @@ where
 }
 
 impl GtfsDb {
-    pub fn new(db: &PathBuf) -> Result<Self> {
-        let db_file = db.to_str().unwrap();
-        let conn = Connection::open(db_file)?;
+    pub fn new(db: &Path) -> Result<Self> {
+        let conn = Connection::open(db)?;
 
         Ok(GtfsDb { connection: conn })
     }
