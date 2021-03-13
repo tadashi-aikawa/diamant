@@ -15,7 +15,7 @@ pub struct Opts {
 }
 
 pub fn run(op: &Opts) -> Result<()> {
-    let gtfs_csv = external::gtfscsv::init(op.gtfs_dir.clone())?;
+    let gtfs_csv = external::gtfscsv::init(&op.gtfs_dir)?;
     let gtfs_db = external::gtfsdb::init(&op.database)?;
 
     let mut service = GtfsService::new(gtfs_db, gtfs_csv);

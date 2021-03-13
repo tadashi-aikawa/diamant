@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use anyhow::Result;
 
@@ -23,14 +23,14 @@ pub struct GtfsCsv {
     gtfs_dir: PathBuf,
 }
 
-pub fn init(path: PathBuf) -> Result<Box<dyn Gtfs>> {
+pub fn init(path: &Path) -> Result<Box<dyn Gtfs>> {
     let ins = GtfsCsv::new(path)?;
     Ok(Box::new(ins))
 }
 
 impl GtfsCsv {
-    pub fn new(gtfs_dir: PathBuf) -> Result<Self> {
-        Ok(GtfsCsv { gtfs_dir })
+    pub fn new(gtfs_dir: &Path) -> Result<Self> {
+        Ok(GtfsCsv { gtfs_dir: gtfs_dir.into() })
     }
 }
 
