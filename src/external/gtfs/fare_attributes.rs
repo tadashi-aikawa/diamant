@@ -70,7 +70,7 @@ impl Table for FareAttribute {
         price int not null,
         currency_type text,
         payment_method int not null,
-        transfers int not null,
+        transfers int,
         transfer_duration int,
         PRIMARY KEY(fare_id, currency_type)
         "
