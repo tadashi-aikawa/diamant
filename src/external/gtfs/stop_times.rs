@@ -1,12 +1,12 @@
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
-use crate::external::gtfs::{Meter, Sequence};
 use crate::external::gtfs::stops::StopId;
 use crate::external::gtfs::trips::TripId;
+use crate::external::gtfs::{Meter, Sequence};
 use crate::external::gtfsdb::Table;
 
-#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
 #[repr(u8)]
 enum PickupType {
     /// 通常の乗車地
@@ -19,7 +19,7 @@ enum PickupType {
     NeedDriverReservation = 3,
 }
 
-#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
 #[repr(u8)]
 enum DropOffType {
     /// 通常の降車地 (ブザーを押して申告する一般的な停留所を含む)
@@ -34,7 +34,7 @@ enum DropOffType {
 
 /// 通過時刻情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#stop_times
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct StopTime {
     /// 便ID
     trip_id: TripId,

@@ -1,4 +1,5 @@
 use anyhow::Result;
+use itertools::Itertools;
 use log::info;
 
 use crate::external;
@@ -27,26 +28,31 @@ impl GtfsService {
 
     pub fn insert_tables(&mut self, gtfs_dir: &PathBuf) -> Result<()> {
         let agencies = self.gtfs_csv.select_agencies()?;
+        let agencies = agencies.iter().unique().collect_vec();
         info!("ℹ️ [agencies] {} records", agencies.len());
         self.gtfs_db.insert_agencies(&agencies)?;
         info!("  ✨ Success");
 
         let stops = self.gtfs_csv.select_stops()?;
+        let stops = stops.iter().unique().collect_vec();
         info!("ℹ️ [stops] {} records", stops.len());
         self.gtfs_db.insert_stops(&stops)?;
         info!("  ✨ Success");
 
         let routes = self.gtfs_csv.select_routes()?;
+        let routes = routes.iter().unique().collect_vec();
         info!("ℹ️ [routes] {} records", routes.len());
         self.gtfs_db.insert_routes(&routes)?;
         info!("  ✨ Success");
 
         let trips = self.gtfs_csv.select_trips()?;
+        let trips = trips.iter().unique().collect_vec();
         info!("ℹ️ [trips] {} records", trips.len());
         self.gtfs_db.insert_trips(&trips)?;
         info!("  ✨ Success");
 
         let stop_times = self.gtfs_csv.select_stop_times()?;
+        let stop_times = stop_times.iter().unique().collect_vec();
         info!("ℹ️ [stop_times] {} records", stop_times.len());
         self.gtfs_db.insert_stop_times(&stop_times)?;
         info!("  ✨ Success");
@@ -55,6 +61,7 @@ impl GtfsService {
         let path = gtfs_dir.join("calendar.txt");
         if path.exists() {
             let calendars = self.gtfs_csv.select_calendars()?;
+            let calendars = calendars.iter().unique().collect_vec();
             info!("ℹ️ [calendar] {} records", calendars.len());
             self.gtfs_db.insert_calendars(&calendars)?;
             info!("  ✨ Success");
@@ -64,6 +71,7 @@ impl GtfsService {
         let path = gtfs_dir.join("calendar_dates.txt");
         if path.exists() {
             let calendar_dates = self.gtfs_csv.select_calendar_dates()?;
+            let calendar_dates = calendar_dates.iter().unique().collect_vec();
             info!("ℹ️ [calendar_dates] {} records", calendar_dates.len());
             self.gtfs_db.insert_calendar_dates(&calendar_dates)?;
             info!("  ✨ Success");
@@ -73,6 +81,7 @@ impl GtfsService {
         let path = gtfs_dir.join("fare_attributes.txt");
         if path.exists() {
             let fare_attributes = self.gtfs_csv.select_fare_attributes()?;
+            let fare_attributes = fare_attributes.iter().unique().collect_vec();
             info!("ℹ️ [fare_attributes] {} records", fare_attributes.len());
             self.gtfs_db.insert_fare_attributes(&fare_attributes)?;
             info!("  ✨ Success");
@@ -82,6 +91,7 @@ impl GtfsService {
         let path = gtfs_dir.join("fare_rules.txt");
         if path.exists() {
             let fare_rules = self.gtfs_csv.select_fare_rules()?;
+            let fare_rules = fare_rules.iter().unique().collect_vec();
             info!("ℹ️ [fare_rules] {} records", fare_rules.len());
             self.gtfs_db.insert_fare_rules(&fare_rules)?;
             info!("  ✨ Success");
@@ -91,6 +101,7 @@ impl GtfsService {
         let path = gtfs_dir.join("shapes.txt");
         if path.exists() {
             let shapes = self.gtfs_csv.select_shapes()?;
+            let shapes = shapes.iter().unique().collect_vec();
             info!("ℹ️ [shapes] {} records", shapes.len());
             self.gtfs_db.insert_shapes(&shapes)?;
             info!("  ✨ Success");
@@ -100,6 +111,7 @@ impl GtfsService {
         let path = gtfs_dir.join("frequencies.txt");
         if path.exists() {
             let frequencies = self.gtfs_csv.select_frequencies()?;
+            let frequencies = frequencies.iter().unique().collect_vec();
             info!("ℹ️ [frequencies] {} records", frequencies.len());
             self.gtfs_db.insert_frequencies(&frequencies)?;
             info!("  ✨ Success");
@@ -109,6 +121,7 @@ impl GtfsService {
         let path = gtfs_dir.join("transfers.txt");
         if path.exists() {
             let transfers = self.gtfs_csv.select_transfers()?;
+            let transfers = transfers.iter().unique().collect_vec();
             info!("ℹ️ [transfers] {} records", transfers.len());
             self.gtfs_db.insert_transfers(&transfers)?;
             info!("  ✨ Success");
@@ -118,6 +131,7 @@ impl GtfsService {
         let path = gtfs_dir.join("feed_info.txt");
         if path.exists() {
             let feeds = self.gtfs_csv.select_feeds()?;
+            let feeds = feeds.iter().unique().collect_vec();
             info!("ℹ️ [feed_info] {} records", feeds.len());
             self.gtfs_db.insert_feeds(&feeds)?;
             info!("  ✨ Success");
@@ -127,6 +141,7 @@ impl GtfsService {
         let path = gtfs_dir.join("translations.txt");
         if path.exists() {
             let translations = self.gtfs_csv.select_translations()?;
+            let translations = translations.iter().unique().collect_vec();
             info!("ℹ️ [translations] {} records", translations.len());
             self.gtfs_db.insert_translations(&translations)?;
             info!("  ✨ Success");

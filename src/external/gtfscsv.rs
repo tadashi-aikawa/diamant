@@ -30,7 +30,9 @@ pub fn init(path: &Path) -> Result<Box<dyn Gtfs>> {
 
 impl GtfsCsv {
     pub fn new(gtfs_dir: &Path) -> Result<Self> {
-        Ok(GtfsCsv { gtfs_dir: gtfs_dir.into() })
+        Ok(GtfsCsv {
+            gtfs_dir: gtfs_dir.into(),
+        })
     }
 }
 
@@ -43,7 +45,7 @@ impl Gtfs for GtfsCsv {
         unimplemented!()
     }
 
-    fn insert_agencies(&mut self, _agencies: &[Agency]) -> Result<()> {
+    fn insert_agencies(&mut self, _agencies: &[&Agency]) -> Result<()> {
         unimplemented!()
     }
 
@@ -52,7 +54,7 @@ impl Gtfs for GtfsCsv {
         Ok(results)
     }
 
-    fn insert_stops(&mut self, _stops: &[Stop]) -> Result<()> {
+    fn insert_stops(&mut self, _stops: &[&Stop]) -> Result<()> {
         unimplemented!()
     }
 
@@ -61,7 +63,7 @@ impl Gtfs for GtfsCsv {
         Ok(results)
     }
 
-    fn insert_routes(&mut self, _routes: &[Route]) -> Result<()> {
+    fn insert_routes(&mut self, _routes: &[&Route]) -> Result<()> {
         unimplemented!()
     }
 
@@ -70,7 +72,7 @@ impl Gtfs for GtfsCsv {
         Ok(results)
     }
 
-    fn insert_trips(&mut self, _trips: &[Trip]) -> Result<()> {
+    fn insert_trips(&mut self, _trips: &[&Trip]) -> Result<()> {
         unimplemented!()
     }
 
@@ -79,7 +81,7 @@ impl Gtfs for GtfsCsv {
         Ok(results)
     }
 
-    fn insert_stop_times(&mut self, _stop_times: &[StopTime]) -> Result<()> {
+    fn insert_stop_times(&mut self, _stop_times: &[&StopTime]) -> Result<()> {
         unimplemented!()
     }
 
@@ -88,7 +90,7 @@ impl Gtfs for GtfsCsv {
         Ok(results)
     }
 
-    fn insert_calendars(&mut self, _calendars: &[Calendar]) -> Result<()> {
+    fn insert_calendars(&mut self, _calendars: &[&Calendar]) -> Result<()> {
         unimplemented!()
     }
 
@@ -97,7 +99,7 @@ impl Gtfs for GtfsCsv {
         Ok(results)
     }
 
-    fn insert_calendar_dates(&mut self, _calendar_dates: &[CalendarDate]) -> Result<()> {
+    fn insert_calendar_dates(&mut self, _calendar_dates: &[&CalendarDate]) -> Result<()> {
         unimplemented!()
     }
 
@@ -106,7 +108,7 @@ impl Gtfs for GtfsCsv {
         Ok(results)
     }
 
-    fn insert_fare_attributes(&mut self, _fare_attributes: &[FareAttribute]) -> Result<()> {
+    fn insert_fare_attributes(&mut self, _fare_attributes: &[&FareAttribute]) -> Result<()> {
         unimplemented!()
     }
 
@@ -115,7 +117,7 @@ impl Gtfs for GtfsCsv {
         Ok(results)
     }
 
-    fn insert_fare_rules(&mut self, _fare_rules: &[FareRule]) -> Result<()> {
+    fn insert_fare_rules(&mut self, _fare_rules: &[&FareRule]) -> Result<()> {
         unimplemented!()
     }
 
@@ -124,7 +126,7 @@ impl Gtfs for GtfsCsv {
         Ok(results)
     }
 
-    fn insert_shapes(&mut self, _shapes: &[Shape]) -> Result<()> {
+    fn insert_shapes(&mut self, _shapes: &[&Shape]) -> Result<()> {
         unimplemented!()
     }
 
@@ -133,7 +135,7 @@ impl Gtfs for GtfsCsv {
         Ok(results)
     }
 
-    fn insert_frequencies(&mut self, _frequencies: &[Frequency]) -> Result<()> {
+    fn insert_frequencies(&mut self, _frequencies: &[&Frequency]) -> Result<()> {
         unimplemented!()
     }
 
@@ -142,7 +144,7 @@ impl Gtfs for GtfsCsv {
         Ok(results)
     }
 
-    fn insert_transfers(&mut self, _transfers: &[Transfer]) -> Result<()> {
+    fn insert_transfers(&mut self, _transfers: &[&Transfer]) -> Result<()> {
         unimplemented!()
     }
 
@@ -151,7 +153,7 @@ impl Gtfs for GtfsCsv {
         Ok(results)
     }
 
-    fn insert_feeds(&mut self, _feeds: &[Feed]) -> Result<()> {
+    fn insert_feeds(&mut self, _feeds: &[&Feed]) -> Result<()> {
         unimplemented!()
     }
 
@@ -160,7 +162,7 @@ impl Gtfs for GtfsCsv {
         Ok(results)
     }
 
-    fn insert_translations(&mut self, _translations: &[Translation]) -> Result<()> {
+    fn insert_translations(&mut self, _translations: &[&Translation]) -> Result<()> {
         unimplemented!()
     }
 

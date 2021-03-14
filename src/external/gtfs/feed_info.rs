@@ -5,7 +5,7 @@ use crate::external::gtfsdb::Table;
 
 /// 提供情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#feed_info
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct Feed {
     /// 提供組織名 (ex: 東京都交通局)
     feed_publisher_name: String,

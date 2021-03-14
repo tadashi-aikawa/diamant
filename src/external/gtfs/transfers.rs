@@ -6,7 +6,7 @@ use crate::external::gtfs::Second;
 use crate::external::gtfsdb::Table;
 
 /// 利用タイプ
-#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
 #[repr(u8)]
 enum TransferType {
     /// 2つの経路間の推奨乗換地点
@@ -21,7 +21,7 @@ enum TransferType {
 
 /// 乗換情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#transfers
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct Transfer {
     /// 乗換元標柱ID
     from_stop_id: StopId,

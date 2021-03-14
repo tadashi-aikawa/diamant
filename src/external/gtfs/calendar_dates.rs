@@ -8,7 +8,7 @@ use serde_repr::{Deserialize_repr, Serialize_repr};
 pub type ServiceId = String;
 
 /// 利用タイプ
-#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
 #[repr(u8)]
 enum ExceptionType {
     /// 運行区分適用
@@ -19,7 +19,7 @@ enum ExceptionType {
 
 /// 運行区分情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#calendar
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct CalendarDate {
     /// サービスID
     service_id: ServiceId,

@@ -2,13 +2,14 @@ use serde::{Deserialize, Serialize};
 
 use crate::external::gtfs::{Latitude, Longitude, Sequence};
 use crate::external::gtfsdb::Table;
+use ordered_float::OrderedFloat;
 
 /// 描画ID (ex: S_1001)
 pub type ShapeId = String;
 
 /// 描画情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#shapes
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, PartialEq, Clone, Eq, Hash)]
 pub struct Shape {
     /// 描画ID
     shape_id: ShapeId,
@@ -19,7 +20,7 @@ pub struct Shape {
     /// 描画順序
     shape_pt_sequence: Sequence,
     /// 描画距離 (JPでは使わない)
-    shape_dist_traveled: Option<f32>,
+    shape_dist_traveled: Option<OrderedFloat<f32>>,
 }
 
 impl Table for Shape {

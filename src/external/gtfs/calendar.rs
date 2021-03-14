@@ -8,7 +8,7 @@ use serde_repr::{Deserialize_repr, Serialize_repr};
 pub type ServiceId = String;
 
 /// 運行状態
-#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
 #[repr(u8)]
 enum OperationStatus {
     /// 非運行
@@ -19,7 +19,7 @@ enum OperationStatus {
 
 /// 運行区分情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#calendar
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct Calendar {
     /// 運行日ID
     service_id: ServiceId,

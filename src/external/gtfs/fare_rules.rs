@@ -7,7 +7,7 @@ use crate::external::gtfsdb::Table;
 
 /// 運賃定義情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#fare
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct FareRule {
     /// 運賃ID
     fare_id: FareId,

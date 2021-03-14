@@ -15,6 +15,7 @@ use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::transfers::Transfer;
 use crate::external::gtfs::translations::Translation;
 use crate::external::gtfs::trips::Trip;
+use ordered_float::OrderedFloat;
 
 pub mod agency;
 pub mod calendar;
@@ -50,21 +51,21 @@ pub type MailAddress = String;
 /// Url
 pub type Url = String;
 /// 緯度 (degree)
-pub type Latitude = f32;
+pub type Latitude = OrderedFloat<f32>;
 /// 経度 (degree)
-pub type Longitude = f32;
+pub type Longitude = OrderedFloat<f32>;
 
 // TODO (ex: Z_210)
 pub type ZoneId = String;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub enum Timezone {
     /// 日本語
     #[serde(rename = "Asia/Tokyo")]
     AsiaTokyo,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 #[serde(rename_all = "lowercase")]
 pub enum Lang {
     Ja,
@@ -82,32 +83,32 @@ pub enum Lang {
 pub trait Gtfs {
     fn create_all(&self) -> Result<()>;
     fn drop_all(&self) -> Result<()>;
-    fn insert_agencies(&mut self, agencies: &[Agency]) -> Result<()>;
+    fn insert_agencies(&mut self, agencies: &[&Agency]) -> Result<()>;
     fn select_agencies(&mut self) -> Result<Vec<Agency>>;
-    fn insert_stops(&mut self, stops: &[Stop]) -> Result<()>;
+    fn insert_stops(&mut self, stops: &[&Stop]) -> Result<()>;
     fn select_stops(&mut self) -> Result<Vec<Stop>>;
-    fn insert_routes(&mut self, routes: &[Route]) -> Result<()>;
+    fn insert_routes(&mut self, routes: &[&Route]) -> Result<()>;
     fn select_routes(&mut self) -> Result<Vec<Route>>;
-    fn insert_trips(&mut self, trips: &[Trip]) -> Result<()>;
+    fn insert_trips(&mut self, trips: &[&Trip]) -> Result<()>;
     fn select_trips(&mut self) -> Result<Vec<Trip>>;
-    fn insert_stop_times(&mut self, stop_times: &[StopTime]) -> Result<()>;
+    fn insert_stop_times(&mut self, stop_times: &[&StopTime]) -> Result<()>;
     fn select_stop_times(&mut self) -> Result<Vec<StopTime>>;
-    fn insert_calendars(&mut self, calendars: &[Calendar]) -> Result<()>;
+    fn insert_calendars(&mut self, calendars: &[&Calendar]) -> Result<()>;
     fn select_calendars(&mut self) -> Result<Vec<Calendar>>;
-    fn insert_calendar_dates(&mut self, calendar_dates: &[CalendarDate]) -> Result<()>;
+    fn insert_calendar_dates(&mut self, calendar_dates: &[&CalendarDate]) -> Result<()>;
     fn select_calendar_dates(&mut self) -> Result<Vec<CalendarDate>>;
-    fn insert_fare_attributes(&mut self, fare_attributes: &[FareAttribute]) -> Result<()>;
+    fn insert_fare_attributes(&mut self, fare_attributes: &[&FareAttribute]) -> Result<()>;
     fn select_fare_attributes(&mut self) -> Result<Vec<FareAttribute>>;
-    fn insert_fare_rules(&mut self, fare_rules: &[FareRule]) -> Result<()>;
+    fn insert_fare_rules(&mut self, fare_rules: &[&FareRule]) -> Result<()>;
     fn select_fare_rules(&mut self) -> Result<Vec<FareRule>>;
-    fn insert_shapes(&mut self, shapes: &[Shape]) -> Result<()>;
+    fn insert_shapes(&mut self, shapes: &[&Shape]) -> Result<()>;
     fn select_shapes(&mut self) -> Result<Vec<Shape>>;
-    fn insert_frequencies(&mut self, frequencies: &[Frequency]) -> Result<()>;
+    fn insert_frequencies(&mut self, frequencies: &[&Frequency]) -> Result<()>;
     fn select_frequencies(&mut self) -> Result<Vec<Frequency>>;
-    fn insert_transfers(&mut self, transfers: &[Transfer]) -> Result<()>;
+    fn insert_transfers(&mut self, transfers: &[&Transfer]) -> Result<()>;
     fn select_transfers(&mut self) -> Result<Vec<Transfer>>;
-    fn insert_feeds(&mut self, feeds: &[Feed]) -> Result<()>;
+    fn insert_feeds(&mut self, feeds: &[&Feed]) -> Result<()>;
     fn select_feeds(&mut self) -> Result<Vec<Feed>>;
-    fn insert_translations(&mut self, translations: &[Translation]) -> Result<()>;
+    fn insert_translations(&mut self, translations: &[&Translation]) -> Result<()>;
     fn select_translations(&mut self) -> Result<Vec<Translation>>;
 }

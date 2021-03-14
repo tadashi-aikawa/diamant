@@ -25,3 +25,6 @@ serde_rusqlite = "0.26.0"
 strum = "0.20.0"
 strum_macros = "0.20.1"
 chrono = { version = "0.4.19", features = ["serde"] }
+itertools = "0.10.0"
+ordered-float = { version = "2.1.1", features = ["serde"] }
+

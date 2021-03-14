@@ -9,7 +9,7 @@ pub type FareId = String;
 pub type CurrencyType = String;
 
 /// 利用タイプ
-#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
 #[repr(u8)]
 enum PaymentMethod {
     /// 乗車後に支払う
@@ -19,7 +19,7 @@ enum PaymentMethod {
 }
 
 /// 乗換回数
-#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
 #[repr(u8)]
 enum TransferCount {
     /// 乗り換え不可
@@ -32,7 +32,7 @@ enum TransferCount {
 
 /// 運賃属性情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#fare
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct FareAttribute {
     /// 運賃ID
     fare_id: FareId,

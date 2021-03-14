@@ -66,7 +66,7 @@ where
     Ok(())
 }
 
-pub fn insert<T>(conn: &mut Connection, records: &[T]) -> rusqlite::Result<()>
+pub fn insert<T>(conn: &mut Connection, records: &[&T]) -> rusqlite::Result<()>
 where
     T: serde::ser::Serialize + Debug + Table,
 {
@@ -148,7 +148,7 @@ impl Gtfs for GtfsDb {
         Ok(())
     }
 
-    fn insert_agencies(&mut self, agencies: &[Agency]) -> Result<()> {
+    fn insert_agencies(&mut self, agencies: &[&Agency]) -> Result<()> {
         insert(&mut self.connection, agencies)?;
         Ok(())
     }
@@ -157,7 +157,7 @@ impl Gtfs for GtfsDb {
         select_all::<Agency>(&mut self.connection).context("Fail to select agency")
     }
 
-    fn insert_stops(&mut self, stops: &[Stop]) -> Result<()> {
+    fn insert_stops(&mut self, stops: &[&Stop]) -> Result<()> {
         insert(&mut self.connection, stops)?;
         Ok(())
     }
@@ -166,7 +166,7 @@ impl Gtfs for GtfsDb {
         select_all::<Stop>(&mut self.connection).context("Fail to select stops")
     }
 
-    fn insert_routes(&mut self, routes: &[Route]) -> Result<()> {
+    fn insert_routes(&mut self, routes: &[&Route]) -> Result<()> {
         insert(&mut self.connection, routes)?;
         Ok(())
     }
@@ -175,7 +175,7 @@ impl Gtfs for GtfsDb {
         select_all::<Route>(&mut self.connection).context("Fail to select_routes")
     }
 
-    fn insert_trips(&mut self, trips: &[Trip]) -> Result<()> {
+    fn insert_trips(&mut self, trips: &[&Trip]) -> Result<()> {
         insert(&mut self.connection, trips)?;
         Ok(())
     }
@@ -184,7 +184,7 @@ impl Gtfs for GtfsDb {
         select_all::<Trip>(&mut self.connection).context("Fail to select_trips")
     }
 
-    fn insert_stop_times(&mut self, stop_times: &[StopTime]) -> Result<()> {
+    fn insert_stop_times(&mut self, stop_times: &[&StopTime]) -> Result<()> {
         insert(&mut self.connection, stop_times)?;
         Ok(())
     }
@@ -193,7 +193,7 @@ impl Gtfs for GtfsDb {
         select_all::<StopTime>(&mut self.connection).context("Fail to select stop_times")
     }
 
-    fn insert_calendars(&mut self, calendars: &[Calendar]) -> Result<()> {
+    fn insert_calendars(&mut self, calendars: &[&Calendar]) -> Result<()> {
         insert(&mut self.connection, calendars)?;
         Ok(())
     }
@@ -202,7 +202,7 @@ impl Gtfs for GtfsDb {
         select_all::<Calendar>(&mut self.connection).context("Fail to select calendars")
     }
 
-    fn insert_calendar_dates(&mut self, calendar_dates: &[CalendarDate]) -> Result<()> {
+    fn insert_calendar_dates(&mut self, calendar_dates: &[&CalendarDate]) -> Result<()> {
         insert(&mut self.connection, calendar_dates)?;
         Ok(())
     }
@@ -211,7 +211,7 @@ impl Gtfs for GtfsDb {
         select_all::<CalendarDate>(&mut self.connection).context("Fail to select calendar_dates")
     }
 
-    fn insert_fare_attributes(&mut self, fare_attributes: &[FareAttribute]) -> Result<()> {
+    fn insert_fare_attributes(&mut self, fare_attributes: &[&FareAttribute]) -> Result<()> {
         insert(&mut self.connection, fare_attributes)?;
         Ok(())
     }
@@ -220,7 +220,7 @@ impl Gtfs for GtfsDb {
         select_all::<FareAttribute>(&mut self.connection).context("Fail to select fare_attributes")
     }
 
-    fn insert_fare_rules(&mut self, fare_rules: &[FareRule]) -> Result<()> {
+    fn insert_fare_rules(&mut self, fare_rules: &[&FareRule]) -> Result<()> {
         insert(&mut self.connection, fare_rules)?;
         Ok(())
     }
@@ -229,7 +229,7 @@ impl Gtfs for GtfsDb {
         select_all::<FareRule>(&mut self.connection).context("Fail to select fare_rules")
     }
 
-    fn insert_shapes(&mut self, shapes: &[Shape]) -> Result<()> {
+    fn insert_shapes(&mut self, shapes: &[&Shape]) -> Result<()> {
         insert(&mut self.connection, shapes)?;
         Ok(())
     }
@@ -238,7 +238,7 @@ impl Gtfs for GtfsDb {
         select_all::<Shape>(&mut self.connection).context("Fail to select shapes")
     }
 
-    fn insert_frequencies(&mut self, frequencies: &[Frequency]) -> Result<()> {
+    fn insert_frequencies(&mut self, frequencies: &[&Frequency]) -> Result<()> {
         insert(&mut self.connection, frequencies)?;
         Ok(())
     }
@@ -247,7 +247,7 @@ impl Gtfs for GtfsDb {
         select_all::<Frequency>(&mut self.connection).context("Fail to select frequencies")
     }
 
-    fn insert_transfers(&mut self, transfers: &[Transfer]) -> Result<()> {
+    fn insert_transfers(&mut self, transfers: &[&Transfer]) -> Result<()> {
         insert(&mut self.connection, transfers)?;
         Ok(())
     }
@@ -256,7 +256,7 @@ impl Gtfs for GtfsDb {
         select_all::<Transfer>(&mut self.connection).context("Fail to select transfers")
     }
 
-    fn insert_feeds(&mut self, feeds: &[Feed]) -> Result<()> {
+    fn insert_feeds(&mut self, feeds: &[&Feed]) -> Result<()> {
         insert(&mut self.connection, feeds)?;
         Ok(())
     }
@@ -265,7 +265,7 @@ impl Gtfs for GtfsDb {
         select_all::<Feed>(&mut self.connection).context("Fail to select feed_info")
     }
 
-    fn insert_translations(&mut self, translations: &[Translation]) -> Result<()> {
+    fn insert_translations(&mut self, translations: &[&Translation]) -> Result<()> {
         insert(&mut self.connection, translations)?;
         Ok(())
     }

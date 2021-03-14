@@ -5,7 +5,7 @@ use crate::external::gtfs::calendar::ServiceId;
 use crate::external::gtfs::routes::RouteId;
 use crate::external::gtfsdb::Table;
 
-#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
 #[repr(u8)]
 enum Direction {
     /// 往路
@@ -14,7 +14,7 @@ enum Direction {
     Inbound = 1,
 }
 
-#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
 #[repr(u8)]
 enum WheelchairAccessible {
     /// 車いすによる乗車可否の情報なし
@@ -25,7 +25,7 @@ enum WheelchairAccessible {
     Deny = 2,
 }
 
-#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
 #[repr(u8)]
 enum BikesAllowed {
     /// 自転車の持込可否の情報なし
@@ -44,7 +44,7 @@ type JpOfficeId = String;
 
 /// 便情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#trips
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct Trip {
     /// 経路ID
     route_id: RouteId,

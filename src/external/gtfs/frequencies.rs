@@ -6,7 +6,7 @@ use crate::external::gtfs::{Second, UnlimitedTime};
 use crate::external::gtfsdb::Table;
 
 /// 利用タイプ
-#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
 #[repr(u8)]
 enum GuideExactTimes {
     /// 時刻を案内しない
@@ -17,7 +17,7 @@ enum GuideExactTimes {
 
 /// 運行間隔情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#frequencies
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct Frequency {
     /// 便ID
     trip_id: TripId,

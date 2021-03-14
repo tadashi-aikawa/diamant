@@ -4,7 +4,7 @@ use crate::external::gtfs::Lang;
 use crate::external::gtfsdb::Table;
 
 /// 翻訳情報
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct Translation {
     /// テーブル名
     table_name: String,

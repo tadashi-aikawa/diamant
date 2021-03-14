@@ -10,7 +10,7 @@ pub type StopId = String;
 pub type PlatformCode = String;
 
 /// 停留所・標柱区分
-#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
 #[repr(u8)]
 enum LocationType {
     /// 標柱
@@ -21,7 +21,7 @@ enum LocationType {
 
 /// 停留所・標柱情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#stops
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, PartialEq, Clone, Eq, Hash)]
 pub struct Stop {
     /// 停留所・標柱ID
     stop_id: StopId,

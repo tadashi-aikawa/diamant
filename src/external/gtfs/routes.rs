@@ -9,7 +9,7 @@ use crate::external::gtfsdb::Table;
 pub type RouteId = String;
 
 // GTFSの場合は他にも追加されるはず
-#[derive(Debug, Deserialize_repr, Serialize_repr)]
+#[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
 #[repr(u8)]
 enum RouteType {
     /// バス
@@ -18,7 +18,7 @@ enum RouteType {
 
 /// 経路情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#routes
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct Route {
     /// 経路ID
     route_id: RouteId,
