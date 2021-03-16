@@ -32,9 +32,8 @@ pub trait Table {
     fn create_sql() -> &'static str;
 }
 
-pub fn init(path: &Path) -> Result<Box<dyn Gtfs>> {
-    let ins = GtfsDb::new(path)?;
-    Ok(Box::new(ins))
+pub fn init(path: &Path) -> Result<GtfsDb> {
+    GtfsDb::new(path)
 }
 
 pub fn create<T>(conn: &Connection) -> Result<()>

@@ -3,12 +3,18 @@ use anyhow::Result;
 use crate::external;
 use crate::external::gtfs::routes::Route;
 
-pub struct RouteService {
-    gtfs: Box<dyn external::gtfs::Gtfs>,
+pub struct RouteService<G>
+where
+    G: external::gtfs::Gtfs,
+{
+    gtfs: G,
 }
 
-impl RouteService {
-    pub fn new(gtfs: Box<dyn external::gtfs::Gtfs>) -> Self {
+impl<G> RouteService<G>
+where
+    G: external::gtfs::Gtfs,
+{
+    pub fn new(gtfs: G) -> Self {
         Self { gtfs }
     }
 
