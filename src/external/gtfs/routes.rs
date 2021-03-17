@@ -42,6 +42,9 @@ pub struct Route {
     route_text_color: Option<Color>,
     /// 路線ID
     jp_parent_route_id: Option<String>,
+    // route_sort_order
+    // continuous_pickup
+    // continuous_drop_off
 }
 
 impl Table for Route {
@@ -75,7 +78,8 @@ impl Table for Route {
         route_url text,
         route_color text,
         route_text_color text,
-        jp_parent_route_id text
+        jp_parent_route_id text,
+        foreign key (agency_id) references agency(agency_id)
         "
     }
 }

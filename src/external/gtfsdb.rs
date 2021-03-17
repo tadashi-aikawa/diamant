@@ -139,10 +139,10 @@ impl Gtfs for GtfsDb {
 
     fn drop_all(&self) -> Result<()> {
         // TODO: GTFSとGTFS-JPでmethodを分けた方がいいかも、他に独自テーブルの有無もあるし
+        drop::<Route>(&self.connection)?;
         drop::<AgencyJp>(&self.connection)?;
         drop::<Agency>(&self.connection)?;
 
-        drop::<Route>(&self.connection)?;
         drop::<RouteJp>(&self.connection)?;
         drop::<Stop>(&self.connection)?;
         drop::<Trip>(&self.connection)?;

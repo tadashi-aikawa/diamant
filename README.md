@@ -9,11 +9,11 @@ TODO
 
 | file                  | insert | select | correct table definition |
 | --------------------- | ------ | ------ | ------------------------ |
-| [agency.txt]          | 🦉   |        |                          |
-| [agency_jp.txt]       | 🦉   |        |                          |
-| [stops.txt]           | 🦉   |        |                          |
-| [routes.txt]          | 🦉   | 🦉   |                          |
-| [routes_jp.txt]       | 🦉   |        |                          |
+| [agency.txt]          | 🦉   |        | 🦉                     |
+| [agency_jp.txt]       | 🦉   |        | 🦉                     |
+| [stops.txt]           | 🦉   |        | 🦉                     |
+| [routes.txt]          | 🦉   | 🦉   | 🦉                     |
+| [routes_jp.txt]       | 🦉   |        | 🦉                     |
 | [trips.txt]           | 🦉   | 🦉   |                          |
 | [office_jp.txt]       | 🦉   |        |                          |
 | [stop_times.txt]      | 🦉   |        |                          |

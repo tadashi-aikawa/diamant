@@ -1,9 +1,11 @@
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
-use crate::external::gtfs::{Latitude, Longitude, Timezone, Url, ZoneId};
+use crate::external::gtfs::{Latitude, Longitude, Timezone, Url};
 use crate::external::gtfsdb::Table;
 
+/// 区間ID (ex: Z_210)
+pub type ZoneId = String;
 /// 停留所・標柱ID (ex: ①100 ②100_10)
 pub type StopId = String;
 /// のりばコード (『番』『のりば』のような語句は含めない. 翻訳言語に応じて変わるため)
@@ -20,6 +22,7 @@ enum LocationType {
 }
 
 /// 停留所・標柱情報
+/// https://developers.google.com/transit/gtfs/reference?hl=ja#agencytxt
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#stops
 #[derive(Debug, Deserialize, Serialize, PartialEq, Clone, Eq, Hash)]
 pub struct Stop {
@@ -42,6 +45,10 @@ pub struct Stop {
     /// 停留所・標柱区分
     location_type: Option<LocationType>,
     /// 親駅情報
+    /// location_typeが
+    ///   - 0だと任意
+    ///   - 1だと利用不可
+    ///   - 2～4だと必須
     parent_station: Option<StopId>,
     /// タイムゾーン (日本ではagency_timezoneが優先されるため不要)
     stop_timezone: Option<Timezone>,
@@ -49,6 +56,7 @@ pub struct Stop {
     wheelchair_boarding: Option<u32>,
     /// のりば情報 (ex: ①※設定なし ②10)
     platform_code: Option<PlatformCode>,
+    // level_id: Option<LevelId>
 }
 
 impl Table for Stop {

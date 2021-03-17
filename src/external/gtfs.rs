@@ -67,9 +67,6 @@ pub type Latitude = OrderedFloat<f32>;
 /// 経度 (degree)
 pub type Longitude = OrderedFloat<f32>;
 
-// TODO (ex: Z_210)
-pub type ZoneId = String;
-
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub enum Timezone {
     /// 日本語

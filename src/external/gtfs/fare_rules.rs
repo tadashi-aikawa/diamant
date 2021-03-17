@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::external::gtfs::fare_attributes::FareId;
 use crate::external::gtfs::routes::RouteId;
-use crate::external::gtfs::ZoneId;
+use crate::external::gtfs::stops::ZoneId;
 use crate::external::gtfsdb::Table;
 
 /// 運賃定義情報

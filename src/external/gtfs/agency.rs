@@ -7,6 +7,7 @@ use crate::external::gtfsdb::Table;
 pub type AgencyId = String;
 
 /// 事業者情報
+/// https://developers.google.com/transit/gtfs/reference?hl=ja#agencytxt
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#agency
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct Agency {
@@ -19,7 +20,7 @@ pub struct Agency {
     /// タイムゾーン (ex: Asia/Tokyo)
     agency_timezone: Timezone,
     /// 言語
-    agency_lang: Lang,
+    agency_lang: Option<Lang>,
     /// 電話番号
     agency_phone: Option<TelephoneNumber>,
     /// オンライン購入URL
@@ -52,7 +53,7 @@ impl Table for Agency {
         agency_name text not null,
         agency_url text not null,
         agency_timezone text not null,
-        agency_lang text not null,
+        agency_lang text,
         agency_phone text,
         agency_fare_url text,
         agency_email text
