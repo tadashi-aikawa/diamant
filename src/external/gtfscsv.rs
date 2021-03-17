@@ -10,6 +10,7 @@ use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::feed_info::Feed;
 use crate::external::gtfs::frequencies::Frequency;
+use crate::external::gtfs::office_jp::OfficeJp;
 use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::routes_jp::RouteJp;
 use crate::external::gtfs::shapes::Shape;
@@ -97,6 +98,15 @@ impl Gtfs for GtfsCsv {
 
     fn select_trips(&mut self) -> Result<Vec<Trip>> {
         let results = io::read::<Trip>(&self.gtfs_dir.join("trips.txt"))?;
+        Ok(results)
+    }
+
+    fn insert_offices_jp(&mut self, offices: &[&OfficeJp]) -> Result<()> {
+        unimplemented!()
+    }
+
+    fn select_offices_jp(&mut self) -> Result<Vec<OfficeJp>> {
+        let results = io::read::<OfficeJp>(&self.gtfs_dir.join("office_jp.txt"))?;
         Ok(results)
     }
 

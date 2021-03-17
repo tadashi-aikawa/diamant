@@ -80,6 +80,18 @@ where
         self.gtfs_db.insert_trips(&trips)?;
         info!("  ✨ Success");
 
+        // TODO: 判定処理をgtfsのIFで
+        let path = gtfs_dir.join("office_jp.txt");
+        if path.exists() {
+            let offices_jp = self.gtfs_csv.select_offices_jp()?;
+            let offices_jp = offices_jp.iter().unique().collect_vec();
+            info!("ℹ️ [office_jp] {} records", offices_jp.len());
+            self.gtfs_db.insert_offices_jp(&offices_jp)?;
+            info!("  ✨ Success");
+        } else {
+            info!("ℹ️ [office_jp] Skip because office_jp.txt was not found");
+        }
+
         let stop_times = self.gtfs_csv.select_stop_times()?;
         let stop_times = stop_times.iter().unique().collect_vec();
         info!("ℹ️ [stop_times] {} records", stop_times.len());

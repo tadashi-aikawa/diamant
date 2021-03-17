@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
 use crate::external::gtfs::calendar::ServiceId;
+use crate::external::gtfs::office_jp::JpOfficeId;
 use crate::external::gtfs::routes::RouteId;
 use crate::external::gtfsdb::Table;
 
@@ -38,9 +39,6 @@ enum BikesAllowed {
 
 /// 便ID (ex: 1001_WD_001)
 pub type TripId = String;
-
-/// 営業所ID (ex: S)
-type JpOfficeId = String;
 
 /// 便情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#trips
