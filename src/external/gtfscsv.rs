@@ -23,9 +23,8 @@ pub struct GtfsCsv {
     gtfs_dir: PathBuf,
 }
 
-pub fn init(path: &Path) -> Result<Box<dyn Gtfs>> {
-    let ins = GtfsCsv::new(path)?;
-    Ok(Box::new(ins))
+pub fn init(path: &Path) -> Result<GtfsCsv> {
+    GtfsCsv::new(path)
 }
 
 impl GtfsCsv {

@@ -3,12 +3,18 @@ use anyhow::Result;
 use crate::external;
 use crate::external::gtfs::trips::Trip;
 
-pub struct TripService {
-    gtfs: Box<dyn external::gtfs::Gtfs>,
+pub struct TripService<G>
+where
+    G: external::gtfs::Gtfs,
+{
+    gtfs: G,
 }
 
-impl TripService {
-    pub fn new(gtfs: Box<dyn external::gtfs::Gtfs>) -> Self {
+impl<G> TripService<G>
+where
+    G: external::gtfs::Gtfs,
+{
+    pub fn new(gtfs: G) -> Self {
         Self { gtfs }
     }
 

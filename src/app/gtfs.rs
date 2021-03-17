@@ -5,17 +5,22 @@ use log::info;
 use crate::external;
 use std::path::PathBuf;
 
-pub struct GtfsService {
-    gtfs_db: Box<dyn external::gtfs::Gtfs>,
-    gtfs_csv: Box<dyn external::gtfs::Gtfs>,
+pub struct GtfsService<G1, G2>
+where
+    G1: external::gtfs::Gtfs,
+    G2: external::gtfs::Gtfs,
+{
+    gtfs_db: G1,
+    gtfs_csv: G2,
 }
 
 /// GTFS全体を横断するアプリケーションサービス
-impl GtfsService {
-    pub fn new(
-        gtfs_db: Box<dyn external::gtfs::Gtfs>,
-        gtfs_csv: Box<dyn external::gtfs::Gtfs>,
-    ) -> Self {
+impl<G1, G2> GtfsService<G1, G2>
+where
+    G1: external::gtfs::Gtfs,
+    G2: external::gtfs::Gtfs,
+{
+    pub fn new(gtfs_db: G1, gtfs_csv: G2) -> Self {
         Self { gtfs_db, gtfs_csv }
     }
 
