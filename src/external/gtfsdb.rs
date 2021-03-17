@@ -15,6 +15,7 @@ use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::feed_info::Feed;
 use crate::external::gtfs::frequencies::Frequency;
 use crate::external::gtfs::routes::Route;
+use crate::external::gtfs::routes_jp::RouteJp;
 use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
@@ -117,6 +118,7 @@ impl Gtfs for GtfsDb {
         create::<Agency>(&self.connection)?;
         create::<AgencyJp>(&self.connection)?;
         create::<Route>(&self.connection)?;
+        create::<RouteJp>(&self.connection)?;
         create::<Stop>(&self.connection)?;
         create::<Trip>(&self.connection)?;
         create::<StopTime>(&self.connection)?;
@@ -137,6 +139,7 @@ impl Gtfs for GtfsDb {
         drop::<Agency>(&self.connection)?;
         drop::<AgencyJp>(&self.connection)?;
         drop::<Route>(&self.connection)?;
+        drop::<RouteJp>(&self.connection)?;
         drop::<Stop>(&self.connection)?;
         drop::<Trip>(&self.connection)?;
         drop::<StopTime>(&self.connection)?;
@@ -186,6 +189,15 @@ impl Gtfs for GtfsDb {
 
     fn select_routes(&mut self) -> Result<Vec<Route>> {
         select_all::<Route>(&mut self.connection).context("Fail to select_routes")
+    }
+
+    fn insert_routes_jp(&mut self, routes_jp: &[&RouteJp]) -> Result<()> {
+        insert(&mut self.connection, routes_jp)?;
+        Ok(())
+    }
+
+    fn select_routes_jp(&mut self) -> Result<Vec<RouteJp>> {
+        select_all::<RouteJp>(&mut self.connection).context("Fail to select_routes_jp")
     }
 
     fn insert_trips(&mut self, trips: &[&Trip]) -> Result<()> {

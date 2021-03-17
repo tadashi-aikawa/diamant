@@ -11,6 +11,7 @@ use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::feed_info::Feed;
 use crate::external::gtfs::frequencies::Frequency;
 use crate::external::gtfs::routes::Route;
+use crate::external::gtfs::routes_jp::RouteJp;
 use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
@@ -78,6 +79,15 @@ impl Gtfs for GtfsCsv {
 
     fn select_routes(&mut self) -> Result<Vec<Route>> {
         let results = io::read::<Route>(&self.gtfs_dir.join("routes.txt"))?;
+        Ok(results)
+    }
+
+    fn insert_routes_jp(&mut self, _routes: &[&RouteJp]) -> Result<()> {
+        unimplemented!()
+    }
+
+    fn select_routes_jp(&mut self) -> Result<Vec<RouteJp>> {
+        let results = io::read::<RouteJp>(&self.gtfs_dir.join("routes_jp.txt"))?;
         Ok(results)
     }
 

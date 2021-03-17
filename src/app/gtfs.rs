@@ -43,11 +43,11 @@ where
         if path.exists() {
             let agencies_jp = self.gtfs_csv.select_agencies_jp()?;
             let agencies_jp = agencies_jp.iter().unique().collect_vec();
-            info!("ℹ️ [agencies_jp] {} records", agencies_jp.len());
+            info!("ℹ️ [agency_jp] {} records", agencies_jp.len());
             self.gtfs_db.insert_agencies_jp(&agencies_jp)?;
             info!("  ✨ Success");
         } else {
-            info!("ℹ️ [agencies_jp] Skip because agency_jp.txt was not found");
+            info!("ℹ️ [agency_jp] Skip because agency_jp.txt was not found");
         }
 
         let stops = self.gtfs_csv.select_stops()?;
@@ -61,6 +61,18 @@ where
         info!("ℹ️ [routes] {} records", routes.len());
         self.gtfs_db.insert_routes(&routes)?;
         info!("  ✨ Success");
+
+        // TODO: 判定処理をgtfsのIFで
+        let path = gtfs_dir.join("routes_jp.txt");
+        if path.exists() {
+            let routes_jp = self.gtfs_csv.select_routes_jp()?;
+            let routes_jp = routes_jp.iter().unique().collect_vec();
+            info!("ℹ️ [routes_jp] {} records", routes_jp.len());
+            self.gtfs_db.insert_routes_jp(&routes_jp)?;
+            info!("  ✨ Success");
+        } else {
+            info!("ℹ️ [routes_jp] Skip because routes_jp.txt was not found");
+        }
 
         let trips = self.gtfs_csv.select_trips()?;
         let trips = trips.iter().unique().collect_vec();

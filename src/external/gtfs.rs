@@ -11,6 +11,7 @@ use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::feed_info::Feed;
 use crate::external::gtfs::frequencies::Frequency;
 use crate::external::gtfs::routes::Route;
+use crate::external::gtfs::routes_jp::RouteJp;
 use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
@@ -27,6 +28,7 @@ pub mod fare_rules;
 pub mod feed_info;
 pub mod frequencies;
 pub mod routes;
+pub mod routes_jp;
 pub mod shapes;
 pub mod stop_times;
 pub mod stops;
@@ -40,8 +42,10 @@ pub type Color = String;
 pub type Meter = u32;
 /// HH:mm:ss形式で28時などの表現も許容
 pub type UnlimitedTime = String;
-/// YYYY-MM-DD形式の年月日
+/// YYYY-MM-DD形式の年月日 (ex: 2017-01-06)
 pub type DateString = String;
+/// YYYYMMDD形式の年月日 (ex: 20170106)(Option<NaiveDate>がDeserializeできないため仕方なく..)
+pub type OptionalDateString = Option<String>;
 /// 秒
 pub type Second = u32;
 /// 順序 (ex: 0)
@@ -97,6 +101,8 @@ pub trait Gtfs {
     fn select_stops(&mut self) -> Result<Vec<Stop>>;
     fn insert_routes(&mut self, routes: &[&Route]) -> Result<()>;
     fn select_routes(&mut self) -> Result<Vec<Route>>;
+    fn insert_routes_jp(&mut self, routes: &[&RouteJp]) -> Result<()>;
+    fn select_routes_jp(&mut self) -> Result<Vec<RouteJp>>;
     fn insert_trips(&mut self, trips: &[&Trip]) -> Result<()>;
     fn select_trips(&mut self) -> Result<Vec<Trip>>;
     fn insert_stop_times(&mut self, stop_times: &[&StopTime]) -> Result<()>;
