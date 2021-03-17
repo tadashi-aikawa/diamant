@@ -101,7 +101,7 @@ impl Gtfs for GtfsCsv {
         Ok(results)
     }
 
-    fn insert_offices_jp(&mut self, offices: &[&OfficeJp]) -> Result<()> {
+    fn insert_offices_jp(&mut self, _offices: &[&OfficeJp]) -> Result<()> {
         unimplemented!()
     }
 

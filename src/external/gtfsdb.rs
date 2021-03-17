@@ -68,7 +68,7 @@ where
     Ok(())
 }
 
-pub fn insert<T>(conn: &mut Connection, records: &[&T]) -> rusqlite::Result<()>
+pub fn insert<T>(conn: &mut Connection, records: &[&T]) -> anyhow::Result<()>
 where
     T: serde::ser::Serialize + Debug + Table,
 {
@@ -87,7 +87,8 @@ where
 
     debug!("Insert {} records to {}", records.len(), T::table_name());
     for record in records {
-        tx.execute_named(sql.as_str(), &to_params_named(&record).unwrap().to_slice())?;
+        tx.execute_named(sql.as_str(), &to_params_named(&record).unwrap().to_slice())
+            .with_context(|| format!("Fail to insert {:?}", record))?;
     }
 
     tx.commit()?;
@@ -138,8 +139,9 @@ impl Gtfs for GtfsDb {
 
     fn drop_all(&self) -> Result<()> {
         // TODO: GTFSとGTFS-JPでmethodを分けた方がいいかも、他に独自テーブルの有無もあるし
-        drop::<Agency>(&self.connection)?;
         drop::<AgencyJp>(&self.connection)?;
+        drop::<Agency>(&self.connection)?;
+
         drop::<Route>(&self.connection)?;
         drop::<RouteJp>(&self.connection)?;
         drop::<Stop>(&self.connection)?;
@@ -159,8 +161,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_agencies(&mut self, agencies: &[&Agency]) -> Result<()> {
-        insert(&mut self.connection, agencies)?;
-        Ok(())
+        insert(&mut self.connection, agencies)
     }
 
     fn select_agencies(&mut self) -> Result<Vec<Agency>> {
@@ -168,8 +169,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_agencies_jp(&mut self, agencies_jp: &[&AgencyJp]) -> Result<()> {
-        insert(&mut self.connection, agencies_jp)?;
-        Ok(())
+        insert(&mut self.connection, agencies_jp)
     }
 
     fn select_agencies_jp(&mut self) -> Result<Vec<AgencyJp>> {
@@ -177,8 +177,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_stops(&mut self, stops: &[&Stop]) -> Result<()> {
-        insert(&mut self.connection, stops)?;
-        Ok(())
+        insert(&mut self.connection, stops)
     }
 
     fn select_stops(&mut self) -> Result<Vec<Stop>> {
@@ -186,8 +185,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_routes(&mut self, routes: &[&Route]) -> Result<()> {
-        insert(&mut self.connection, routes)?;
-        Ok(())
+        insert(&mut self.connection, routes)
     }
 
     fn select_routes(&mut self) -> Result<Vec<Route>> {
@@ -195,8 +193,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_routes_jp(&mut self, routes_jp: &[&RouteJp]) -> Result<()> {
-        insert(&mut self.connection, routes_jp)?;
-        Ok(())
+        insert(&mut self.connection, routes_jp)
     }
 
     fn select_routes_jp(&mut self) -> Result<Vec<RouteJp>> {
@@ -204,8 +201,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_trips(&mut self, trips: &[&Trip]) -> Result<()> {
-        insert(&mut self.connection, trips)?;
-        Ok(())
+        insert(&mut self.connection, trips)
     }
 
     fn select_trips(&mut self) -> Result<Vec<Trip>> {
@@ -213,8 +209,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_offices_jp(&mut self, offices: &[&OfficeJp]) -> Result<()> {
-        insert(&mut self.connection, offices)?;
-        Ok(())
+        insert(&mut self.connection, offices)
     }
 
     fn select_offices_jp(&mut self) -> Result<Vec<OfficeJp>> {
@@ -222,8 +217,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_stop_times(&mut self, stop_times: &[&StopTime]) -> Result<()> {
-        insert(&mut self.connection, stop_times)?;
-        Ok(())
+        insert(&mut self.connection, stop_times)
     }
 
     fn select_stop_times(&mut self) -> Result<Vec<StopTime>> {
@@ -231,8 +225,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_calendars(&mut self, calendars: &[&Calendar]) -> Result<()> {
-        insert(&mut self.connection, calendars)?;
-        Ok(())
+        insert(&mut self.connection, calendars)
     }
 
     fn select_calendars(&mut self) -> Result<Vec<Calendar>> {
@@ -240,8 +233,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_calendar_dates(&mut self, calendar_dates: &[&CalendarDate]) -> Result<()> {
-        insert(&mut self.connection, calendar_dates)?;
-        Ok(())
+        insert(&mut self.connection, calendar_dates)
     }
 
     fn select_calendar_dates(&mut self) -> Result<Vec<CalendarDate>> {
@@ -249,8 +241,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_fare_attributes(&mut self, fare_attributes: &[&FareAttribute]) -> Result<()> {
-        insert(&mut self.connection, fare_attributes)?;
-        Ok(())
+        insert(&mut self.connection, fare_attributes)
     }
 
     fn select_fare_attributes(&mut self) -> Result<Vec<FareAttribute>> {
@@ -258,8 +249,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_fare_rules(&mut self, fare_rules: &[&FareRule]) -> Result<()> {
-        insert(&mut self.connection, fare_rules)?;
-        Ok(())
+        insert(&mut self.connection, fare_rules)
     }
 
     fn select_fare_rules(&mut self) -> Result<Vec<FareRule>> {
@@ -267,8 +257,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_shapes(&mut self, shapes: &[&Shape]) -> Result<()> {
-        insert(&mut self.connection, shapes)?;
-        Ok(())
+        insert(&mut self.connection, shapes)
     }
 
     fn select_shapes(&mut self) -> Result<Vec<Shape>> {
@@ -276,8 +265,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_frequencies(&mut self, frequencies: &[&Frequency]) -> Result<()> {
-        insert(&mut self.connection, frequencies)?;
-        Ok(())
+        insert(&mut self.connection, frequencies)
     }
 
     fn select_frequencies(&mut self) -> Result<Vec<Frequency>> {
@@ -285,8 +273,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_transfers(&mut self, transfers: &[&Transfer]) -> Result<()> {
-        insert(&mut self.connection, transfers)?;
-        Ok(())
+        insert(&mut self.connection, transfers)
     }
 
     fn select_transfers(&mut self) -> Result<Vec<Transfer>> {
@@ -294,8 +281,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_feeds(&mut self, feeds: &[&Feed]) -> Result<()> {
-        insert(&mut self.connection, feeds)?;
-        Ok(())
+        insert(&mut self.connection, feeds)
     }
 
     fn select_feeds(&mut self) -> Result<Vec<Feed>> {
@@ -303,8 +289,7 @@ impl Gtfs for GtfsDb {
     }
 
     fn insert_translations(&mut self, translations: &[&Translation]) -> Result<()> {
-        insert(&mut self.connection, translations)?;
-        Ok(())
+        insert(&mut self.connection, translations)
     }
 
     fn select_translations(&mut self) -> Result<Vec<Translation>> {
