@@ -3,10 +3,8 @@ name: Release
 on: push
 
 jobs:
-  build:
-
+  windows-build:
     runs-on: windows-latest
-
     steps:
       - uses: actions/checkout@v2
 
@@ -26,3 +24,18 @@ jobs:
         with:
           name: hibou-x86_64-pc-windows
           path: target/release/hibou.exe
+
+  linux-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build static
+        uses: stevenleadbeater/rust-musl-builder@master
+        with:
+          args: /bin/bash -c "cargo build --release --target=x86_64-unknown-linux-musl"
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: hibou-x86_64-unknown-linux-musl
+          path: target/x86_64-unknown-linux-musl/release/hibou
