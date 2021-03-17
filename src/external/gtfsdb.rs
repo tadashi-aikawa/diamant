@@ -7,6 +7,7 @@ use serde::__private::fmt::Debug;
 use serde_rusqlite::{from_rows, to_params_named};
 
 use crate::external::gtfs::agency::Agency;
+use crate::external::gtfs::agency_jp::AgencyJp;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::fare_attributes::FareAttribute;
@@ -112,7 +113,9 @@ impl GtfsDb {
 
 impl Gtfs for GtfsDb {
     fn create_all(&self) -> Result<()> {
+        // TODO: GTFSとGTFS-JPでmethodを分けた方がいいかも、他に独自テーブルの有無もあるし
         create::<Agency>(&self.connection)?;
+        create::<AgencyJp>(&self.connection)?;
         create::<Route>(&self.connection)?;
         create::<Stop>(&self.connection)?;
         create::<Trip>(&self.connection)?;
@@ -130,7 +133,9 @@ impl Gtfs for GtfsDb {
     }
 
     fn drop_all(&self) -> Result<()> {
+        // TODO: GTFSとGTFS-JPでmethodを分けた方がいいかも、他に独自テーブルの有無もあるし
         drop::<Agency>(&self.connection)?;
+        drop::<AgencyJp>(&self.connection)?;
         drop::<Route>(&self.connection)?;
         drop::<Stop>(&self.connection)?;
         drop::<Trip>(&self.connection)?;
@@ -154,6 +159,15 @@ impl Gtfs for GtfsDb {
 
     fn select_agencies(&mut self) -> Result<Vec<Agency>> {
         select_all::<Agency>(&mut self.connection).context("Fail to select agency")
+    }
+
+    fn insert_agencies_jp(&mut self, agencies_jp: &[&AgencyJp]) -> Result<()> {
+        insert(&mut self.connection, agencies_jp)?;
+        Ok(())
+    }
+
+    fn select_agencies_jp(&mut self) -> Result<Vec<AgencyJp>> {
+        select_all::<AgencyJp>(&mut self.connection).context("Fail to select agency_jp")
     }
 
     fn insert_stops(&mut self, stops: &[&Stop]) -> Result<()> {

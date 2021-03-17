@@ -6,7 +6,7 @@ use crate::external::gtfsdb::Table;
 /// 事業者ID  (ex: 8000020130001, 8000020130001_1)
 pub type AgencyId = String;
 
-/// 経路情報
+/// 事業者情報
 /// https://www.gtfs.jp/developpers-guide/format-reference.html#agency
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct Agency {

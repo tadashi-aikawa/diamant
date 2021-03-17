@@ -38,6 +38,18 @@ where
         self.gtfs_db.insert_agencies(&agencies)?;
         info!("  ✨ Success");
 
+        // TODO: 判定処理をgtfsのIFで
+        let path = gtfs_dir.join("agency_jp.txt");
+        if path.exists() {
+            let agencies_jp = self.gtfs_csv.select_agencies_jp()?;
+            let agencies_jp = agencies_jp.iter().unique().collect_vec();
+            info!("ℹ️ [agencies_jp] {} records", agencies_jp.len());
+            self.gtfs_db.insert_agencies_jp(&agencies_jp)?;
+            info!("  ✨ Success");
+        } else {
+            info!("ℹ️ [agencies_jp] Skip because agency_jp.txt was not found");
+        }
+
         let stops = self.gtfs_csv.select_stops()?;
         let stops = stops.iter().unique().collect_vec();
         info!("ℹ️ [stops] {} records", stops.len());

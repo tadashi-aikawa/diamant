@@ -3,6 +3,7 @@ use std::path::{Path, PathBuf};
 use anyhow::Result;
 
 use crate::external::gtfs::agency::Agency;
+use crate::external::gtfs::agency_jp::AgencyJp;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::fare_attributes::FareAttribute;
@@ -50,6 +51,15 @@ impl Gtfs for GtfsCsv {
 
     fn select_agencies(&mut self) -> Result<Vec<Agency>> {
         let results = io::read::<Agency>(&self.gtfs_dir.join("agency.txt"))?;
+        Ok(results)
+    }
+
+    fn insert_agencies_jp(&mut self, _agencies_jp: &[&AgencyJp]) -> Result<()> {
+        unimplemented!()
+    }
+
+    fn select_agencies_jp(&mut self) -> Result<Vec<AgencyJp>> {
+        let results = io::read::<AgencyJp>(&self.gtfs_dir.join("agency_jp.txt"))?;
         Ok(results)
     }
 

@@ -10,7 +10,7 @@ TODO
 | file                  | insert | select | correct table definition |
 | --------------------- | ------ | ------ | ------------------------ |
 | [agency.txt]          | 🦉   |        |                          |
-| [agency_jp.txt]       |        |        |                          |
+| [agency_jp.txt]       | 🦉   |        |                          |
 | [stops.txt]           | 🦉   |        |                          |
 | [routes.txt]          | 🦉   | 🦉   |                          |
 | [routes_jp.txt]       |        |        |                          |

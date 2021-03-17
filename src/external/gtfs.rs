@@ -1,7 +1,9 @@
 use anyhow::Result;
+use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
 
 use crate::external::gtfs::agency::Agency;
+use crate::external::gtfs::agency_jp::AgencyJp;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::fare_attributes::FareAttribute;
@@ -15,9 +17,9 @@ use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::transfers::Transfer;
 use crate::external::gtfs::translations::Translation;
 use crate::external::gtfs::trips::Trip;
-use ordered_float::OrderedFloat;
 
 pub mod agency;
+pub mod agency_jp;
 pub mod calendar;
 pub mod calendar_dates;
 pub mod fare_attributes;
@@ -46,8 +48,12 @@ pub type Second = u32;
 pub type Sequence = u32;
 /// 電話番号 (ex: 03-2816-5700)
 pub type TelephoneNumber = String;
+/// 郵便番号 (ex: 1638001)
+pub type ZipNumber = String;
 /// メールアドレス
 pub type MailAddress = String;
+/// 住所 (ex: 東京都新宿区西新宿二丁目８番１号)
+pub type Address = String;
 /// Url
 pub type Url = String;
 /// 緯度 (degree)
@@ -85,6 +91,8 @@ pub trait Gtfs {
     fn drop_all(&self) -> Result<()>;
     fn insert_agencies(&mut self, agencies: &[&Agency]) -> Result<()>;
     fn select_agencies(&mut self) -> Result<Vec<Agency>>;
+    fn insert_agencies_jp(&mut self, agencies: &[&AgencyJp]) -> Result<()>;
+    fn select_agencies_jp(&mut self) -> Result<Vec<AgencyJp>>;
     fn insert_stops(&mut self, stops: &[&Stop]) -> Result<()>;
     fn select_stops(&mut self) -> Result<Vec<Stop>>;
     fn insert_routes(&mut self, routes: &[&Route]) -> Result<()>;
