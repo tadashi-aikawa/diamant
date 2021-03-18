@@ -1,41 +1,56 @@
 name: Release
 
-on: push
+on:
+  push:
+    tags:
+      - '*'
 
 jobs:
-  windows-build:
-    runs-on: windows-latest
+  build:
+    name: Release binary
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact_name: hibou
+            asset_name: hibou-x86_64-unknown-linux-gnu
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            artifact_name: hibou
+            asset_name: hibou-x86_64-unknown-linux-musl
+          - os: windows-latest
+            target: x86_64-pc-windows-gnu
+            artifact_name: hibou
+            asset_name: hibou-x86_64-pc-windows-gnu
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            artifact_name: hibou
+            asset_name: hibou-x86_64-apple-darwin
+
+    runs-on: ${{ matrix.os }}
+
     steps:
       - uses: actions/checkout@v2
-
-      - name: Install latest rust toolchain
-        uses: actions-rs/toolchain@v1
+      - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          default: true
           override: true
 
       - uses: Swatinem/rust-cache@v1
 
       - name: Build
-        run: cargo build --all --release
-
-      - uses: actions/upload-artifact@v2
+        uses: actions-rs/cargo@v1
         with:
-          name: hibou-x86_64-pc-windows
-          path: target/release/hibou.exe
+          use-cross: true
+          command: build
+          args: --release --target ${{ matrix.target }} --all-features --verbose
 
-  linux-build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Build static
-        uses: stevenleadbeater/rust-musl-builder@master
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@2.1.1
         with:
-          args: /bin/bash -c "cargo build --release --target=x86_64-unknown-linux-musl"
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: hibou-x86_64-unknown-linux-musl
-          path: target/x86_64-unknown-linux-musl/release/hibou
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: target/${{ matrix.target }}/release/${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.asset_name }}
+          tag: ${{ github.ref }}
+          overwrite: true
