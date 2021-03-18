@@ -19,7 +19,7 @@ jobs:
             target: x86_64-unknown-linux-musl
             artifact_name: hibou
             asset_name: hibou-x86_64-unknown-linux-musl
-          - os: ubuntu-latest
+          - os: windows-latest
             target: x86_64-pc-windows-gnu
             artifact_name: hibou
             asset_name: hibou-x86_64-pc-windows-gnu
@@ -34,6 +34,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
+          target: ${{ matrix.target }}
           toolchain: stable
           override: true
 
