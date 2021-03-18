@@ -19,7 +19,7 @@ jobs:
             target: x86_64-unknown-linux-musl
             artifact_name: hibou
             asset_name: hibou-x86_64-unknown-linux-musl
-          - os: windows-latest
+          - os: ubuntu-latest
             target: x86_64-pc-windows-gnu
             artifact_name: hibou
             asset_name: hibou-x86_64-pc-windows-gnu
