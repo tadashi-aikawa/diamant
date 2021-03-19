@@ -11,27 +11,30 @@ jobs:
     strategy:
       matrix:
         include:
-          - target: x86_64-unknown-linux-gnu
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
             artifact_name: hibou
             asset_name: hibou-x86_64-unknown-linux-gnu
-          - target: x86_64-unknown-linux-musl
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
             artifact_name: hibou
             asset_name: hibou-x86_64-unknown-linux-musl
-          - target: x86_64-pc-windows-msvc
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
             artifact_name: hibou.exe
             asset_name: hibou-x86_64-pc-windows-msvc
-          - target: x86_64-apple-darwin
+          - os: macos-latest
+            target: x86_64-apple-darwin
             artifact_name: hibou
             asset_name: hibou-x86_64-apple-darwin
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          target: ${{ matrix.target }}
           override: true
 
       - uses: Swatinem/rust-cache@v1
