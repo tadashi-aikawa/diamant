@@ -50,6 +50,38 @@ where
             info!("ℹ️ [agency_jp] Skip because agency_jp.txt was not found");
         }
 
+        // TODO: 判定処理をgtfsのIFで
+        let path = gtfs_dir.join("office_jp.txt");
+        if path.exists() {
+            let offices_jp = self.gtfs_csv.select_offices_jp()?;
+            let offices_jp = offices_jp.iter().unique().collect_vec();
+            info!("ℹ️ [office_jp] {} records", offices_jp.len());
+            self.gtfs_db.insert_offices_jp(&offices_jp)?;
+            info!("  ✨ Success");
+        } else {
+            info!("ℹ️ [office_jp] Skip because office_jp.txt was not found");
+        }
+
+        // TODO: 判定処理をgtfsのIFで
+        let path = gtfs_dir.join("calendar.txt");
+        if path.exists() {
+            let calendars = self.gtfs_csv.select_calendars()?;
+            let calendars = calendars.iter().unique().collect_vec();
+            info!("ℹ️ [calendar] {} records", calendars.len());
+            self.gtfs_db.insert_calendars(&calendars)?;
+            info!("  ✨ Success");
+        }
+
+        // TODO: 判定処理をgtfsのIFで
+        let path = gtfs_dir.join("calendar_dates.txt");
+        if path.exists() {
+            let calendar_dates = self.gtfs_csv.select_calendar_dates()?;
+            let calendar_dates = calendar_dates.iter().unique().collect_vec();
+            info!("ℹ️ [calendar_dates] {} records", calendar_dates.len());
+            self.gtfs_db.insert_calendar_dates(&calendar_dates)?;
+            info!("  ✨ Success");
+        }
+
         let stops = self.gtfs_csv.select_stops()?;
         let stops = stops.iter().unique().collect_vec();
         info!("ℹ️ [stops] {} records", stops.len());
@@ -80,43 +112,11 @@ where
         self.gtfs_db.insert_trips(&trips)?;
         info!("  ✨ Success");
 
-        // TODO: 判定処理をgtfsのIFで
-        let path = gtfs_dir.join("office_jp.txt");
-        if path.exists() {
-            let offices_jp = self.gtfs_csv.select_offices_jp()?;
-            let offices_jp = offices_jp.iter().unique().collect_vec();
-            info!("ℹ️ [office_jp] {} records", offices_jp.len());
-            self.gtfs_db.insert_offices_jp(&offices_jp)?;
-            info!("  ✨ Success");
-        } else {
-            info!("ℹ️ [office_jp] Skip because office_jp.txt was not found");
-        }
-
         let stop_times = self.gtfs_csv.select_stop_times()?;
         let stop_times = stop_times.iter().unique().collect_vec();
         info!("ℹ️ [stop_times] {} records", stop_times.len());
         self.gtfs_db.insert_stop_times(&stop_times)?;
         info!("  ✨ Success");
-
-        // TODO: 判定処理をgtfsのIFで
-        let path = gtfs_dir.join("calendar.txt");
-        if path.exists() {
-            let calendars = self.gtfs_csv.select_calendars()?;
-            let calendars = calendars.iter().unique().collect_vec();
-            info!("ℹ️ [calendar] {} records", calendars.len());
-            self.gtfs_db.insert_calendars(&calendars)?;
-            info!("  ✨ Success");
-        }
-
-        // TODO: 判定処理をgtfsのIFで
-        let path = gtfs_dir.join("calendar_dates.txt");
-        if path.exists() {
-            let calendar_dates = self.gtfs_csv.select_calendar_dates()?;
-            let calendar_dates = calendar_dates.iter().unique().collect_vec();
-            info!("ℹ️ [calendar_dates] {} records", calendar_dates.len());
-            self.gtfs_db.insert_calendar_dates(&calendar_dates)?;
-            info!("  ✨ Success");
-        }
 
         // TODO: 判定処理をgtfsのIFで
         let path = gtfs_dir.join("fare_attributes.txt");

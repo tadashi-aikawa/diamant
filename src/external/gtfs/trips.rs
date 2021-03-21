@@ -95,6 +95,7 @@ impl Table for Trip {
         ]
     }
 
+    // 外部キー制約はあえて付けない。季節便などが含まれるとエラーになるため
     fn create_sql() -> &'static str {
         "
          route_id text not null,

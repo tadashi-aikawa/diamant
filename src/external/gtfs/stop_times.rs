@@ -90,7 +90,9 @@ impl Table for StopTime {
         drop_off_type int,
         shape_dist_traveled int,
         timepoint int,
-        PRIMARY KEY(trip_id, stop_sequence)
+        PRIMARY KEY(trip_id, stop_sequence),
+        foreign key (trip_id) references trips(trip_id),
+        foreign key (stop_id) references stops(stop_id)
         "
     }
 }
