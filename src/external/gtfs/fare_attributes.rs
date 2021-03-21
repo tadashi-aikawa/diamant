@@ -1,4 +1,5 @@
 use crate::external::gtfs::Second;
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
@@ -46,6 +47,12 @@ pub struct FareAttribute {
     transfers: Option<TransferCount>,
     /// 乗換有効期限
     transfer_duration: Option<Second>,
+}
+
+impl GTFSFile for FareAttribute {
+    fn file_name() -> &'static str {
+        "fare_attributes.txt"
+    }
 }
 
 impl Table for FareAttribute {

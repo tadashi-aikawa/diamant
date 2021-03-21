@@ -3,6 +3,7 @@ use serde_repr::{Deserialize_repr, Serialize_repr};
 
 use crate::external::gtfs::stops::StopId;
 use crate::external::gtfs::Second;
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 
 /// 利用タイプ
@@ -31,6 +32,12 @@ pub struct Transfer {
     transfer_type: TransferType,
     /// 乗換時間
     min_transfer_time: Option<Second>,
+}
+
+impl GTFSFile for Transfer {
+    fn file_name() -> &'static str {
+        "transfers.txt"
+    }
 }
 
 impl Table for Transfer {

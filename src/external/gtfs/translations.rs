@@ -1,13 +1,28 @@
 use serde::{Deserialize, Serialize};
 
 use crate::external::gtfs::Lang;
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
+
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
+#[serde(rename_all = "snake_case")]
+pub enum TranslatableTableName {
+    Agency,
+    Stops,
+    Routes,
+    Trips,
+    StopTimes,
+    FeedInfo,
+    Pathways,
+    Levels,
+    Attributions,
+}
 
 /// 翻訳情報
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct Translation {
     /// テーブル名
-    table_name: String,
+    table_name: TranslatableTableName,
     /// フィールド名
     field_name: String,
     /// 言語
@@ -20,6 +35,12 @@ pub struct Translation {
     record_sub_id: Option<String>,
     /// フィールド値
     field_value: Option<String>,
+}
+
+impl GTFSFile for Translation {
+    fn file_name() -> &'static str {
+        "translations.txt"
+    }
 }
 
 impl Table for Translation {

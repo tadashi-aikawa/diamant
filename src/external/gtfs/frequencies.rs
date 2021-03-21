@@ -3,6 +3,7 @@ use serde_repr::{Deserialize_repr, Serialize_repr};
 
 use crate::external::gtfs::trips::TripId;
 use crate::external::gtfs::{Second, UnlimitedTime};
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 
 /// 利用タイプ
@@ -29,6 +30,12 @@ pub struct Frequency {
     headway_secs: Second,
     /// 案内精度
     exact_times: Option<GuideExactTimes>,
+}
+
+impl GTFSFile for Frequency {
+    fn file_name() -> &'static str {
+        "frequencies.txt"
+    }
 }
 
 impl Table for Frequency {

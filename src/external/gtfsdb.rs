@@ -175,6 +175,10 @@ impl Gtfs for GtfsDb {
         select_all::<AgencyJp>(&mut self.connection).context("Fail to select agency_jp")
     }
 
+    fn has_agency_jp(&mut self) -> bool {
+        unimplemented!()
+    }
+
     fn insert_stops(&mut self, stops: &[&Stop]) -> Result<()> {
         insert(&mut self.connection, stops)
     }
@@ -199,6 +203,10 @@ impl Gtfs for GtfsDb {
         select_all::<RouteJp>(&mut self.connection).context("Fail to select_routes_jp")
     }
 
+    fn has_routes_jp(&mut self) -> bool {
+        unimplemented!()
+    }
+
     fn insert_trips(&mut self, trips: &[&Trip]) -> Result<()> {
         insert(&mut self.connection, trips)
     }
@@ -213,6 +221,10 @@ impl Gtfs for GtfsDb {
 
     fn select_offices_jp(&mut self) -> Result<Vec<OfficeJp>> {
         select_all::<OfficeJp>(&mut self.connection).context("Fail to select_offices_jp")
+    }
+
+    fn has_office_jp(&mut self) -> bool {
+        unimplemented!()
     }
 
     fn insert_stop_times(&mut self, stop_times: &[&StopTime]) -> Result<()> {
@@ -239,12 +251,20 @@ impl Gtfs for GtfsDb {
         select_all::<CalendarDate>(&mut self.connection).context("Fail to select calendar_dates")
     }
 
+    fn has_calendar_dates(&mut self) -> bool {
+        unimplemented!()
+    }
+
     fn insert_fare_attributes(&mut self, fare_attributes: &[&FareAttribute]) -> Result<()> {
         insert(&mut self.connection, fare_attributes)
     }
 
     fn select_fare_attributes(&mut self) -> Result<Vec<FareAttribute>> {
         select_all::<FareAttribute>(&mut self.connection).context("Fail to select fare_attributes")
+    }
+
+    fn has_fare_attributes(&mut self) -> bool {
+        unimplemented!()
     }
 
     fn insert_fare_rules(&mut self, fare_rules: &[&FareRule]) -> Result<()> {
@@ -255,12 +275,20 @@ impl Gtfs for GtfsDb {
         select_all::<FareRule>(&mut self.connection).context("Fail to select fare_rules")
     }
 
+    fn has_fare_rules(&mut self) -> bool {
+        unimplemented!()
+    }
+
     fn insert_shapes(&mut self, shapes: &[&Shape]) -> Result<()> {
         insert(&mut self.connection, shapes)
     }
 
     fn select_shapes(&mut self) -> Result<Vec<Shape>> {
         select_all::<Shape>(&mut self.connection).context("Fail to select shapes")
+    }
+
+    fn has_shapes(&mut self) -> bool {
+        unimplemented!()
     }
 
     fn insert_frequencies(&mut self, frequencies: &[&Frequency]) -> Result<()> {
@@ -271,12 +299,20 @@ impl Gtfs for GtfsDb {
         select_all::<Frequency>(&mut self.connection).context("Fail to select frequencies")
     }
 
+    fn has_frequencies(&mut self) -> bool {
+        unimplemented!()
+    }
+
     fn insert_transfers(&mut self, transfers: &[&Transfer]) -> Result<()> {
         insert(&mut self.connection, transfers)
     }
 
     fn select_transfers(&mut self) -> Result<Vec<Transfer>> {
         select_all::<Transfer>(&mut self.connection).context("Fail to select transfers")
+    }
+
+    fn has_transfers(&mut self) -> bool {
+        unimplemented!()
     }
 
     fn insert_feeds(&mut self, feeds: &[&Feed]) -> Result<()> {

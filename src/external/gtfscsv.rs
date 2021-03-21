@@ -21,13 +21,32 @@ use crate::external::gtfs::translations::Translation;
 use crate::external::gtfs::trips::Trip;
 use crate::external::gtfs::Gtfs;
 use crate::io;
+use serde::de::DeserializeOwned;
 
 pub struct GtfsCsv {
     gtfs_dir: PathBuf,
 }
 
+pub trait GTFSFile {
+    fn file_name() -> &'static str;
+}
+
 pub fn init(path: &Path) -> Result<GtfsCsv> {
     GtfsCsv::new(path)
+}
+
+fn load_gtfs<T>(gtfs_dir: &Path) -> Result<Vec<T>>
+where
+    T: GTFSFile + DeserializeOwned,
+{
+    io::read::<T>(&gtfs_dir.join(T::file_name()))
+}
+
+fn has_gtfs<T>(gtfs_dir: &Path) -> bool
+where
+    T: GTFSFile,
+{
+    gtfs_dir.join(T::file_name()).exists()
 }
 
 impl GtfsCsv {
@@ -52,8 +71,7 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_agencies(&mut self) -> Result<Vec<Agency>> {
-        let results = io::read::<Agency>(&self.gtfs_dir.join("agency.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
     }
 
     fn insert_agencies_jp(&mut self, _agencies_jp: &[&AgencyJp]) -> Result<()> {
@@ -61,8 +79,11 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_agencies_jp(&mut self) -> Result<Vec<AgencyJp>> {
-        let results = io::read::<AgencyJp>(&self.gtfs_dir.join("agency_jp.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
+    }
+
+    fn has_agency_jp(&mut self) -> bool {
+        has_gtfs::<AgencyJp>(&self.gtfs_dir)
     }
 
     fn insert_stops(&mut self, _stops: &[&Stop]) -> Result<()> {
@@ -70,8 +91,7 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_stops(&mut self) -> Result<Vec<Stop>> {
-        let results = io::read::<Stop>(&self.gtfs_dir.join("stops.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
     }
 
     fn insert_routes(&mut self, _routes: &[&Route]) -> Result<()> {
@@ -79,8 +99,7 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_routes(&mut self) -> Result<Vec<Route>> {
-        let results = io::read::<Route>(&self.gtfs_dir.join("routes.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
     }
 
     fn insert_routes_jp(&mut self, _routes: &[&RouteJp]) -> Result<()> {
@@ -88,8 +107,11 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_routes_jp(&mut self) -> Result<Vec<RouteJp>> {
-        let results = io::read::<RouteJp>(&self.gtfs_dir.join("routes_jp.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
+    }
+
+    fn has_routes_jp(&mut self) -> bool {
+        has_gtfs::<RouteJp>(&self.gtfs_dir)
     }
 
     fn insert_trips(&mut self, _trips: &[&Trip]) -> Result<()> {
@@ -97,8 +119,7 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_trips(&mut self) -> Result<Vec<Trip>> {
-        let results = io::read::<Trip>(&self.gtfs_dir.join("trips.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
     }
 
     fn insert_offices_jp(&mut self, _offices: &[&OfficeJp]) -> Result<()> {
@@ -106,8 +127,11 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_offices_jp(&mut self) -> Result<Vec<OfficeJp>> {
-        let results = io::read::<OfficeJp>(&self.gtfs_dir.join("office_jp.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
+    }
+
+    fn has_office_jp(&mut self) -> bool {
+        has_gtfs::<OfficeJp>(&self.gtfs_dir)
     }
 
     fn insert_stop_times(&mut self, _stop_times: &[&StopTime]) -> Result<()> {
@@ -115,8 +139,7 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_stop_times(&mut self) -> Result<Vec<StopTime>> {
-        let results = io::read::<StopTime>(&self.gtfs_dir.join("stop_times.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
     }
 
     fn insert_calendars(&mut self, _calendars: &[&Calendar]) -> Result<()> {
@@ -124,8 +147,7 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_calendars(&mut self) -> Result<Vec<Calendar>> {
-        let results = io::read::<Calendar>(&self.gtfs_dir.join("calendar.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
     }
 
     fn insert_calendar_dates(&mut self, _calendar_dates: &[&CalendarDate]) -> Result<()> {
@@ -133,8 +155,11 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_calendar_dates(&mut self) -> Result<Vec<CalendarDate>> {
-        let results = io::read::<CalendarDate>(&self.gtfs_dir.join("calendar_dates.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
+    }
+
+    fn has_calendar_dates(&mut self) -> bool {
+        has_gtfs::<CalendarDate>(&self.gtfs_dir)
     }
 
     fn insert_fare_attributes(&mut self, _fare_attributes: &[&FareAttribute]) -> Result<()> {
@@ -142,8 +167,11 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_fare_attributes(&mut self) -> Result<Vec<FareAttribute>> {
-        let results = io::read::<FareAttribute>(&self.gtfs_dir.join("fare_attributes.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
+    }
+
+    fn has_fare_attributes(&mut self) -> bool {
+        has_gtfs::<FareAttribute>(&self.gtfs_dir)
     }
 
     fn insert_fare_rules(&mut self, _fare_rules: &[&FareRule]) -> Result<()> {
@@ -151,8 +179,11 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_fare_rules(&mut self) -> Result<Vec<FareRule>> {
-        let results = io::read::<FareRule>(&self.gtfs_dir.join("fare_rules.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
+    }
+
+    fn has_fare_rules(&mut self) -> bool {
+        has_gtfs::<FareRule>(&self.gtfs_dir)
     }
 
     fn insert_shapes(&mut self, _shapes: &[&Shape]) -> Result<()> {
@@ -160,8 +191,11 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_shapes(&mut self) -> Result<Vec<Shape>> {
-        let results = io::read::<Shape>(&self.gtfs_dir.join("shapes.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
+    }
+
+    fn has_shapes(&mut self) -> bool {
+        has_gtfs::<Shape>(&self.gtfs_dir)
     }
 
     fn insert_frequencies(&mut self, _frequencies: &[&Frequency]) -> Result<()> {
@@ -169,8 +203,11 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_frequencies(&mut self) -> Result<Vec<Frequency>> {
-        let results = io::read::<Frequency>(&self.gtfs_dir.join("frequencies.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
+    }
+
+    fn has_frequencies(&mut self) -> bool {
+        has_gtfs::<Frequency>(&self.gtfs_dir)
     }
 
     fn insert_transfers(&mut self, _transfers: &[&Transfer]) -> Result<()> {
@@ -178,8 +215,11 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_transfers(&mut self) -> Result<Vec<Transfer>> {
-        let results = io::read::<Transfer>(&self.gtfs_dir.join("transfers.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
+    }
+
+    fn has_transfers(&mut self) -> bool {
+        has_gtfs::<Transfer>(&self.gtfs_dir)
     }
 
     fn insert_feeds(&mut self, _feeds: &[&Feed]) -> Result<()> {
@@ -187,8 +227,7 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_feeds(&mut self) -> Result<Vec<Feed>> {
-        let results = io::read::<Feed>(&self.gtfs_dir.join("feed_info.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
     }
 
     fn insert_translations(&mut self, _translations: &[&Translation]) -> Result<()> {
@@ -196,7 +235,6 @@ impl Gtfs for GtfsCsv {
     }
 
     fn select_translations(&mut self) -> Result<Vec<Translation>> {
-        let results = io::read::<Translation>(&self.gtfs_dir.join("translations.txt"))?;
-        Ok(results)
+        load_gtfs::<_>(&self.gtfs_dir)
     }
 }

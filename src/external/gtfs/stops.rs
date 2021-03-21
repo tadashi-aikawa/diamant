@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
 use crate::external::gtfs::{Latitude, Longitude, Timezone, Url};
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 
 /// 区間ID (ex: Z_210)
@@ -57,6 +58,12 @@ pub struct Stop {
     /// のりば情報 (ex: ①※設定なし ②10)
     platform_code: Option<PlatformCode>,
     // level_id: Option<LevelId>
+}
+
+impl GTFSFile for Stop {
+    fn file_name() -> &'static str {
+        "stops.txt"
+    }
 }
 
 impl Table for Stop {

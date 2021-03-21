@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::external::gtfs::{Latitude, Longitude, Sequence};
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 use ordered_float::OrderedFloat;
 
@@ -21,6 +22,12 @@ pub struct Shape {
     shape_pt_sequence: Sequence,
     /// 描画距離 (JPでは使わない)
     shape_dist_traveled: Option<OrderedFloat<f32>>,
+}
+
+impl GTFSFile for Shape {
+    fn file_name() -> &'static str {
+        "shapes.txt"
+    }
 }
 
 impl Table for Shape {

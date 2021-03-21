@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::external::gtfs::routes::RouteId;
 use crate::external::gtfs::OptionalDateString;
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 
 /// 経路情報(JP)
@@ -18,6 +19,12 @@ pub struct RouteJp {
     via_stop: Option<String>,
     /// 終点 (ex: 東京ビッグサイト)
     destination_stop: Option<String>,
+}
+
+impl GTFSFile for RouteJp {
+    fn file_name() -> &'static str {
+        "routes_jp.txt"
+    }
 }
 
 impl Table for RouteJp {

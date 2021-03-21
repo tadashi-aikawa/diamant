@@ -1,3 +1,4 @@
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 use crate::serde_chrono_custom::yyyymmdd;
 use chrono::NaiveDate;
@@ -43,6 +44,12 @@ pub struct Calendar {
     /// サービス終了日
     #[serde(with = "yyyymmdd")]
     end_date: NaiveDate,
+}
+
+impl GTFSFile for Calendar {
+    fn file_name() -> &'static str {
+        "calendar.txt"
+    }
 }
 
 impl Table for Calendar {

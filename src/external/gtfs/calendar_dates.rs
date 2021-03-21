@@ -1,3 +1,4 @@
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 use crate::serde_chrono_custom::yyyymmdd;
 use chrono::NaiveDate;
@@ -28,6 +29,12 @@ pub struct CalendarDate {
     date: NaiveDate,
     /// 利用タイプ
     exception_type: ExceptionType,
+}
+
+impl GTFSFile for CalendarDate {
+    fn file_name() -> &'static str {
+        "calendar_dates.txt"
+    }
 }
 
 impl Table for CalendarDate {

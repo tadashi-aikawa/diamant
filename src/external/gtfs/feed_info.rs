@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::external::gtfs::{DateString, Lang, Url};
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 
 /// 提供情報
@@ -19,6 +20,12 @@ pub struct Feed {
     feed_end_date: Option<DateString>,
     /// 提供データバージョン
     feed_version: Option<String>,
+}
+
+impl GTFSFile for Feed {
+    fn file_name() -> &'static str {
+        "feed_info.txt"
+    }
 }
 
 impl Table for Feed {

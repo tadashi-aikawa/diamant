@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::external::gtfs::{Lang, MailAddress, TelephoneNumber, Timezone, Url};
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 
 /// 事業者ID  (ex: 8000020130001, 8000020130001_1)
@@ -27,6 +28,12 @@ pub struct Agency {
     agency_fare_url: Option<Url>,
     /// 事業者Eメール
     agency_email: Option<MailAddress>,
+}
+
+impl GTFSFile for Agency {
+    fn file_name() -> &'static str {
+        "agency.txt"
+    }
 }
 
 impl Table for Agency {

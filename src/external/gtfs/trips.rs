@@ -4,6 +4,7 @@ use serde_repr::{Deserialize_repr, Serialize_repr};
 use crate::external::gtfs::calendar::ServiceId;
 use crate::external::gtfs::office_jp::JpOfficeId;
 use crate::external::gtfs::routes::RouteId;
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 
 #[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
@@ -70,6 +71,12 @@ pub struct Trip {
     jp_trip_desc_symbol: Option<String>,
     /// 営業所ID
     jp_office_id: Option<JpOfficeId>,
+}
+
+impl GTFSFile for Trip {
+    fn file_name() -> &'static str {
+        "trips.txt"
+    }
 }
 
 impl Table for Trip {

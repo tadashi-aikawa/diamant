@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::external::gtfs::agency::AgencyId;
 use crate::external::gtfs::{Address, ZipNumber};
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 
 /// 事業者情報(JP)
@@ -20,6 +21,12 @@ pub struct AgencyJp {
     agency_president_pos: Option<String>,
     /// 代表者氏名 (ex: 東京 太郎)
     agency_president_name: Option<String>,
+}
+
+impl GTFSFile for AgencyJp {
+    fn file_name() -> &'static str {
+        "agency_jp.txt"
+    }
 }
 
 impl Table for AgencyJp {

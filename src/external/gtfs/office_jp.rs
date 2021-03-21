@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::external::gtfs::{TelephoneNumber, Url};
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 
 /// 営業所ID (ex: S)
@@ -18,6 +19,12 @@ pub struct OfficeJp {
     office_url: Option<Url>,
     /// 営業所電話番号
     office_phone: Option<TelephoneNumber>,
+}
+
+impl GTFSFile for OfficeJp {
+    fn file_name() -> &'static str {
+        "office_jp.txt"
+    }
 }
 
 impl Table for OfficeJp {

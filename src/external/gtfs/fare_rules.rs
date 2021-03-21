@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::external::gtfs::fare_attributes::FareId;
 use crate::external::gtfs::routes::RouteId;
 use crate::external::gtfs::stops::ZoneId;
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 
 /// 運賃定義情報
@@ -19,6 +20,12 @@ pub struct FareRule {
     destination_id: Option<ZoneId>,
     /// 通過ゾーン (JPでは使わない)
     contains_id: Option<ZoneId>,
+}
+
+impl GTFSFile for FareRule {
+    fn file_name() -> &'static str {
+        "fare_rules.txt"
+    }
 }
 
 impl Table for FareRule {

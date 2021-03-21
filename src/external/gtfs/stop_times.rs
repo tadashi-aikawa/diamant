@@ -4,6 +4,7 @@ use serde_repr::{Deserialize_repr, Serialize_repr};
 use crate::external::gtfs::stops::StopId;
 use crate::external::gtfs::trips::TripId;
 use crate::external::gtfs::{Meter, Sequence};
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 
 #[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
@@ -56,6 +57,12 @@ pub struct StopTime {
     shape_dist_traveled: Option<Meter>,
     /// 発着時間精度 (日本では使用しない)
     timepoint: Option<i32>,
+}
+
+impl GTFSFile for StopTime {
+    fn file_name() -> &'static str {
+        "stop_times.txt"
+    }
 }
 
 impl Table for StopTime {

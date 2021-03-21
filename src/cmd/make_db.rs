@@ -22,7 +22,7 @@ pub fn run(op: &Opts) -> Result<()> {
 
     service.drop_tables()?;
     service.create_tables()?;
-    service.insert_tables(&op.gtfs_dir)?;
+    service.insert_tables()?;
 
     Ok(())
 }

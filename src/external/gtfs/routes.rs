@@ -3,6 +3,7 @@ use serde_repr::{Deserialize_repr, Serialize_repr};
 
 use crate::external::gtfs::agency::AgencyId;
 use crate::external::gtfs::Color;
+use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 
 /// 経路ID (ex: 1001)
@@ -45,6 +46,12 @@ pub struct Route {
     // route_sort_order
     // continuous_pickup
     // continuous_drop_off
+}
+
+impl GTFSFile for Route {
+    fn file_name() -> &'static str {
+        "routes.txt"
+    }
 }
 
 impl Table for Route {
