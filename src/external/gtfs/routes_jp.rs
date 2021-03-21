@@ -41,8 +41,7 @@ impl Table for RouteJp {
         route_update_date text,
         origin_stop text,
         via_stop text,
-        destination_stop text,
-        foreign key (route_id) references routes(route_id)
+        destination_stop text
         "
     }
 }

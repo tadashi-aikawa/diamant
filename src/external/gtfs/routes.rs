@@ -78,8 +78,7 @@ impl Table for Route {
         route_url text,
         route_color text,
         route_text_color text,
-        jp_parent_route_id text,
-        foreign key (agency_id) references agency(agency_id)
+        jp_parent_route_id text
         "
     }
 }

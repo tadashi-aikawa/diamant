@@ -45,8 +45,7 @@ impl Table for AgencyJp {
         agency_zip_number text,
         agency_address text,
         agency_president_pos text,
-        agency_president_name text,
-        foreign key (agency_id) references agency(agency_id)
+        agency_president_name text
         "
     }
 }

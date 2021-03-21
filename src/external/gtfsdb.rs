@@ -119,14 +119,14 @@ impl Gtfs for GtfsDb {
         // TODO: GTFSとGTFS-JPでmethodを分けた方がいいかも、他に独自テーブルの有無もあるし
         create::<Agency>(&self.connection)?;
         create::<AgencyJp>(&self.connection)?;
-        create::<OfficeJp>(&self.connection)?;
-        create::<Calendar>(&self.connection)?;
-        create::<CalendarDate>(&self.connection)?;
+        create::<Stop>(&self.connection)?;
         create::<Route>(&self.connection)?;
         create::<RouteJp>(&self.connection)?;
         create::<Trip>(&self.connection)?;
-        create::<Stop>(&self.connection)?;
+        create::<OfficeJp>(&self.connection)?;
         create::<StopTime>(&self.connection)?;
+        create::<Calendar>(&self.connection)?;
+        create::<CalendarDate>(&self.connection)?;
         create::<FareAttribute>(&self.connection)?;
         create::<FareRule>(&self.connection)?;
         create::<Shape>(&self.connection)?;
@@ -139,17 +139,16 @@ impl Gtfs for GtfsDb {
 
     fn drop_all(&self) -> Result<()> {
         // TODO: GTFSとGTFS-JPでmethodを分けた方がいいかも、他に独自テーブルの有無もあるし
-        drop::<StopTime>(&self.connection)?;
-        drop::<Stop>(&self.connection)?;
-        drop::<Trip>(&self.connection)?;
-        drop::<RouteJp>(&self.connection)?;
-        drop::<Route>(&self.connection)?;
-        drop::<CalendarDate>(&self.connection)?;
-        drop::<Calendar>(&self.connection)?;
-        drop::<OfficeJp>(&self.connection)?;
-        drop::<AgencyJp>(&self.connection)?;
         drop::<Agency>(&self.connection)?;
-
+        drop::<AgencyJp>(&self.connection)?;
+        drop::<Stop>(&self.connection)?;
+        drop::<Route>(&self.connection)?;
+        drop::<RouteJp>(&self.connection)?;
+        drop::<Trip>(&self.connection)?;
+        drop::<OfficeJp>(&self.connection)?;
+        drop::<StopTime>(&self.connection)?;
+        drop::<Calendar>(&self.connection)?;
+        drop::<CalendarDate>(&self.connection)?;
         drop::<FareAttribute>(&self.connection)?;
         drop::<FareRule>(&self.connection)?;
         drop::<Shape>(&self.connection)?;
