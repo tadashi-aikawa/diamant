@@ -54,3 +54,29 @@ jobs:
           asset_name: ${{ matrix.asset_name }}
           tag: ${{ github.ref }}
           overwrite: true
+      - name: "Slack notification (not success)"
+        uses: homoluctus/slatify@master
+        if: "! success()"
+        with:
+          type: ${{ job.status }}
+          username: GitHub Actions (Failure)
+          job_name: ":hibou_owl: Release ${{ github.ref }} (${{ matrix.os }} ${{ matrix.target }})"
+          mention: channel
+          mention_if: always
+          icon_emoji: "github"
+          url: ${{ secrets.SLACK_WEBHOOK }}
+
+  notify:
+    needs: release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Slack Notification (success)"
+        uses: homoluctus/slatify@master
+        if: always()
+        with:
+          type: ${{ job.status }}
+          username: GitHub Actions (Success)
+          job_name: ":hibou_owl: Release ${{ github.ref }}"
+          icon_emoji: ":github:"
+          url: ${{ secrets.SLACK_WEBHOOK }}
