@@ -1,6 +1,9 @@
 Hibou
 =====
 
+[![Version](https://img.shields.io/github/v/release/tadashi-aikawa/hibou?label=%F0%9F%93%A6release)](https://github.com/tadashi-aikawa/hibou/releases/latest)
+[![Release](https://github.com/tadashi-aikawa/hibou/actions/workflows/release.yaml/badge.svg)](https://github.com/tadashi-aikawa/hibou/actions/workflows/release.yaml)
+
 Hibou is a CLI tool for GTFS-JP.
 
 
