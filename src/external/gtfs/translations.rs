@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+use crate::external::gtfs::legacy_translations::LegacyTranslation;
 use crate::external::gtfs::Lang;
 use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
@@ -70,5 +71,67 @@ impl Table for Translation {
         record_sub_id text,
         field_value text
         "
+    }
+}
+
+impl Translation {
+    /// 出現頻度の高いもののみ
+    pub fn from_legacy(regacy: &LegacyTranslation) -> Vec<Translation> {
+        vec![
+            Translation {
+                table_name: TranslatableTableName::Stops,
+                field_name: "stop_name".to_string(),
+                language: regacy.lang.clone(),
+                translation: regacy.translation.clone(),
+                record_id: None,
+                record_sub_id: None,
+                field_value: Some(regacy.trans_id.clone()),
+            },
+            Translation {
+                table_name: TranslatableTableName::Routes,
+                field_name: "route_short_name".to_string(),
+                language: regacy.lang.clone(),
+                translation: regacy.translation.clone(),
+                record_id: None,
+                record_sub_id: None,
+                field_value: Some(regacy.trans_id.clone()),
+            },
+            Translation {
+                table_name: TranslatableTableName::Routes,
+                field_name: "route_long_name".to_string(),
+                language: regacy.lang.clone(),
+                translation: regacy.translation.clone(),
+                record_id: None,
+                record_sub_id: None,
+                field_value: Some(regacy.trans_id.clone()),
+            },
+            Translation {
+                table_name: TranslatableTableName::Trips,
+                field_name: "trip_headsign".to_string(),
+                language: regacy.lang.clone(),
+                translation: regacy.translation.clone(),
+                record_id: None,
+                record_sub_id: None,
+                field_value: Some(regacy.trans_id.clone()),
+            },
+            Translation {
+                table_name: TranslatableTableName::Trips,
+                field_name: "trip_short_name".to_string(),
+                language: regacy.lang.clone(),
+                translation: regacy.translation.clone(),
+                record_id: None,
+                record_sub_id: None,
+                field_value: Some(regacy.trans_id.clone()),
+            },
+            Translation {
+                table_name: TranslatableTableName::StopTimes,
+                field_name: "stop_headsign".to_string(),
+                language: regacy.lang.clone(),
+                translation: regacy.translation.clone(),
+                record_id: None,
+                record_sub_id: None,
+                field_value: Some(regacy.trans_id.clone()),
+            },
+        ]
     }
 }

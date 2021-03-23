@@ -14,6 +14,7 @@ use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::feed_info::Feed;
 use crate::external::gtfs::frequencies::Frequency;
+use crate::external::gtfs::legacy_translations::LegacyTranslation;
 use crate::external::gtfs::office_jp::OfficeJp;
 use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::routes_jp::RouteJp;
@@ -68,7 +69,7 @@ where
     Ok(())
 }
 
-pub fn insert<T>(conn: &mut Connection, records: &[&T]) -> anyhow::Result<()>
+pub fn insert<T>(conn: &mut Connection, records: &[T]) -> anyhow::Result<()>
 where
     T: serde::ser::Serialize + Debug + Table,
 {
@@ -159,7 +160,7 @@ impl Gtfs for GtfsDb {
         Ok(())
     }
 
-    fn insert_agencies(&mut self, agencies: &[&Agency]) -> Result<()> {
+    fn insert_agencies(&mut self, agencies: &[Agency]) -> Result<()> {
         insert(&mut self.connection, agencies)
     }
 
@@ -167,7 +168,7 @@ impl Gtfs for GtfsDb {
         select_all::<Agency>(&mut self.connection).context("Fail to select agency")
     }
 
-    fn insert_agencies_jp(&mut self, agencies_jp: &[&AgencyJp]) -> Result<()> {
+    fn insert_agencies_jp(&mut self, agencies_jp: &[AgencyJp]) -> Result<()> {
         insert(&mut self.connection, agencies_jp)
     }
 
@@ -179,7 +180,7 @@ impl Gtfs for GtfsDb {
         unimplemented!()
     }
 
-    fn insert_stops(&mut self, stops: &[&Stop]) -> Result<()> {
+    fn insert_stops(&mut self, stops: &[Stop]) -> Result<()> {
         insert(&mut self.connection, stops)
     }
 
@@ -187,7 +188,7 @@ impl Gtfs for GtfsDb {
         select_all::<Stop>(&mut self.connection).context("Fail to select stops")
     }
 
-    fn insert_routes(&mut self, routes: &[&Route]) -> Result<()> {
+    fn insert_routes(&mut self, routes: &[Route]) -> Result<()> {
         insert(&mut self.connection, routes)
     }
 
@@ -195,7 +196,7 @@ impl Gtfs for GtfsDb {
         select_all::<Route>(&mut self.connection).context("Fail to select_routes")
     }
 
-    fn insert_routes_jp(&mut self, routes_jp: &[&RouteJp]) -> Result<()> {
+    fn insert_routes_jp(&mut self, routes_jp: &[RouteJp]) -> Result<()> {
         insert(&mut self.connection, routes_jp)
     }
 
@@ -207,7 +208,7 @@ impl Gtfs for GtfsDb {
         unimplemented!()
     }
 
-    fn insert_trips(&mut self, trips: &[&Trip]) -> Result<()> {
+    fn insert_trips(&mut self, trips: &[Trip]) -> Result<()> {
         insert(&mut self.connection, trips)
     }
 
@@ -215,7 +216,7 @@ impl Gtfs for GtfsDb {
         select_all::<Trip>(&mut self.connection).context("Fail to select_trips")
     }
 
-    fn insert_offices_jp(&mut self, offices: &[&OfficeJp]) -> Result<()> {
+    fn insert_offices_jp(&mut self, offices: &[OfficeJp]) -> Result<()> {
         insert(&mut self.connection, offices)
     }
 
@@ -227,7 +228,7 @@ impl Gtfs for GtfsDb {
         unimplemented!()
     }
 
-    fn insert_stop_times(&mut self, stop_times: &[&StopTime]) -> Result<()> {
+    fn insert_stop_times(&mut self, stop_times: &[StopTime]) -> Result<()> {
         insert(&mut self.connection, stop_times)
     }
 
@@ -235,7 +236,7 @@ impl Gtfs for GtfsDb {
         select_all::<StopTime>(&mut self.connection).context("Fail to select stop_times")
     }
 
-    fn insert_calendars(&mut self, calendars: &[&Calendar]) -> Result<()> {
+    fn insert_calendars(&mut self, calendars: &[Calendar]) -> Result<()> {
         insert(&mut self.connection, calendars)
     }
 
@@ -243,7 +244,7 @@ impl Gtfs for GtfsDb {
         select_all::<Calendar>(&mut self.connection).context("Fail to select calendars")
     }
 
-    fn insert_calendar_dates(&mut self, calendar_dates: &[&CalendarDate]) -> Result<()> {
+    fn insert_calendar_dates(&mut self, calendar_dates: &[CalendarDate]) -> Result<()> {
         insert(&mut self.connection, calendar_dates)
     }
 
@@ -255,7 +256,7 @@ impl Gtfs for GtfsDb {
         unimplemented!()
     }
 
-    fn insert_fare_attributes(&mut self, fare_attributes: &[&FareAttribute]) -> Result<()> {
+    fn insert_fare_attributes(&mut self, fare_attributes: &[FareAttribute]) -> Result<()> {
         insert(&mut self.connection, fare_attributes)
     }
 
@@ -267,7 +268,7 @@ impl Gtfs for GtfsDb {
         unimplemented!()
     }
 
-    fn insert_fare_rules(&mut self, fare_rules: &[&FareRule]) -> Result<()> {
+    fn insert_fare_rules(&mut self, fare_rules: &[FareRule]) -> Result<()> {
         insert(&mut self.connection, fare_rules)
     }
 
@@ -279,7 +280,7 @@ impl Gtfs for GtfsDb {
         unimplemented!()
     }
 
-    fn insert_shapes(&mut self, shapes: &[&Shape]) -> Result<()> {
+    fn insert_shapes(&mut self, shapes: &[Shape]) -> Result<()> {
         insert(&mut self.connection, shapes)
     }
 
@@ -291,7 +292,7 @@ impl Gtfs for GtfsDb {
         unimplemented!()
     }
 
-    fn insert_frequencies(&mut self, frequencies: &[&Frequency]) -> Result<()> {
+    fn insert_frequencies(&mut self, frequencies: &[Frequency]) -> Result<()> {
         insert(&mut self.connection, frequencies)
     }
 
@@ -303,7 +304,7 @@ impl Gtfs for GtfsDb {
         unimplemented!()
     }
 
-    fn insert_transfers(&mut self, transfers: &[&Transfer]) -> Result<()> {
+    fn insert_transfers(&mut self, transfers: &[Transfer]) -> Result<()> {
         insert(&mut self.connection, transfers)
     }
 
@@ -315,7 +316,7 @@ impl Gtfs for GtfsDb {
         unimplemented!()
     }
 
-    fn insert_feeds(&mut self, feeds: &[&Feed]) -> Result<()> {
+    fn insert_feeds(&mut self, feeds: &[Feed]) -> Result<()> {
         insert(&mut self.connection, feeds)
     }
 
@@ -323,11 +324,19 @@ impl Gtfs for GtfsDb {
         select_all::<Feed>(&mut self.connection).context("Fail to select feed_info")
     }
 
-    fn insert_translations(&mut self, translations: &[&Translation]) -> Result<()> {
+    fn insert_translations(&mut self, translations: &[Translation]) -> Result<()> {
         insert(&mut self.connection, translations)
     }
 
     fn select_translations(&mut self) -> Result<Vec<Translation>> {
         select_all::<Translation>(&mut self.connection).context("Fail to select translations")
+    }
+
+    fn insert_legacy_translations(&mut self, translations: &[LegacyTranslation]) -> Result<()> {
+        insert(&mut self.connection, translations)
+    }
+
+    fn select_legacy_translations(&mut self) -> Result<Vec<LegacyTranslation>> {
+        select_all::<LegacyTranslation>(&mut self.connection).context("Fail to select translations")
     }
 }

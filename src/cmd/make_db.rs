@@ -12,6 +12,9 @@ pub struct Opts {
     gtfs_dir: PathBuf,
     #[clap(short, long, parse(from_os_str), default_value = "hibou.db")]
     database: PathBuf,
+    /// Load legacy translations and create a current translations table
+    #[clap(short, long)]
+    legacy_translations: bool,
 }
 
 pub fn run(op: &Opts) -> Result<()> {
@@ -22,7 +25,7 @@ pub fn run(op: &Opts) -> Result<()> {
 
     service.drop_tables()?;
     service.create_tables()?;
-    service.insert_tables()?;
+    service.insert_tables(op.legacy_translations)?;
 
     Ok(())
 }

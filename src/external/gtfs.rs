@@ -10,6 +10,7 @@ use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::feed_info::Feed;
 use crate::external::gtfs::frequencies::Frequency;
+use crate::external::gtfs::legacy_translations::LegacyTranslation;
 use crate::external::gtfs::office_jp::OfficeJp;
 use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::routes_jp::RouteJp;
@@ -28,6 +29,7 @@ pub mod fare_attributes;
 pub mod fare_rules;
 pub mod feed_info;
 pub mod frequencies;
+pub mod legacy_translations;
 pub mod office_jp;
 pub mod routes;
 pub mod routes_jp;
@@ -84,6 +86,10 @@ pub enum Lang {
     ZhCn,
     #[serde(rename = "zh-TW")]
     ZhTw,
+    #[serde(rename = "zh-Hans")]
+    ZhHans,
+    #[serde(rename = "zh-Hant")]
+    ZhHant,
     /// ふりがな
     #[serde(rename = "ja-Hrkt")]
     JaHrkt,
@@ -92,47 +98,49 @@ pub enum Lang {
 pub trait Gtfs {
     fn create_all(&self) -> Result<()>;
     fn drop_all(&self) -> Result<()>;
-    fn insert_agencies(&mut self, agencies: &[&Agency]) -> Result<()>;
+    fn insert_agencies(&mut self, agencies: &[Agency]) -> Result<()>;
     fn select_agencies(&mut self) -> Result<Vec<Agency>>;
-    fn insert_agencies_jp(&mut self, agencies: &[&AgencyJp]) -> Result<()>;
+    fn insert_agencies_jp(&mut self, agencies: &[AgencyJp]) -> Result<()>;
     fn select_agencies_jp(&mut self) -> Result<Vec<AgencyJp>>;
     fn has_agency_jp(&mut self) -> bool;
-    fn insert_stops(&mut self, stops: &[&Stop]) -> Result<()>;
+    fn insert_stops(&mut self, stops: &[Stop]) -> Result<()>;
     fn select_stops(&mut self) -> Result<Vec<Stop>>;
-    fn insert_routes(&mut self, routes: &[&Route]) -> Result<()>;
+    fn insert_routes(&mut self, routes: &[Route]) -> Result<()>;
     fn select_routes(&mut self) -> Result<Vec<Route>>;
-    fn insert_routes_jp(&mut self, routes: &[&RouteJp]) -> Result<()>;
+    fn insert_routes_jp(&mut self, routes: &[RouteJp]) -> Result<()>;
     fn select_routes_jp(&mut self) -> Result<Vec<RouteJp>>;
     fn has_routes_jp(&mut self) -> bool;
-    fn insert_trips(&mut self, trips: &[&Trip]) -> Result<()>;
+    fn insert_trips(&mut self, trips: &[Trip]) -> Result<()>;
     fn select_trips(&mut self) -> Result<Vec<Trip>>;
-    fn insert_offices_jp(&mut self, offices: &[&OfficeJp]) -> Result<()>;
+    fn insert_offices_jp(&mut self, offices: &[OfficeJp]) -> Result<()>;
     fn select_offices_jp(&mut self) -> Result<Vec<OfficeJp>>;
     fn has_office_jp(&mut self) -> bool;
-    fn insert_stop_times(&mut self, stop_times: &[&StopTime]) -> Result<()>;
+    fn insert_stop_times(&mut self, stop_times: &[StopTime]) -> Result<()>;
     fn select_stop_times(&mut self) -> Result<Vec<StopTime>>;
-    fn insert_calendars(&mut self, calendars: &[&Calendar]) -> Result<()>;
+    fn insert_calendars(&mut self, calendars: &[Calendar]) -> Result<()>;
     fn select_calendars(&mut self) -> Result<Vec<Calendar>>;
-    fn insert_calendar_dates(&mut self, calendar_dates: &[&CalendarDate]) -> Result<()>;
+    fn insert_calendar_dates(&mut self, calendar_dates: &[CalendarDate]) -> Result<()>;
     fn select_calendar_dates(&mut self) -> Result<Vec<CalendarDate>>;
     fn has_calendar_dates(&mut self) -> bool;
-    fn insert_fare_attributes(&mut self, fare_attributes: &[&FareAttribute]) -> Result<()>;
+    fn insert_fare_attributes(&mut self, fare_attributes: &[FareAttribute]) -> Result<()>;
     fn select_fare_attributes(&mut self) -> Result<Vec<FareAttribute>>;
     fn has_fare_attributes(&mut self) -> bool;
-    fn insert_fare_rules(&mut self, fare_rules: &[&FareRule]) -> Result<()>;
+    fn insert_fare_rules(&mut self, fare_rules: &[FareRule]) -> Result<()>;
     fn select_fare_rules(&mut self) -> Result<Vec<FareRule>>;
     fn has_fare_rules(&mut self) -> bool;
-    fn insert_shapes(&mut self, shapes: &[&Shape]) -> Result<()>;
+    fn insert_shapes(&mut self, shapes: &[Shape]) -> Result<()>;
     fn select_shapes(&mut self) -> Result<Vec<Shape>>;
     fn has_shapes(&mut self) -> bool;
-    fn insert_frequencies(&mut self, frequencies: &[&Frequency]) -> Result<()>;
+    fn insert_frequencies(&mut self, frequencies: &[Frequency]) -> Result<()>;
     fn select_frequencies(&mut self) -> Result<Vec<Frequency>>;
     fn has_frequencies(&mut self) -> bool;
-    fn insert_transfers(&mut self, transfers: &[&Transfer]) -> Result<()>;
+    fn insert_transfers(&mut self, transfers: &[Transfer]) -> Result<()>;
     fn select_transfers(&mut self) -> Result<Vec<Transfer>>;
     fn has_transfers(&mut self) -> bool;
-    fn insert_feeds(&mut self, feeds: &[&Feed]) -> Result<()>;
+    fn insert_feeds(&mut self, feeds: &[Feed]) -> Result<()>;
     fn select_feeds(&mut self) -> Result<Vec<Feed>>;
-    fn insert_translations(&mut self, translations: &[&Translation]) -> Result<()>;
+    fn insert_translations(&mut self, translations: &[Translation]) -> Result<()>;
     fn select_translations(&mut self) -> Result<Vec<Translation>>;
+    fn insert_legacy_translations(&mut self, translations: &[LegacyTranslation]) -> Result<()>;
+    fn select_legacy_translations(&mut self) -> Result<Vec<LegacyTranslation>>;
 }

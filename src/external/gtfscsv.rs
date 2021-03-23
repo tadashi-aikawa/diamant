@@ -10,6 +10,7 @@ use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::feed_info::Feed;
 use crate::external::gtfs::frequencies::Frequency;
+use crate::external::gtfs::legacy_translations::LegacyTranslation;
 use crate::external::gtfs::office_jp::OfficeJp;
 use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::routes_jp::RouteJp;
@@ -66,7 +67,7 @@ impl Gtfs for GtfsCsv {
         unimplemented!()
     }
 
-    fn insert_agencies(&mut self, _agencies: &[&Agency]) -> Result<()> {
+    fn insert_agencies(&mut self, _agencies: &[Agency]) -> Result<()> {
         unimplemented!()
     }
 
@@ -74,7 +75,7 @@ impl Gtfs for GtfsCsv {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
-    fn insert_agencies_jp(&mut self, _agencies_jp: &[&AgencyJp]) -> Result<()> {
+    fn insert_agencies_jp(&mut self, _agencies_jp: &[AgencyJp]) -> Result<()> {
         unimplemented!()
     }
 
@@ -86,7 +87,7 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<AgencyJp>(&self.gtfs_dir)
     }
 
-    fn insert_stops(&mut self, _stops: &[&Stop]) -> Result<()> {
+    fn insert_stops(&mut self, _stops: &[Stop]) -> Result<()> {
         unimplemented!()
     }
 
@@ -94,7 +95,7 @@ impl Gtfs for GtfsCsv {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
-    fn insert_routes(&mut self, _routes: &[&Route]) -> Result<()> {
+    fn insert_routes(&mut self, _routes: &[Route]) -> Result<()> {
         unimplemented!()
     }
 
@@ -102,7 +103,7 @@ impl Gtfs for GtfsCsv {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
-    fn insert_routes_jp(&mut self, _routes: &[&RouteJp]) -> Result<()> {
+    fn insert_routes_jp(&mut self, _routes: &[RouteJp]) -> Result<()> {
         unimplemented!()
     }
 
@@ -114,7 +115,7 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<RouteJp>(&self.gtfs_dir)
     }
 
-    fn insert_trips(&mut self, _trips: &[&Trip]) -> Result<()> {
+    fn insert_trips(&mut self, _trips: &[Trip]) -> Result<()> {
         unimplemented!()
     }
 
@@ -122,7 +123,7 @@ impl Gtfs for GtfsCsv {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
-    fn insert_offices_jp(&mut self, _offices: &[&OfficeJp]) -> Result<()> {
+    fn insert_offices_jp(&mut self, _offices: &[OfficeJp]) -> Result<()> {
         unimplemented!()
     }
 
@@ -134,7 +135,7 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<OfficeJp>(&self.gtfs_dir)
     }
 
-    fn insert_stop_times(&mut self, _stop_times: &[&StopTime]) -> Result<()> {
+    fn insert_stop_times(&mut self, _stop_times: &[StopTime]) -> Result<()> {
         unimplemented!()
     }
 
@@ -142,7 +143,7 @@ impl Gtfs for GtfsCsv {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
-    fn insert_calendars(&mut self, _calendars: &[&Calendar]) -> Result<()> {
+    fn insert_calendars(&mut self, _calendars: &[Calendar]) -> Result<()> {
         unimplemented!()
     }
 
@@ -150,7 +151,7 @@ impl Gtfs for GtfsCsv {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
-    fn insert_calendar_dates(&mut self, _calendar_dates: &[&CalendarDate]) -> Result<()> {
+    fn insert_calendar_dates(&mut self, _calendar_dates: &[CalendarDate]) -> Result<()> {
         unimplemented!()
     }
 
@@ -162,7 +163,7 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<CalendarDate>(&self.gtfs_dir)
     }
 
-    fn insert_fare_attributes(&mut self, _fare_attributes: &[&FareAttribute]) -> Result<()> {
+    fn insert_fare_attributes(&mut self, _fare_attributes: &[FareAttribute]) -> Result<()> {
         unimplemented!()
     }
 
@@ -174,7 +175,7 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<FareAttribute>(&self.gtfs_dir)
     }
 
-    fn insert_fare_rules(&mut self, _fare_rules: &[&FareRule]) -> Result<()> {
+    fn insert_fare_rules(&mut self, _fare_rules: &[FareRule]) -> Result<()> {
         unimplemented!()
     }
 
@@ -186,7 +187,7 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<FareRule>(&self.gtfs_dir)
     }
 
-    fn insert_shapes(&mut self, _shapes: &[&Shape]) -> Result<()> {
+    fn insert_shapes(&mut self, _shapes: &[Shape]) -> Result<()> {
         unimplemented!()
     }
 
@@ -198,7 +199,7 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<Shape>(&self.gtfs_dir)
     }
 
-    fn insert_frequencies(&mut self, _frequencies: &[&Frequency]) -> Result<()> {
+    fn insert_frequencies(&mut self, _frequencies: &[Frequency]) -> Result<()> {
         unimplemented!()
     }
 
@@ -210,7 +211,7 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<Frequency>(&self.gtfs_dir)
     }
 
-    fn insert_transfers(&mut self, _transfers: &[&Transfer]) -> Result<()> {
+    fn insert_transfers(&mut self, _transfers: &[Transfer]) -> Result<()> {
         unimplemented!()
     }
 
@@ -222,7 +223,7 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<Transfer>(&self.gtfs_dir)
     }
 
-    fn insert_feeds(&mut self, _feeds: &[&Feed]) -> Result<()> {
+    fn insert_feeds(&mut self, _feeds: &[Feed]) -> Result<()> {
         unimplemented!()
     }
 
@@ -230,11 +231,19 @@ impl Gtfs for GtfsCsv {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
-    fn insert_translations(&mut self, _translations: &[&Translation]) -> Result<()> {
+    fn insert_translations(&mut self, _translations: &[Translation]) -> Result<()> {
         unimplemented!()
     }
 
     fn select_translations(&mut self) -> Result<Vec<Translation>> {
+        load_gtfs::<_>(&self.gtfs_dir)
+    }
+
+    fn insert_legacy_translations(&mut self, _translations: &[LegacyTranslation]) -> Result<()> {
+        unimplemented!()
+    }
+
+    fn select_legacy_translations(&mut self) -> Result<Vec<LegacyTranslation>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 }
