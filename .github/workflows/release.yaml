@@ -67,7 +67,7 @@ jobs:
           url: ${{ secrets.SLACK_WEBHOOK }}
 
   notify:
-    needs: release
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
