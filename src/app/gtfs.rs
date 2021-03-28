@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use itertools::Itertools;
 use log::info;
 
@@ -36,7 +36,9 @@ where
         if legacy_translations {
             // 昔のtranslation
             info!("ℹ️ [translations] Load legacy translations");
-            let translations = self.gtfs_csv.load_legacy_translations()?;
+            let translations = self.gtfs_csv.load_legacy_translations().context(
+                "translations.txtのパースに失敗しました。ファイルに問題がない場合はtranslationの定義が新しい仕様に準拠していないか確認してください",
+            )?;
             let translations = translations
                 .iter()
                 .unique()
@@ -46,7 +48,9 @@ where
             self.gtfs_db.insert_translations(&translations)?;
             info!("  ✨ Success");
         } else {
-            let translations = self.gtfs_csv.load_translations()?;
+            let translations = self.gtfs_csv.load_translations().context(
+                "translations.txtのパースに失敗しました。ファイルに問題がない場合はtranslationが古い仕様に準拠していないか確認してください",
+            )?;
             let translations = translations.into_iter().unique().collect_vec();
             info!("ℹ️ [translations] {} records", translations.len());
             self.gtfs_db.insert_translations(&translations)?;
