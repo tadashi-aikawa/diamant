@@ -20,7 +20,7 @@ use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::transfers::Transfer;
 use crate::external::gtfs::translations::Translation;
 use crate::external::gtfs::trips::Trip;
-use crate::external::gtfs::Gtfs;
+use crate::external::gtfs::GtfsCsvTrait;
 use crate::io;
 use serde::de::DeserializeOwned;
 
@@ -30,10 +30,6 @@ pub struct GtfsCsv {
 
 pub trait GTFSFile {
     fn file_name() -> &'static str;
-}
-
-pub fn init(path: &Path) -> Result<GtfsCsv> {
-    GtfsCsv::new(path)
 }
 
 fn load_gtfs<T>(gtfs_dir: &Path) -> Result<Vec<T>>
@@ -58,28 +54,12 @@ impl GtfsCsv {
     }
 }
 
-impl Gtfs for GtfsCsv {
-    fn create_all(&self) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn drop_all(&self) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn insert_agencies(&mut self, _agencies: &[Agency]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_agencies(&mut self) -> Result<Vec<Agency>> {
+impl GtfsCsvTrait for GtfsCsv {
+    fn load_agencies(&mut self) -> Result<Vec<Agency>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
-    fn insert_agencies_jp(&mut self, _agencies_jp: &[AgencyJp]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_agencies_jp(&mut self) -> Result<Vec<AgencyJp>> {
+    fn load_agencies_jp(&mut self) -> Result<Vec<AgencyJp>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
@@ -87,27 +67,15 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<AgencyJp>(&self.gtfs_dir)
     }
 
-    fn insert_stops(&mut self, _stops: &[Stop]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_stops(&mut self) -> Result<Vec<Stop>> {
+    fn load_stops(&mut self) -> Result<Vec<Stop>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
-    fn insert_routes(&mut self, _routes: &[Route]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_routes(&mut self) -> Result<Vec<Route>> {
+    fn load_routes(&mut self) -> Result<Vec<Route>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
-    fn insert_routes_jp(&mut self, _routes: &[RouteJp]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_routes_jp(&mut self) -> Result<Vec<RouteJp>> {
+    fn load_routes_jp(&mut self) -> Result<Vec<RouteJp>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
@@ -115,19 +83,11 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<RouteJp>(&self.gtfs_dir)
     }
 
-    fn insert_trips(&mut self, _trips: &[Trip]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_trips(&mut self) -> Result<Vec<Trip>> {
+    fn load_trips(&mut self) -> Result<Vec<Trip>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
-    fn insert_offices_jp(&mut self, _offices: &[OfficeJp]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_offices_jp(&mut self) -> Result<Vec<OfficeJp>> {
+    fn load_offices_jp(&mut self) -> Result<Vec<OfficeJp>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
@@ -135,27 +95,15 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<OfficeJp>(&self.gtfs_dir)
     }
 
-    fn insert_stop_times(&mut self, _stop_times: &[StopTime]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_stop_times(&mut self) -> Result<Vec<StopTime>> {
+    fn load_stop_times(&mut self) -> Result<Vec<StopTime>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
-    fn insert_calendars(&mut self, _calendars: &[Calendar]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_calendars(&mut self) -> Result<Vec<Calendar>> {
+    fn load_calendars(&mut self) -> Result<Vec<Calendar>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
-    fn insert_calendar_dates(&mut self, _calendar_dates: &[CalendarDate]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_calendar_dates(&mut self) -> Result<Vec<CalendarDate>> {
+    fn load_calendar_dates(&mut self) -> Result<Vec<CalendarDate>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
@@ -163,11 +111,7 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<CalendarDate>(&self.gtfs_dir)
     }
 
-    fn insert_fare_attributes(&mut self, _fare_attributes: &[FareAttribute]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_fare_attributes(&mut self) -> Result<Vec<FareAttribute>> {
+    fn load_fare_attributes(&mut self) -> Result<Vec<FareAttribute>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
@@ -175,20 +119,12 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<FareAttribute>(&self.gtfs_dir)
     }
 
-    fn insert_fare_rules(&mut self, _fare_rules: &[FareRule]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_fare_rules(&mut self) -> Result<Vec<FareRule>> {
+    fn load_fare_rules(&mut self) -> Result<Vec<FareRule>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
     fn has_fare_rules(&mut self) -> bool {
         has_gtfs::<FareRule>(&self.gtfs_dir)
-    }
-
-    fn insert_shapes(&mut self, _shapes: &[Shape]) -> Result<()> {
-        unimplemented!()
     }
 
     fn select_shapes(&mut self) -> Result<Vec<Shape>> {
@@ -199,11 +135,7 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<Shape>(&self.gtfs_dir)
     }
 
-    fn insert_frequencies(&mut self, _frequencies: &[Frequency]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_frequencies(&mut self) -> Result<Vec<Frequency>> {
+    fn load_frequencies(&mut self) -> Result<Vec<Frequency>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
@@ -211,11 +143,7 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<Frequency>(&self.gtfs_dir)
     }
 
-    fn insert_transfers(&mut self, _transfers: &[Transfer]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_transfers(&mut self) -> Result<Vec<Transfer>> {
+    fn load_transfers(&mut self) -> Result<Vec<Transfer>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
@@ -223,27 +151,15 @@ impl Gtfs for GtfsCsv {
         has_gtfs::<Transfer>(&self.gtfs_dir)
     }
 
-    fn insert_feeds(&mut self, _feeds: &[Feed]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_feeds(&mut self) -> Result<Vec<Feed>> {
+    fn load_feeds(&mut self) -> Result<Vec<Feed>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
-    fn insert_translations(&mut self, _translations: &[Translation]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_translations(&mut self) -> Result<Vec<Translation>> {
+    fn load_translations(&mut self) -> Result<Vec<Translation>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 
-    fn insert_legacy_translations(&mut self, _translations: &[LegacyTranslation]) -> Result<()> {
-        unimplemented!()
-    }
-
-    fn select_legacy_translations(&mut self) -> Result<Vec<LegacyTranslation>> {
+    fn load_legacy_translations(&mut self) -> Result<Vec<LegacyTranslation>> {
         load_gtfs::<_>(&self.gtfs_dir)
     }
 }

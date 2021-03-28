@@ -18,10 +18,10 @@ pub struct Opts {
 }
 
 pub fn run(op: &Opts) -> Result<()> {
-    let gtfs_csv = external::gtfscsv::init(&op.gtfs_dir)?;
+    let gtfs_csv = external::gtfscsv::GtfsCsv::new(&op.gtfs_dir)?;
     let gtfs_db = external::gtfsdb::init(&op.database)?;
 
-    let mut service = GtfsService::new(gtfs_db, gtfs_csv);
+    let mut service = GtfsService::new(gtfs_csv, gtfs_db);
 
     service.drop_tables()?;
     service.create_tables()?;

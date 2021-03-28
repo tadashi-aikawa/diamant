@@ -1,24 +1,25 @@
 use anyhow::Result;
 
-use crate::external;
 use crate::external::gtfs::trips::Trip;
+use crate::external::gtfs::GtfsCsvTrait;
+use crate::external::gtfscsv::GtfsCsv;
 
-pub struct TripService<G>
-where
-    G: external::gtfs::Gtfs,
-{
-    gtfs: G,
+pub trait TripService {
+    fn fetch(&mut self) -> Result<Vec<Trip>>;
 }
 
-impl<G> TripService<G>
-where
-    G: external::gtfs::Gtfs,
-{
-    pub fn new(gtfs: G) -> Self {
+pub struct TripServiceCsv {
+    gtfs: GtfsCsv,
+}
+
+impl TripServiceCsv {
+    pub fn new(gtfs: GtfsCsv) -> Self {
         Self { gtfs }
     }
+}
 
-    pub fn fetch(&mut self) -> Result<Vec<Trip>> {
-        self.gtfs.select_trips()
+impl TripService for TripServiceCsv {
+    fn fetch(&mut self) -> Result<Vec<Trip>> {
+        self.gtfs.load_trips()
     }
 }

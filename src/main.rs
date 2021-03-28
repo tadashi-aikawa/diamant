@@ -26,8 +26,6 @@ enum SubCommand {
     MakeDb(cmd::make_db::Opts),
     /// データベースからデータを取得します
     Get(cmd::get::Opts),
-    /// 開発用のテストコマンド
-    Test(cmd::test::Opts),
 }
 
 fn main() -> Result<()> {
@@ -37,7 +35,6 @@ fn main() -> Result<()> {
     match opts.subcmd {
         SubCommand::MakeDb(op) => cmd::make_db::run(&op)?,
         SubCommand::Get(op) => cmd::get::run(&op)?,
-        SubCommand::Test(op) => cmd::test::run(&op)?,
     }
 
     Ok(())
