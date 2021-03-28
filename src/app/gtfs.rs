@@ -32,6 +32,27 @@ where
     }
 
     pub fn insert_tables(&mut self, legacy_translations: bool) -> Result<()> {
+        // translationのlegacyフラグが間違っている場合に失敗するため最初に実行
+        if legacy_translations {
+            // 昔のtranslation
+            info!("ℹ️ [translations] Load legacy translations");
+            let translations = self.gtfs_csv.load_legacy_translations()?;
+            let translations = translations
+                .iter()
+                .unique()
+                .flat_map(Translation::from_legacy)
+                .collect_vec();
+            info!("ℹ️ [translations] {} records", translations.len());
+            self.gtfs_db.insert_translations(&translations)?;
+            info!("  ✨ Success");
+        } else {
+            let translations = self.gtfs_csv.load_translations()?;
+            let translations = translations.into_iter().unique().collect_vec();
+            info!("ℹ️ [translations] {} records", translations.len());
+            self.gtfs_db.insert_translations(&translations)?;
+            info!("  ✨ Success");
+        }
+
         let agencies = self.gtfs_csv.load_agencies()?;
         let agencies = agencies.into_iter().unique().collect_vec();
         info!("ℹ️ [agencies] {} records", agencies.len());
@@ -164,26 +185,6 @@ where
         info!("ℹ️ [feed_info] {} records", feeds.len());
         self.gtfs_db.insert_feeds(&feeds)?;
         info!("  ✨ Success");
-
-        if legacy_translations {
-            // 昔のtranslation
-            info!("ℹ️ [translations] Load legacy translations");
-            let translations = self.gtfs_csv.load_legacy_translations()?;
-            let translations = translations
-                .iter()
-                .unique()
-                .flat_map(Translation::from_legacy)
-                .collect_vec();
-            info!("ℹ️ [translations] {} records", translations.len());
-            self.gtfs_db.insert_translations(&translations)?;
-            info!("  ✨ Success");
-        } else {
-            let translations = self.gtfs_csv.load_translations()?;
-            let translations = translations.into_iter().unique().collect_vec();
-            info!("ℹ️ [translations] {} records", translations.len());
-            self.gtfs_db.insert_translations(&translations)?;
-            info!("  ✨ Success");
-        }
 
         Ok(())
     }
