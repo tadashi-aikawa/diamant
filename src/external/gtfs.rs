@@ -82,6 +82,8 @@ pub enum Lang {
     Ja,
     En,
     Ko,
+    Th,
+    Vi,
     #[serde(rename = "zh-CN")]
     ZhCn,
     #[serde(rename = "zh-TW")]
@@ -92,6 +94,7 @@ pub enum Lang {
     ZhHant,
     /// ふりがな
     #[serde(rename = "ja-Hrkt")]
+    #[serde(alias = "ja-HrKt")] // ジョルダン用
     JaHrkt,
 }
 
