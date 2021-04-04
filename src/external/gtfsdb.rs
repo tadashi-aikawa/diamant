@@ -10,6 +10,8 @@ use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::agency_jp::AgencyJp;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
+use crate::external::gtfs::extended::trip_with_stops::{select_stops_by_trips, TripWithStop};
+use crate::external::gtfs::extended::trips2courses::Trip2Course;
 use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::feed_info::Feed;
@@ -135,6 +137,8 @@ impl GtfsDbTrait for GtfsDb {
         create::<Transfer>(&self.connection)?;
         create::<Feed>(&self.connection)?;
         create::<Translation>(&self.connection)?;
+        // ----------- extended ---------------
+        create::<Trip2Course>(&self.connection)?;
         Ok(())
     }
 
@@ -157,6 +161,8 @@ impl GtfsDbTrait for GtfsDb {
         drop::<Transfer>(&self.connection)?;
         drop::<Feed>(&self.connection)?;
         drop::<Translation>(&self.connection)?;
+        // ----------- extended ---------------
+        drop::<Trip2Course>(&self.connection)?;
         Ok(())
     }
 
@@ -238,5 +244,15 @@ impl GtfsDbTrait for GtfsDb {
 
     fn insert_legacy_translations(&mut self, translations: &[LegacyTranslation]) -> Result<()> {
         insert(&mut self.connection, translations)
+    }
+
+    /// ---------------------------extended--------------------------
+
+    fn select_trip_with_stops(&mut self) -> Result<Vec<TripWithStop>> {
+        select_stops_by_trips(&mut self.connection).context("Fail to select_trip_with_stops")
+    }
+
+    fn insert_trips2courses(&mut self, trip2courses: &[Trip2Course]) -> Result<()> {
+        insert(&mut self.connection, trip2courses)
     }
 }

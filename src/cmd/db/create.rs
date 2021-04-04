@@ -26,6 +26,7 @@ pub fn run(op: &Opts) -> Result<()> {
     service.drop_tables()?;
     service.create_tables()?;
     service.insert_tables(op.legacy_translations)?;
+    service.insert_origin_tables()?;
 
     Ok(())
 }

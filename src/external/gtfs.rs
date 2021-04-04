@@ -6,6 +6,8 @@ use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::agency_jp::AgencyJp;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
+use crate::external::gtfs::extended::trip_with_stops::TripWithStop;
+use crate::external::gtfs::extended::trips2courses::Trip2Course;
 use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::feed_info::Feed;
@@ -25,6 +27,7 @@ pub mod agency;
 pub mod agency_jp;
 pub mod calendar;
 pub mod calendar_dates;
+pub mod extended;
 pub mod fare_attributes;
 pub mod fare_rules;
 pub mod feed_info;
@@ -153,4 +156,9 @@ pub trait GtfsDbTrait {
     fn insert_feeds(&mut self, feeds: &[Feed]) -> Result<()>;
     fn insert_translations(&mut self, translations: &[Translation]) -> Result<()>;
     fn insert_legacy_translations(&mut self, translations: &[LegacyTranslation]) -> Result<()>;
+
+    /// -------------- extended -----------------------
+    /// 返却結果のソートは trip_id, stop_sequence を保証する
+    fn select_trip_with_stops(&mut self) -> Result<Vec<TripWithStop>>;
+    fn insert_trips2courses(&mut self, trip2courses: &[Trip2Course]) -> Result<()>;
 }

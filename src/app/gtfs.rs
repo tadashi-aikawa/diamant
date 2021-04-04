@@ -2,7 +2,10 @@ use anyhow::{Context, Result};
 use itertools::Itertools;
 use log::info;
 
+use crate::external::gtfs::extended::course::CourseGenerator;
+
 use crate::external;
+use crate::external::gtfs::extended::trips2courses::Trip2Course;
 use crate::external::gtfs::translations::Translation;
 
 pub struct GtfsService<CSV, DB>
@@ -190,6 +193,28 @@ where
         self.gtfs_db.insert_feeds(&feeds)?;
         info!("  ✨ Success");
 
+        Ok(())
+    }
+
+    pub fn insert_origin_tables(&mut self) -> Result<()> {
+        let mut generator = CourseGenerator::new();
+
+        // trips2courses
+        let trip_with_stops = self.gtfs_db.select_trip_with_stops()?;
+        let trip_ids2course_ids = trip_with_stops
+            .into_iter()
+            .into_group_map_by(|x| x.trip_id.clone())
+            .into_iter()
+            .map(|(trip_id, stops)| Trip2Course {
+                trip_id,
+                course_id: generator.generate(&stops).course_id,
+            })
+            .sorted_by_key(|x| x.course_id)
+            .collect_vec();
+
+        info!("ℹ️ [trips2courses] {} records", trip_ids2course_ids.len());
+        self.gtfs_db.insert_trips2courses(&trip_ids2course_ids)?;
+        info!("  ✨ Success");
         Ok(())
     }
 
