@@ -11,7 +11,9 @@ use crate::external::gtfs::agency_jp::AgencyJp;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::extended::course::Course;
-use crate::external::gtfs::extended::trip_with_stops::{select_stops_by_trips, TripWithStop};
+use crate::external::gtfs::extended::trip_with_sequence_meta::{
+    select_trip_with_sequence_meta, TripWithSequenceMeta,
+};
 use crate::external::gtfs::extended::trips2courses::Trip2Course;
 use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
@@ -251,8 +253,9 @@ impl GtfsDbTrait for GtfsDb {
 
     /// ---------------------------extended--------------------------
 
-    fn select_trip_with_stops(&mut self) -> Result<Vec<TripWithStop>> {
-        select_stops_by_trips(&mut self.connection).context("Fail to select_trip_with_stops")
+    fn select_trip_with_sequence_meta(&mut self) -> Result<Vec<TripWithSequenceMeta>> {
+        select_trip_with_sequence_meta(&mut self.connection)
+            .context("Fail to select_trip_with_stops")
     }
 
     fn insert_trips2courses(&mut self, trip2courses: &[Trip2Course]) -> Result<()> {

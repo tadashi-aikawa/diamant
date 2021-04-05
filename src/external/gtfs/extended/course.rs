@@ -1,4 +1,4 @@
-use crate::external::gtfs::extended::trip_with_stops::TripWithStop;
+use crate::external::gtfs::extended::trip_with_sequence_meta::TripWithSequenceMeta;
 use crate::external::gtfsdb::Table;
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
@@ -50,7 +50,7 @@ impl CourseGenerator {
     }
 
     /// trip_with_stopsは 1つのtripに対し、sequence昇順
-    pub fn generate(&mut self, trip_with_stops: &[TripWithStop]) -> Course {
+    pub fn generate(&mut self, trip_with_stops: &[TripWithSequenceMeta]) -> Course {
         let identify = trip_with_stops
             .iter()
             .map(|x| x.stop_name.clone())
@@ -59,13 +59,16 @@ impl CourseGenerator {
             Some(c) => c.clone(),
             None => {
                 let course_name = format!(
-                    "{}-{}",
+                    "{}({}～{})",
                     trip_with_stops
                         .first()
-                        .map_or("nothing".into(), |x| x.stop_name.clone()),
+                        .map_or("".into(), |x| x.clone().route_name()),
+                    trip_with_stops
+                        .first()
+                        .map_or("".into(), |x| x.stop_name.clone()),
                     trip_with_stops
                         .last()
-                        .map_or("nothing".into(), |x| x.stop_name.clone())
+                        .map_or("".into(), |x| x.stop_name.clone())
                 );
                 let course = Course {
                     course_id: self.current_id + 1,

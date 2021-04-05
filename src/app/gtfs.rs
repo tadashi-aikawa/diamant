@@ -200,8 +200,8 @@ where
         let mut course_generator = CourseGenerator::new();
 
         // trips2courses
-        let trip_with_stops = self.gtfs_db.select_trip_with_stops()?;
-        let trip_ids2course_ids = trip_with_stops
+        let trip_with_sequence_meta = self.gtfs_db.select_trip_with_sequence_meta()?;
+        let trip_ids2course_ids = trip_with_sequence_meta
             .into_iter()
             .into_group_map_by(|x| x.trip_id.clone())
             .into_iter()
