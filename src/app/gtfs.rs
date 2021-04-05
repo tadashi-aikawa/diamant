@@ -197,7 +197,7 @@ where
     }
 
     pub fn insert_origin_tables(&mut self) -> Result<()> {
-        let mut generator = CourseGenerator::new();
+        let mut course_generator = CourseGenerator::new();
 
         // trips2courses
         let trip_with_stops = self.gtfs_db.select_trip_with_stops()?;
@@ -207,7 +207,7 @@ where
             .into_iter()
             .map(|(trip_id, stops)| Trip2Course {
                 trip_id,
-                course_id: generator.generate(&stops).course_id,
+                course_id: course_generator.generate(&stops).course_id,
             })
             .sorted_by_key(|x| x.course_id)
             .collect_vec();
@@ -215,6 +215,16 @@ where
         info!("ℹ️ [trips2courses] {} records", trip_ids2course_ids.len());
         self.gtfs_db.insert_trips2courses(&trip_ids2course_ids)?;
         info!("  ✨ Success");
+
+        let courses = course_generator
+            .all()
+            .into_iter()
+            .sorted_by_key(|x| x.course_id)
+            .collect_vec();
+        info!("ℹ️ [courses] {} records", courses.len());
+        self.gtfs_db.insert_courses(&courses)?;
+        info!("  ✨ Success");
+
         Ok(())
     }
 

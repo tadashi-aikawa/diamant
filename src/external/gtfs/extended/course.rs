@@ -1,4 +1,5 @@
 use crate::external::gtfs::extended::trip_with_stops::TripWithStop;
+use crate::external::gtfsdb::Table;
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -12,6 +13,24 @@ pub struct Course {
     pub course_id: CourseId,
     /// コース名
     pub course_name: String,
+}
+
+impl Table for Course {
+    fn table_name() -> &'static str {
+        "courses"
+    }
+
+    fn column_names() -> &'static [&'static str] {
+        &["course_id", "course_name"]
+    }
+
+    fn create_sql() -> &'static str {
+        "
+        course_id int,
+        course_name text,
+        PRIMARY KEY(course_id, course_name)
+        "
+    }
 }
 
 /// 同一性
@@ -39,14 +58,27 @@ impl CourseGenerator {
         match self.course_by_identify.get(&identify) {
             Some(c) => c.clone(),
             None => {
+                let course_name = format!(
+                    "{}-{}",
+                    trip_with_stops
+                        .first()
+                        .map_or("nothing".into(), |x| x.stop_name.clone()),
+                    trip_with_stops
+                        .last()
+                        .map_or("nothing".into(), |x| x.stop_name.clone())
+                );
                 let course = Course {
                     course_id: self.current_id + 1,
-                    course_name: "hoge".into(),
+                    course_name,
                 };
                 self.current_id += 1;
                 self.course_by_identify.insert(identify, course.clone());
                 course
             }
         }
+    }
+
+    pub fn all(&mut self) -> Vec<Course> {
+        self.course_by_identify.values().cloned().collect_vec()
     }
 }

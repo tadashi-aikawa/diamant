@@ -10,6 +10,7 @@ use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::agency_jp::AgencyJp;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
+use crate::external::gtfs::extended::course::Course;
 use crate::external::gtfs::extended::trip_with_stops::{select_stops_by_trips, TripWithStop};
 use crate::external::gtfs::extended::trips2courses::Trip2Course;
 use crate::external::gtfs::fare_attributes::FareAttribute;
@@ -139,6 +140,7 @@ impl GtfsDbTrait for GtfsDb {
         create::<Translation>(&self.connection)?;
         // ----------- extended ---------------
         create::<Trip2Course>(&self.connection)?;
+        create::<Course>(&self.connection)?;
         Ok(())
     }
 
@@ -163,6 +165,7 @@ impl GtfsDbTrait for GtfsDb {
         drop::<Translation>(&self.connection)?;
         // ----------- extended ---------------
         drop::<Trip2Course>(&self.connection)?;
+        drop::<Course>(&self.connection)?;
         Ok(())
     }
 
@@ -254,5 +257,9 @@ impl GtfsDbTrait for GtfsDb {
 
     fn insert_trips2courses(&mut self, trip2courses: &[Trip2Course]) -> Result<()> {
         insert(&mut self.connection, trip2courses)
+    }
+
+    fn insert_courses(&mut self, courses: &[Course]) -> Result<()> {
+        insert(&mut self.connection, courses)
     }
 }
