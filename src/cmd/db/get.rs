@@ -4,6 +4,7 @@ use clap::Clap;
 use crate::cmd;
 
 pub mod routes;
+pub mod trip_with_sequence_meta;
 
 #[derive(Clap, Debug)]
 pub struct Opts {
@@ -15,10 +16,13 @@ pub struct Opts {
 pub enum SubCommand {
     /// routes
     Routes(cmd::db::get::routes::Opts),
+    /// tripに対して停車するstopとその付随情報を出力する
+    TripWithSequenceMeta(cmd::db::get::trip_with_sequence_meta::Opts),
 }
 
 pub fn run(opts: &Opts) -> Result<()> {
     match &opts.subcmd {
         SubCommand::Routes(op) => cmd::db::get::routes::run(&op),
+        SubCommand::TripWithSequenceMeta(op) => cmd::db::get::trip_with_sequence_meta::run(&op),
     }
 }
