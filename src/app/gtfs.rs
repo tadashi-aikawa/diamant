@@ -5,6 +5,7 @@ use log::info;
 use crate::external::gtfs::extended::course::CourseGenerator;
 
 use crate::external;
+use crate::external::gtfs::extended::course;
 use crate::external::gtfs::extended::trips2courses::Trip2Course;
 use crate::external::gtfs::translations::Translation;
 
@@ -196,8 +197,11 @@ where
         Ok(())
     }
 
-    pub fn insert_origin_tables(&mut self) -> Result<()> {
-        let mut course_generator = CourseGenerator::new();
+    pub fn insert_origin_tables(
+        &mut self,
+        course_identify_strategy: &course::IdentifyStrategy,
+    ) -> Result<()> {
+        let mut course_generator = CourseGenerator::new(course_identify_strategy);
 
         // trips2courses
         let trip_with_sequence_meta = self.gtfs_db.select_trip_with_sequence_meta()?;
@@ -205,9 +209,13 @@ where
             .into_iter()
             .into_group_map_by(|x| x.trip_id.clone())
             .into_iter()
-            .map(|(trip_id, stops)| Trip2Course {
-                trip_id,
-                course_id: course_generator.generate(&stops).course_id,
+            .map(|(trip_id, stops)| {
+                // TODO: ちゃんと例外処理したい。。
+                let course = course_generator.generate(&stops).unwrap();
+                Trip2Course {
+                    trip_id,
+                    course_id: course.course_id,
+                }
             })
             .sorted_by_key(|x| x.course_id)
             .collect_vec();
