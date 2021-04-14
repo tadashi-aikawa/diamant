@@ -1,6 +1,6 @@
 [package]
 name = "hibou"
-version = "0.1.0"
+version = "0.7.1"
 authors = ["tadashi-aikawa <syou.maman@gmail.com>"]
 edition = "2018"
 
