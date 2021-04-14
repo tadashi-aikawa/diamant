@@ -9,11 +9,11 @@ use strum_macros::{EnumString, EnumVariantNames};
 #[derive(Debug, EnumString, EnumVariantNames)]
 #[strum(serialize_all = "lowercase")]
 pub enum Format {
-    CSV,
-    TSV,
-    JSON,
-    PJSON,
-    YAML,
+    Csv,
+    Tsv,
+    Json,
+    PJson,
+    Yaml,
 }
 
 pub fn read<T>(path: &PathBuf) -> Result<Vec<T>>
@@ -32,11 +32,11 @@ where
     T: Serialize,
 {
     match format {
-        Format::CSV => write_csv(records, b','),
-        Format::TSV => write_csv(records, b'\t'),
-        Format::JSON => write_json(records),
-        Format::PJSON => write_pretty_json(records),
-        Format::YAML => write_yaml(records),
+        Format::Csv => write_csv(records, b','),
+        Format::Tsv => write_csv(records, b'\t'),
+        Format::Json => write_json(records),
+        Format::PJson => write_pretty_json(records),
+        Format::Yaml => write_yaml(records),
     }?;
     Ok(())
 }
