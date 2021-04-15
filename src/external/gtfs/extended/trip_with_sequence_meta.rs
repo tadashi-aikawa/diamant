@@ -14,8 +14,12 @@ use serde_rusqlite::from_rows;
 pub struct TripWithSequenceMeta {
     /// 便ID
     pub trip_id: TripId,
+    /// 便行き先 (ex: 東京ビッグサイト（月島駅経由）)
+    pub trip_headsign: Option<String>,
     /// 通過順位 (ex: 0)
     pub stop_sequence: Sequence,
+    /// 停留所行先 (ex: 東京ビッグサイト（月島駅経由）)
+    pub stop_headsign: Option<String>,
     /// 標柱ID
     pub stop_id: StopId,
     /// 停留所・標柱名称 (ex: ①東京駅八重洲口 ②東京駅八重洲口)
@@ -36,7 +40,7 @@ impl TripWithSequenceMeta {
     pub fn route_name(self) -> String {
         match self.route_long_name {
             Some(n) => n,
-            None => self.route_short_name.unwrap(), // long_nameとshort_nameどちらかは値がある
+            _none => self.route_short_name.unwrap(), // long_nameとshort_nameどちらかは値がある
         }
     }
 }
@@ -49,7 +53,9 @@ pub fn select_trip_with_sequence_meta(
             "
 SELECT
   stt.trip_id,
+  t.trip_headsign,
   stt.stop_sequence,
+  stt.stop_headsign,
   st.stop_id,
   st.stop_name,
   st.stop_lat,
