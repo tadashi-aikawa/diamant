@@ -88,6 +88,7 @@ pub enum Lang {
     Ko,
     Th,
     Vi,
+    Zh,
     #[serde(rename = "zh-CN")]
     ZhCn,
     #[serde(rename = "zh-TW")]
