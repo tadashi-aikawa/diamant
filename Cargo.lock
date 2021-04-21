@@ -374,6 +374,34 @@ dependencies = [
 ]
 
 [[package]]
+name = "diamant"
+version = "0.8.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "clap",
+ "csv",
+ "env_logger",
+ "indicatif",
+ "itertools",
+ "log 0.4.14",
+ "ordered-float",
+ "rocket",
+ "rocket_contrib",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "serde_repr",
+ "serde_rusqlite",
+ "serde_with",
+ "serde_yaml",
+ "strum",
+ "strum_macros",
+ "thiserror",
+ "yaml-rust",
+]
+
+[[package]]
 name = "digest"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -549,34 +577,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "322f4de77956e22ed0e5032c359a0f1273f1f7f0d79bfa3b8ffbc730d7fbcc5c"
 dependencies = [
  "libc",
-]
-
-[[package]]
-name = "hibou"
-version = "0.8.0"
-dependencies = [
- "anyhow",
- "chrono",
- "clap",
- "csv",
- "env_logger",
- "indicatif",
- "itertools",
- "log 0.4.14",
- "ordered-float",
- "rocket",
- "rocket_contrib",
- "rusqlite",
- "serde",
- "serde_json",
- "serde_repr",
- "serde_rusqlite",
- "serde_with",
- "serde_yaml",
- "strum",
- "strum_macros",
- "thiserror",
- "yaml-rust",
 ]
 
 [[package]]

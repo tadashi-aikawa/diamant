@@ -12,7 +12,7 @@ use crate::external::gtfs::extended::course;
 pub struct Opts {
     #[clap(parse(from_os_str))]
     gtfs_dir: PathBuf,
-    #[clap(short, long, parse(from_os_str), default_value = "hibou.db")]
+    #[clap(short, long, parse(from_os_str), default_value = "diamant.db")]
     database: PathBuf,
     /// Load legacy translations and create a current translations table
     #[clap(short, long)]

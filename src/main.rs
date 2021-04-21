@@ -17,7 +17,7 @@ mod serde_chrono_custom;
 #[clap(version = clap::crate_version!(), author = "tadashi-aikawa")]
 struct Opts {
     /// The path of the config file to load
-    #[clap(short, long, default_value = ".hibou.yaml")]
+    #[clap(short, long, default_value = ".diamant.yaml")]
     config: String,
     #[clap(subcommand)]
     subcmd: SubCommand,

@@ -10,7 +10,7 @@ use crate::{external, io};
 
 #[derive(Clap, Debug)]
 pub struct Opts {
-    #[clap(short, long, parse(from_os_str), default_value = "hibou.db")]
+    #[clap(short, long, parse(from_os_str), default_value = "diamant.db")]
     database: PathBuf,
     #[clap(short, long, default_value = "csv", possible_values(Format::VARIANTS))]
     format: Format,

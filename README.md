@@ -1,10 +1,46 @@
-Hibou
-=====
+<h1 align="center">
+    Diamant
+</h1>
 
-[![Version](https://img.shields.io/github/v/release/tadashi-aikawa/hibou?label=%F0%9F%93%A6release)](https://github.com/tadashi-aikawa/hibou/releases/latest)
-[![Release](https://github.com/tadashi-aikawa/hibou/actions/workflows/release.yaml/badge.svg)](https://github.com/tadashi-aikawa/hibou/actions/workflows/release.yaml)
+<p align="center">
+    <img alt="Diamant" src="./logo.png?raw=true" width="360">
+</p>
 
-Hibou is a CLI tool for GTFS-JP.
+<p align="center">
+  Diamant is a both CLI tool and REST API for GTFS-JP
+</p>
+
+<p align="center">
+  <a href="https://github.com/tadashi-aikawa/diamant/releases/latest">
+    <img alt="Version" src="https://img.shields.io/github/v/release/tadashi-aikawa/diamant?label=%F0%9F%93%A6release" />
+  </a>
+  <a href="https://github.com/tadashi-aikawa/diamant/actions/workflows/release.yaml">
+    <img alt="Release" src="https://github.com/tadashi-aikawa/diamant/actions/workflows/release.yaml/badge.svg" />
+  </a>
+</p>
+
+
+Use Diamant as CLI
+------------------
+
+Show usages in help.
+
+```shell
+diamant -h
+```
+
+Use Diamant as API
+------------------
+
+```shell
+diamant serve
+```
+
+### Support APIs
+
+| Path    | Queries | Description        |
+| ------- | ------- | ------------------ |
+| /config |         | Show version.. etc |
 
 
 Support files
@@ -12,23 +48,23 @@ Support files
 
 | file                  | insert |
 | --------------------- | ------ |
-| [agency.txt]          | 🦉   |
-| [agency_jp.txt]       | 🦉   |
-| [stops.txt]           | 🦉   |
-| [routes.txt]          | 🦉   |
-| [routes_jp.txt]       | 🦉   |
-| [trips.txt]           | 🦉   |
-| [office_jp.txt]       | 🦉   |
-| [stop_times.txt]      | 🦉   |
-| [calendar.txt]        | 🦉   |
-| [calendar_dates.txt]  | 🦉   |
-| [fare_attributes.txt] | 🦉   |
-| [fare_rules.txt]      | 🦉   |
-| [shapes.txt]          | 🦉   |
-| [frequencies.txt]     | 🦉   |
-| [transfers.txt]       | 🦉   |
-| [feed_info.txt]       | 🦉   |
-| [translations.txt]    | 🦉   |
+| [agency.txt]          | 💎   |
+| [agency_jp.txt]       | 💎   |
+| [stops.txt]           | 💎   |
+| [routes.txt]          | 💎   |
+| [routes_jp.txt]       | 💎   |
+| [trips.txt]           | 💎   |
+| [office_jp.txt]       | 💎   |
+| [stop_times.txt]      | 💎   |
+| [calendar.txt]        | 💎   |
+| [calendar_dates.txt]  | 💎   |
+| [fare_attributes.txt] | 💎   |
+| [fare_rules.txt]      | 💎   |
+| [shapes.txt]          | 💎   |
+| [frequencies.txt]     | 💎   |
+| [transfers.txt]       | 💎   |
+| [feed_info.txt]       | 💎   |
+| [translations.txt]    | 💎   |
 
 [agency.txt]: https://www.gtfs.jp/developpers-guide/format-reference.html#agency
 [agency_jp.txt]: https://www.gtfs.jp/developpers-guide/format-reference.html#agency
