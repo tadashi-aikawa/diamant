@@ -83,3 +83,21 @@ Support files
 [transfers.txt]: https://www.gtfs.jp/developpers-guide/format-reference.html#transfers
 [feed_info.txt]: https://www.gtfs.jp/developpers-guide/format-reference.html#feed_info
 [translations.txt]: https://www.gtfs.jp/developpers-guide/format-reference.html#translations
+
+
+For Developers
+--------------
+
+### Dev
+
+```shell
+cargo run -- -h
+```
+
+### Release
+
+1. Update `cargo.toml`
+2. Create a tag on git like `v0.1.2`
+3. Push
+
+Then GitHub Actions execute a `Release` action automatically.
