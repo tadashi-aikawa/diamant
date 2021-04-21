@@ -1,7 +1,12 @@
+#![feature(proc_macro_hygiene, decl_macro)]
+#[macro_use]
+extern crate rocket;
+
 use anyhow::Result;
 use clap::Clap;
 use env_logger::Env;
 
+mod api;
 mod app;
 mod cmd;
 mod external;
@@ -9,7 +14,7 @@ mod io;
 mod serde_chrono_custom;
 
 #[derive(Clap, Debug)]
-#[clap(version = "0.1", author = "tadashi-aikawa")]
+#[clap(version = clap::crate_version!(), author = "tadashi-aikawa")]
 struct Opts {
     /// The path of the config file to load
     #[clap(short, long, default_value = ".hibou.yaml")]
@@ -26,6 +31,7 @@ enum SubCommand {
     Db(cmd::db::Opts),
     /// Get records from GTFS files
     Get(cmd::get::Opts),
+    Serve(cmd::serve::Opts),
 }
 
 fn main() -> Result<()> {
@@ -35,6 +41,7 @@ fn main() -> Result<()> {
     match opts.subcmd {
         SubCommand::Db(op) => cmd::db::run(&op)?,
         SubCommand::Get(op) => cmd::get::run(&op)?,
+        SubCommand::Serve(op) => cmd::serve::run(&op),
     }
 
     Ok(())
