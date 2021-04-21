@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-    <img alt="Diamant" src="./logo.png?raw=true" width="360">
+    <img alt="Diamant" src="./logo.png?raw=true" width="96">
 </p>
 
 <p align="center">
