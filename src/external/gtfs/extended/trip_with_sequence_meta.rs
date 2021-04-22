@@ -47,7 +47,13 @@ impl TripWithSequenceMeta {
 
 pub fn select_trip_with_sequence_meta(
     conn: &mut Connection,
+    trip_id: Option<TripId>,
 ) -> serde_rusqlite::Result<Vec<TripWithSequenceMeta>> {
+    let where_clause = match trip_id {
+        Some(id) => format!("WHERE stt.trip_id = '{}'", id),
+        None => "".into(),
+    };
+
     let mut stmt = conn.prepare(
         format!(
             "
@@ -71,6 +77,7 @@ FROM
     ON stt.stop_id == st.stop_id
     INNER JOIN {} r
     ON t.route_id == r.route_id
+{}
 ORDER BY
   stt.trip_id, stt.stop_sequence
 ",
@@ -78,9 +85,11 @@ ORDER BY
             Trip::table_name(),
             Stop::table_name(),
             Route::table_name(),
+            where_clause,
         )
         .as_str(),
     )?;
+
     let result = from_rows(stmt.query(NO_PARAMS)?).collect();
     result
 }

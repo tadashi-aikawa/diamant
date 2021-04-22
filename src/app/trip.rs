@@ -1,7 +1,7 @@
 use anyhow::Result;
 
 use crate::external::gtfs::extended::trip_with_sequence_meta::TripWithSequenceMeta;
-use crate::external::gtfs::trips::Trip;
+use crate::external::gtfs::trips::{Trip, TripId};
 use crate::external::gtfs::{GtfsCsvTrait, GtfsDbTrait};
 use crate::external::gtfscsv::GtfsCsv;
 use crate::external::gtfsdb::GtfsDb;
@@ -35,7 +35,10 @@ impl TripServiceDb {
         Self { gtfs }
     }
 
-    pub fn fetch_trip_with_sequence_metas(&mut self) -> Result<Vec<TripWithSequenceMeta>> {
-        self.gtfs.select_trip_with_sequence_meta()
+    pub fn fetch_trip_with_sequence_metas(
+        &mut self,
+        trip_id: Option<TripId>,
+    ) -> Result<Vec<TripWithSequenceMeta>> {
+        self.gtfs.select_trip_with_sequence_meta(trip_id)
     }
 }

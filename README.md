@@ -38,9 +38,10 @@ diamant serve
 
 ### Support APIs
 
-| Path    | Queries | Description        |
-| ------- | ------- | ------------------ |
-| /config |         | Show version.. etc |
+| Path    | Queries | Description          |
+| ------- | ------- | -------------------- |
+| /config |         | Show version.. etc   |
+| /stops  | trip_id | Show stops with meta |
 
 
 Support files

@@ -22,7 +22,7 @@ use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::transfers::Transfer;
 use crate::external::gtfs::translations::Translation;
-use crate::external::gtfs::trips::Trip;
+use crate::external::gtfs::trips::{Trip, TripId};
 
 pub mod agency;
 pub mod agency_jp;
@@ -161,7 +161,10 @@ pub trait GtfsDbTrait {
 
     /// -------------- extended -----------------------
     /// 返却結果のソートは trip_id, stop_sequence を保証する
-    fn select_trip_with_sequence_meta(&mut self) -> Result<Vec<TripWithSequenceMeta>>;
+    fn select_trip_with_sequence_meta(
+        &mut self,
+        trip_id: Option<TripId>,
+    ) -> Result<Vec<TripWithSequenceMeta>>;
     fn insert_trips2courses(&mut self, trip2courses: &[Trip2Course]) -> Result<()>;
     fn insert_courses(&mut self, courses: &[Course]) -> Result<()>;
 }

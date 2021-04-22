@@ -28,7 +28,7 @@ use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::Stop;
 use crate::external::gtfs::transfers::Transfer;
 use crate::external::gtfs::translations::Translation;
-use crate::external::gtfs::trips::Trip;
+use crate::external::gtfs::trips::{Trip, TripId};
 use crate::external::gtfs::GtfsDbTrait;
 
 pub struct GtfsDb {
@@ -253,8 +253,11 @@ impl GtfsDbTrait for GtfsDb {
 
     /// ---------------------------extended--------------------------
 
-    fn select_trip_with_sequence_meta(&mut self) -> Result<Vec<TripWithSequenceMeta>> {
-        select_trip_with_sequence_meta(&mut self.connection)
+    fn select_trip_with_sequence_meta(
+        &mut self,
+        trip_id: Option<TripId>,
+    ) -> Result<Vec<TripWithSequenceMeta>> {
+        select_trip_with_sequence_meta(&mut self.connection, trip_id)
             .context("Fail to select_trip_with_stops")
     }
 
