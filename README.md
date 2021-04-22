@@ -120,8 +120,8 @@ cargo run -- -h
 ### リリース
 
 1. `cargo.toml`のversionを更新
-2. `v0.1.2`のようなgitのtagを作成
-3. `📦 v0.1.2`のようにコミット
+2. `📦 v0.1.2`のようにコミット
+3. `v0.1.2`のようなgitのtagを作成
 4. push
 
 すると、GitHub Actionsが自動で`Release`アクションを実行します。
