@@ -35,13 +35,23 @@ Use Diamant as API
 ```shell
 diamant serve
 ```
+Store DBs under `$(pwd)/db/<agence_id>/gtfs.db` as follows.
+
+```console
+📂 .
+└── 📂 db
+    ├── 📂 1260001000674
+    │  └── gtfs.db
+    └── 📂 9330001006723
+       └── gtfs.db   
+```
 
 ### Support APIs
 
-| Path    | Queries | Description          |
-| ------- | ------- | -------------------- |
-| /config |         | Show version.. etc   |
-| /stops  | trip_id | Show stops with meta |
+| Path&Query                   | Description          |
+| ---------------------------- | -------------------- |
+| /config                      | Show version.. etc   |
+| /<agency_id>/stops?<trip_id> | Show stops with meta |
 
 
 Support files
