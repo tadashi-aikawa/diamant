@@ -34,14 +34,16 @@ diamant -h
 APIとして使う
 -------------
 
-`diamant db create`で作成したデータベースを`$(pwd)/db/<agence_id>/gtfs.db`に配置されている必要があります。
+`diamant db create`で作成したデータベースを`$(pwd)/db/<key>/gtfs.db`に配置されている必要があります。
+
+`<key>`の値に制約はありません。以下は一例です。
 
 ```console
 📂 .
 └── 📂 db
-    ├── 📂 1260001000674
+    ├── 📂 company1
     │  └── gtfs.db
-    └── 📂 9330001006723
+    └── 📂 company2
        └── gtfs.db   
 ```
 
@@ -54,10 +56,10 @@ diamant serve
 
 ### サポートAPI
 
-| Path&Query                   | 説明                                 |
-| ---------------------------- | ------------------------------------ |
-| /config                      | バージョンなどを表示する             |
-| /<agency_id>/stops?<trip_id> | tripに紐づくstopとメタ情報を取得する |
+| Path&Query             | 説明                                 |
+| ---------------------- | ------------------------------------ |
+| /config                | バージョンなどを表示する             |
+| /<key>/stops?<trip_id> | tripに紐づくstopとメタ情報を取得する |
 
 #### TODO
 

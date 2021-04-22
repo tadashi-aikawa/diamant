@@ -10,12 +10,11 @@ pub struct Response {
     items: Vec<TripWithSequenceMeta>,
 }
 
-#[get("/<agency_id>/stops?<trip_id>")]
-pub fn index(agency_id: String, trip_id: String) -> Json<Response> {
+#[get("/<key>/stops?<trip_id>")]
+pub fn index(key: String, trip_id: String) -> Json<Response> {
     // TODO: Remove unwrap
     let gtfs =
-        external::gtfsdb::GtfsDb::new(Path::new("db").join(agency_id).join("gtfs.db").as_path())
-            .unwrap();
+        external::gtfsdb::GtfsDb::new(Path::new("db").join(key).join("gtfs.db").as_path()).unwrap();
     let metas = TripServiceDb::new(gtfs)
         .fetch_trip_with_sequence_metas(Some(trip_id))
         .unwrap();
