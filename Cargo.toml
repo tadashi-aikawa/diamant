@@ -1,6 +1,6 @@
 [package]
 name = "diamant"
-version = "0.9.0"
+version = "0.10.0"
 authors = ["tadashi-aikawa <syou.maman@gmail.com>"]
 edition = "2018"
 
