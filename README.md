@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  Diamant is a both CLI tool and REST API for GTFS-JP
+  DiamantはGTFS-JPをCLI、REST APIどちらの方式でも使えるツールです
 </p>
 
 <p align="center">
@@ -19,23 +19,22 @@
   </a>
 </p>
 
+⚠ The descriptions for Diamant is only support for Japanese, sorry..
 
-Use Diamant as CLI
-------------------
 
-Show usages in help.
+CLIとして使う
+-------------
+
+ヘルプを参照してください。
 
 ```shell
 diamant -h
 ```
 
-Use Diamant as API
-------------------
+APIとして使う
+-------------
 
-```shell
-diamant serve
-```
-Store DBs under `$(pwd)/db/<agence_id>/gtfs.db` as follows.
+`diamant db create`で作成したデータベースを`$(pwd)/db/<agence_id>/gtfs.db`に配置されている必要があります。
 
 ```console
 📂 .
@@ -46,16 +45,27 @@ Store DBs under `$(pwd)/db/<agence_id>/gtfs.db` as follows.
        └── gtfs.db   
 ```
 
-### Support APIs
+`serve`コマンドを実行するとサーバーが起動します。
 
-| Path&Query                   | Description          |
-| ---------------------------- | -------------------- |
-| /config                      | Show version.. etc   |
-| /<agency_id>/stops?<trip_id> | Show stops with meta |
+```shell
+diamant serve
+```
 
 
-Support files
--------------
+### サポートAPI
+
+| Path&Query                   | 説明                                 |
+| ---------------------------- | ------------------------------------ |
+| /config                      | バージョンなどを表示する             |
+| /<agency_id>/stops?<trip_id> | tripに紐づくstopとメタ情報を取得する |
+
+#### TODO
+
+- [ ] Swaggerにおける提供
+
+
+サポートファイル一覧
+--------------------
 
 | file                  | insert |
 | --------------------- | ------ |
@@ -96,19 +106,20 @@ Support files
 [translations.txt]: https://www.gtfs.jp/developpers-guide/format-reference.html#translations
 
 
-For Developers
---------------
+開発者へ
+--------
 
-### Dev
+### 開発実行
 
 ```shell
 cargo run -- -h
 ```
 
-### Release
+### リリース
 
-1. Update `cargo.toml`
-2. Create a tag on git like `v0.1.2`
-3. Push
+1. `cargo.toml`のversionを更新
+2. `v0.1.2`のようなgitのtagを作成
+3. `📦 v0.1.2`のようにコミット
+4. push
 
-Then GitHub Actions execute a `Release` action automatically.
+すると、GitHub Actionsが自動で`Release`アクションを実行します。
