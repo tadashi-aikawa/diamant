@@ -10,8 +10,10 @@ use crate::{external, io};
 
 #[derive(Clap, Debug)]
 pub struct Opts {
+    /// 読み込むデータベースファイルのパス
     #[clap(short, long, parse(from_os_str), default_value = "gtfs.db")]
     database: PathBuf,
+    /// 出力フォーマット
     #[clap(short, long, default_value = "csv", possible_values(Format::VARIANTS))]
     format: Format,
 }

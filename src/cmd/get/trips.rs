@@ -10,8 +10,10 @@ use crate::{external, io};
 
 #[derive(Clap, Debug)]
 pub struct Opts {
+    /// 読みこむGTFSが配置されたディレクトリのパス
     #[clap(parse(from_os_str))]
     gtfs_dir: PathBuf,
+    /// 出力フォーマット
     #[clap(short, long, default_value = "csv", possible_values(Format::VARIANTS))]
     format: Format,
 }

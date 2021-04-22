@@ -14,9 +14,9 @@ pub struct Opts {
 
 #[derive(Clap, Debug)]
 pub enum SubCommand {
-    /// routes
+    /// データベースからrouteを取得する
     Routes(cmd::db::get::routes::Opts),
-    /// tripに対して停車するstopとその付随情報を出力する
+    /// データベースからtripに対して停車するstopとその付随情報を出力する
     TripWithSequenceMeta(cmd::db::get::trip_with_sequence_meta::Opts),
 }
 

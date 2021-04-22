@@ -29,8 +29,10 @@ impl Fairing for CORS {
 
 #[derive(Clap, Debug)]
 pub struct Opts {
+    /// ポート番号
     #[clap(short, long, default_value = "8000")]
     port: u16,
+    /// CORSを許可するか
     #[clap(long)]
     cors: bool,
 }

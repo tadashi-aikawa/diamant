@@ -14,9 +14,9 @@ pub struct Opts {
 
 #[derive(Clap, Debug)]
 pub enum SubCommand {
-    /// routes
+    /// GTFSファイルからrouteを取得する
     Routes(cmd::get::routes::Opts),
-    /// trips
+    /// GTFSファイルからtripを取得する
     Trips(cmd::get::trips::Opts),
 }
 

@@ -14,9 +14,9 @@ pub struct Opts {
 
 #[derive(Clap, Debug)]
 pub enum SubCommand {
-    /// Create Database from GTFS files
+    /// GTFSファイルからデータベースを作成する
     Create(cmd::db::create::Opts),
-    /// Get records from GTFS DB
+    /// データベースからデータを取得する
     Get(cmd::db::get::Opts),
 }
 

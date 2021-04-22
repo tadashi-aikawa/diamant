@@ -17,8 +17,8 @@ mod serde_chrono_custom;
 #[clap(version = clap::crate_version!(), author = "tadashi-aikawa")]
 struct Opts {
     /// The path of the config file to load
-    #[clap(short, long, default_value = ".diamant.yaml")]
-    config: String,
+    // #[clap(short, long, default_value = ".diamant.yaml")]
+    // config: String,
     #[clap(subcommand)]
     subcmd: SubCommand,
     // #[clap(short, long, parse(from_occurrences), global = true)]
@@ -27,10 +27,11 @@ struct Opts {
 
 #[derive(Clap, Debug)]
 enum SubCommand {
-    /// Command about DB
+    /// データベースに関するコマンド群
     Db(cmd::db::Opts),
-    /// Get records from GTFS files
+    /// GTFSファイルからデータを取得するコマンド群
     Get(cmd::get::Opts),
+    /// APIサーバーとして立ち上げる(データベースと連携)
     Serve(cmd::serve::Opts),
 }
 

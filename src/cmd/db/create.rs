@@ -10,13 +10,16 @@ use crate::external::gtfs::extended::course;
 
 #[derive(Clap, Debug)]
 pub struct Opts {
+    /// 読みこむGTFSが配置されたディレクトリのパス
     #[clap(parse(from_os_str))]
     gtfs_dir: PathBuf,
+    /// 作成するデータベースファイルのパス
     #[clap(short, long, parse(from_os_str), default_value = "gtfs.db")]
     database: PathBuf,
-    /// Load legacy translations and create a current translations table
+    /// translationsの古い定義を使うかどうか
     #[clap(short, long)]
     legacy_translations: bool,
+    /// courseの一意性戦略
     #[clap(short, long, possible_values(course::IdentifyStrategy::VARIANTS))]
     course_identify_strategy: course::IdentifyStrategy,
 }
