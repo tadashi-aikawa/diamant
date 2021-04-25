@@ -163,7 +163,7 @@ pub trait GtfsDbTrait {
     /// 返却結果のソートは trip_id, stop_sequence を保証する
     fn select_trip_with_sequence_meta(
         &mut self,
-        trip_id: Option<TripId>,
+        trip_ids: Option<Vec<TripId>>,
     ) -> Result<Vec<TripWithSequenceMeta>>;
     fn insert_trips2courses(&mut self, trip2courses: &[Trip2Course]) -> Result<()>;
     fn insert_courses(&mut self, courses: &[Course]) -> Result<()>;

@@ -12,7 +12,7 @@ use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::extended::course::Course;
 use crate::external::gtfs::extended::trip_with_sequence_meta::{
-    select_trip_with_sequence_meta, TripWithSequenceMeta,
+    select_trip_with_sequence_meta, select_trip_with_sequence_meta_by_ids, TripWithSequenceMeta,
 };
 use crate::external::gtfs::extended::trips2courses::Trip2Course;
 use crate::external::gtfs::fare_attributes::FareAttribute;
@@ -115,6 +115,7 @@ where
 impl GtfsDb {
     pub fn new(db: &Path) -> Result<Self> {
         let conn = Connection::open(db)?;
+        rusqlite::vtab::array::load_module(&conn)?;
 
         Ok(GtfsDb { connection: conn })
     }
@@ -255,10 +256,13 @@ impl GtfsDbTrait for GtfsDb {
 
     fn select_trip_with_sequence_meta(
         &mut self,
-        trip_id: Option<TripId>,
+        trip_ids: Option<Vec<TripId>>,
     ) -> Result<Vec<TripWithSequenceMeta>> {
-        select_trip_with_sequence_meta(&mut self.connection, trip_id)
-            .context("Fail to select_trip_with_stops")
+        match trip_ids {
+            Some(ids) => select_trip_with_sequence_meta_by_ids(&mut self.connection, ids),
+            _ => select_trip_with_sequence_meta(&mut self.connection),
+        }
+        .context("Fail to select_trip_with_stops")
     }
 
     fn insert_trips2courses(&mut self, trip2courses: &[Trip2Course]) -> Result<()> {

@@ -1,3 +1,4 @@
+use crate::api::utils::queries::CommaSeparatedValues;
 use crate::app::trip::TripServiceDb;
 use crate::external;
 use crate::external::gtfs::extended::trip_with_sequence_meta::TripWithSequenceMeta;
@@ -10,13 +11,13 @@ pub struct Response {
     items: Vec<TripWithSequenceMeta>,
 }
 
-#[get("/<key>/stops?<trip_id>")]
-pub fn index(key: String, trip_id: String) -> Json<Response> {
+#[get("/<key>/stops?<trip_ids>")]
+pub fn index(key: String, trip_ids: CommaSeparatedValues) -> Json<Response> {
     // TODO: Remove unwrap
     let gtfs =
         external::gtfsdb::GtfsDb::new(Path::new("db").join(key).join("gtfs.db").as_path()).unwrap();
     let metas = TripServiceDb::new(gtfs)
-        .fetch_trip_with_sequence_metas(Some(trip_id))
+        .fetch_trip_with_sequence_metas(Some(trip_ids.unwrap()))
         .unwrap();
     Json(Response { items: metas })
 }

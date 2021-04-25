@@ -1,4 +1,4 @@
-use rusqlite::{Connection, NO_PARAMS};
+use rusqlite::{named_params, types::Value, Connection, NO_PARAMS};
 use serde::{Deserialize, Serialize};
 
 use crate::external::gtfs::stop_times::StopTime;
@@ -8,7 +8,9 @@ use crate::external::gtfs::{Latitude, Longitude, Sequence};
 
 use crate::external::gtfs::routes::{Route, RouteId};
 use crate::external::gtfsdb::Table;
+use itertools::Itertools;
 use serde_rusqlite::from_rows;
+use std::rc::Rc;
 
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct TripWithSequenceMeta {
@@ -47,13 +49,7 @@ impl TripWithSequenceMeta {
 
 pub fn select_trip_with_sequence_meta(
     conn: &mut Connection,
-    trip_id: Option<TripId>,
 ) -> serde_rusqlite::Result<Vec<TripWithSequenceMeta>> {
-    let where_clause = match trip_id {
-        Some(id) => format!("WHERE stt.trip_id = '{}'", id),
-        None => "".into(),
-    };
-
     let mut stmt = conn.prepare(
         format!(
             "
@@ -77,7 +73,6 @@ FROM
     ON stt.stop_id == st.stop_id
     INNER JOIN {} r
     ON t.route_id == r.route_id
-{}
 ORDER BY
   stt.trip_id, stt.stop_sequence
 ",
@@ -85,11 +80,57 @@ ORDER BY
             Trip::table_name(),
             Stop::table_name(),
             Route::table_name(),
-            where_clause,
         )
         .as_str(),
     )?;
 
     let result = from_rows(stmt.query(NO_PARAMS)?).collect();
+    result
+}
+
+pub fn select_trip_with_sequence_meta_by_ids(
+    conn: &mut Connection,
+    trip_ids: Vec<TripId>,
+) -> serde_rusqlite::Result<Vec<TripWithSequenceMeta>> {
+    let mut stmt = conn.prepare(
+        format!(
+            "
+SELECT
+  stt.trip_id,
+  t.trip_headsign,
+  stt.stop_sequence,
+  stt.stop_headsign,
+  st.stop_id,
+  st.stop_name,
+  st.stop_lat,
+  st.stop_lon,
+  r.route_id,
+  r.route_short_name,
+  r.route_long_name
+FROM
+  {} stt
+    INNER JOIN {} t
+    ON stt.trip_id == t.trip_id
+    INNER JOIN {} st
+    ON stt.stop_id == st.stop_id
+    INNER JOIN {} r
+    ON t.route_id == r.route_id
+WHERE stt.trip_id in rarray(:trip_ids)
+ORDER BY
+  stt.trip_id, stt.stop_sequence
+",
+            StopTime::table_name(),
+            Trip::table_name(),
+            Stop::table_name(),
+            Route::table_name(),
+        )
+        .as_str(),
+    )?;
+
+    let ids = Rc::new(trip_ids.into_iter().map(Value::from).collect_vec());
+    let result = from_rows(stmt.query_named(named_params! {
+        ":trip_ids": ids,
+    })?)
+    .collect();
     result
 }
