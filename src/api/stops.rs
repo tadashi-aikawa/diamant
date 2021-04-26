@@ -11,13 +11,17 @@ pub struct Response {
     items: Vec<TripWithSequenceMeta>,
 }
 
-#[get("/<key>/stops?<trip_ids>")]
-pub fn index(key: String, trip_ids: CommaSeparatedValues) -> Json<Response> {
+#[get("/<key>/stops?<trip_ids>&<stop_name_prefix>")]
+pub fn index(
+    key: String,
+    trip_ids: Option<CommaSeparatedValues>,
+    stop_name_prefix: Option<String>,
+) -> Json<Response> {
     // TODO: Remove unwrap
     let gtfs =
         external::gtfsdb::GtfsDb::new(Path::new("db").join(key).join("gtfs.db").as_path()).unwrap();
     let metas = TripServiceDb::new(gtfs)
-        .fetch_trip_with_sequence_metas(Some(trip_ids.unwrap()))
+        .fetch_trip_with_sequence_metas(trip_ids.map(|x| x.unwrap()), stop_name_prefix)
         .unwrap();
     Json(Response { items: metas })
 }

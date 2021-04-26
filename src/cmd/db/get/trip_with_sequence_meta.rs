@@ -20,7 +20,7 @@ pub struct Opts {
 
 pub fn run(op: &Opts) -> Result<()> {
     let gtfs = external::gtfsdb::GtfsDb::new(&op.database)?;
-    let metas = TripServiceDb::new(gtfs).fetch_trip_with_sequence_metas(None)?;
+    let metas = TripServiceDb::new(gtfs).fetch_trip_with_sequence_metas(None, None)?;
     io::write(&metas, &op.format)?;
     Ok(())
 }

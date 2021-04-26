@@ -164,6 +164,7 @@ pub trait GtfsDbTrait {
     fn select_trip_with_sequence_meta(
         &mut self,
         trip_ids: Option<Vec<TripId>>,
+        stop_name_prefix: Option<String>,
     ) -> Result<Vec<TripWithSequenceMeta>>;
     fn insert_trips2courses(&mut self, trip2courses: &[Trip2Course]) -> Result<()>;
     fn insert_courses(&mut self, courses: &[Course]) -> Result<()>;

@@ -38,7 +38,9 @@ impl TripServiceDb {
     pub fn fetch_trip_with_sequence_metas(
         &mut self,
         trip_ids: Option<Vec<TripId>>,
+        stop_name_prefix: Option<String>,
     ) -> Result<Vec<TripWithSequenceMeta>> {
-        self.gtfs.select_trip_with_sequence_meta(trip_ids)
+        self.gtfs
+            .select_trip_with_sequence_meta(trip_ids, stop_name_prefix)
     }
 }

@@ -134,3 +134,49 @@ ORDER BY
     .collect();
     result
 }
+
+pub fn select_trip_with_sequence_meta_by_name(
+    conn: &mut Connection,
+    stop_name_prefix: String,
+) -> serde_rusqlite::Result<Vec<TripWithSequenceMeta>> {
+    let mut stmt = conn.prepare(
+        format!(
+            "
+SELECT
+  stt.trip_id,
+  t.trip_headsign,
+  stt.stop_sequence,
+  stt.stop_headsign,
+  st.stop_id,
+  st.stop_name,
+  st.stop_lat,
+  st.stop_lon,
+  r.route_id,
+  r.route_short_name,
+  r.route_long_name
+FROM
+  {} stt
+    INNER JOIN {} t
+    ON stt.trip_id == t.trip_id
+    INNER JOIN {} st
+    ON stt.stop_id == st.stop_id
+    INNER JOIN {} r
+    ON t.route_id == r.route_id
+WHERE st.stop_name like :stop_name_prefix
+ORDER BY
+  stt.trip_id, stt.stop_sequence
+",
+            StopTime::table_name(),
+            Trip::table_name(),
+            Stop::table_name(),
+            Route::table_name(),
+        )
+        .as_str(),
+    )?;
+
+    let result = from_rows(stmt.query_named(named_params! {
+        ":stop_name_prefix": format!("{}%", stop_name_prefix)
+    })?)
+    .collect();
+    result
+}
