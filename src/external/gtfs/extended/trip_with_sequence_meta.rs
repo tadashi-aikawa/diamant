@@ -30,6 +30,10 @@ pub struct TripWithSequenceMeta {
     pub stop_lat: Latitude,
     /// 経度 (ex: ①139.764698 ※ターミナル中心）②139.768330 ※標柱位置)
     pub stop_lon: Longitude,
+    /// 到着時刻 (ex: 7:00:00)
+    pub arrival_time: String,
+    /// 出発時刻 (ex: 7:00:00)
+    pub departure_time: String,
     /// 経路ID
     pub route_id: RouteId,
     /// 経路略称 (ex: 東16)
@@ -62,6 +66,8 @@ SELECT
   st.stop_name,
   st.stop_lat,
   st.stop_lon,
+  stt.arrival_time,
+  stt.departure_time,
   r.route_id,
   r.route_short_name,
   r.route_long_name
@@ -104,6 +110,8 @@ SELECT
   st.stop_name,
   st.stop_lat,
   st.stop_lon,
+  stt.arrival_time,
+  stt.departure_time,
   r.route_id,
   r.route_short_name,
   r.route_long_name
@@ -151,6 +159,8 @@ SELECT
   st.stop_name,
   st.stop_lat,
   st.stop_lon,
+  stt.arrival_time,
+  stt.departure_time,
   r.route_id,
   r.route_short_name,
   r.route_long_name
