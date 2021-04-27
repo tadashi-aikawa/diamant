@@ -1,17 +1,19 @@
-use crate::api::utils::queries::CommaSeparatedValues;
-use crate::app::trip::TripServiceDb;
-use crate::external;
-use crate::external::gtfs::extended::trip_with_sequence_meta::TripWithSequenceMeta;
+use std::path::Path;
+
 use rocket_contrib::json::Json;
 use serde::{Deserialize, Serialize};
-use std::path::Path;
+
+use crate::api::utils::queries::CommaSeparatedValues;
+use crate::app::stop_time::StopTimeServiceDb;
+use crate::external;
+use crate::external::gtfs::extended::stop_time_details::StopTimeDetail;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Response {
-    items: Vec<TripWithSequenceMeta>,
+    items: Vec<StopTimeDetail>,
 }
 
-#[get("/<key>/stops?<trip_ids>&<stop_name_prefix>")]
+#[get("/<key>/stop_time_details?<trip_ids>&<stop_name_prefix>")]
 pub fn index(
     key: String,
     trip_ids: Option<CommaSeparatedValues>,
@@ -20,8 +22,8 @@ pub fn index(
     // TODO: Remove unwrap
     let gtfs =
         external::gtfsdb::GtfsDb::new(Path::new("db").join(key).join("gtfs.db").as_path()).unwrap();
-    let metas = TripServiceDb::new(gtfs)
-        .fetch_trip_with_sequence_metas(trip_ids.map(|x| x.unwrap()), stop_name_prefix)
+    let metas = StopTimeServiceDb::new(gtfs)
+        .fetch_stop_time_details(trip_ids.map(|x| x.unwrap()), stop_name_prefix)
         .unwrap();
     Json(Response { items: metas })
 }

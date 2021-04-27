@@ -13,7 +13,7 @@ use serde_rusqlite::from_rows;
 use std::rc::Rc;
 
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
-pub struct TripWithSequenceMeta {
+pub struct StopTimeDetail {
     /// 便ID
     pub trip_id: TripId,
     /// 便行き先 (ex: 東京ビッグサイト（月島駅経由）)
@@ -42,7 +42,7 @@ pub struct TripWithSequenceMeta {
     pub route_long_name: Option<String>,
 }
 
-impl TripWithSequenceMeta {
+impl StopTimeDetail {
     pub fn route_name(self) -> String {
         match self.route_long_name {
             Some(n) => n,
@@ -51,9 +51,9 @@ impl TripWithSequenceMeta {
     }
 }
 
-pub fn select_trip_with_sequence_meta(
+pub fn select_stop_time_details(
     conn: &mut Connection,
-) -> serde_rusqlite::Result<Vec<TripWithSequenceMeta>> {
+) -> serde_rusqlite::Result<Vec<StopTimeDetail>> {
     let mut stmt = conn.prepare(
         format!(
             "
@@ -94,10 +94,10 @@ ORDER BY
     result
 }
 
-pub fn select_trip_with_sequence_meta_by_ids(
+pub fn select_stop_time_details_by_ids(
     conn: &mut Connection,
     trip_ids: Vec<TripId>,
-) -> serde_rusqlite::Result<Vec<TripWithSequenceMeta>> {
+) -> serde_rusqlite::Result<Vec<StopTimeDetail>> {
     let mut stmt = conn.prepare(
         format!(
             "
@@ -143,10 +143,10 @@ ORDER BY
     result
 }
 
-pub fn select_trip_with_sequence_meta_by_name(
+pub fn select_stop_time_details_by_name(
     conn: &mut Connection,
     stop_name_prefix: String,
-) -> serde_rusqlite::Result<Vec<TripWithSequenceMeta>> {
+) -> serde_rusqlite::Result<Vec<StopTimeDetail>> {
     let mut stmt = conn.prepare(
         format!(
             "

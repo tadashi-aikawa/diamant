@@ -45,7 +45,7 @@ pub fn run(opts: &Opts) {
 
     let mut app = rocket::custom(config)
         .mount("/config", routes![api::config::index])
-        .mount("/", routes![api::stops::index]);
+        .mount("/", routes![api::stop_time_details::index]);
 
     if opts.cors {
         app = app.attach(CORS);

@@ -7,7 +7,7 @@ use crate::external::gtfs::agency_jp::AgencyJp;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::extended::course::Course;
-use crate::external::gtfs::extended::trip_with_sequence_meta::TripWithSequenceMeta;
+use crate::external::gtfs::extended::stop_time_details::StopTimeDetail;
 use crate::external::gtfs::extended::trips2courses::Trip2Course;
 use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
@@ -161,11 +161,11 @@ pub trait GtfsDbTrait {
 
     /// -------------- extended -----------------------
     /// 返却結果のソートは trip_id, stop_sequence を保証する
-    fn select_trip_with_sequence_meta(
+    fn select_stop_time_details(
         &mut self,
         trip_ids: Option<Vec<TripId>>,
         stop_name_prefix: Option<String>,
-    ) -> Result<Vec<TripWithSequenceMeta>>;
+    ) -> Result<Vec<StopTimeDetail>>;
     fn insert_trips2courses(&mut self, trip2courses: &[Trip2Course]) -> Result<()>;
     fn insert_courses(&mut self, courses: &[Course]) -> Result<()>;
 }

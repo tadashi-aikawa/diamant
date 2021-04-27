@@ -1,3 +1,3 @@
 pub mod course;
-pub mod trip_with_sequence_meta;
+pub mod stop_time_details;
 pub mod trips2courses;

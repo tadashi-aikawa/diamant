@@ -1,4 +1,4 @@
-use crate::external::gtfs::extended::trip_with_sequence_meta::TripWithSequenceMeta;
+use crate::external::gtfs::extended::stop_time_details::StopTimeDetail;
 use crate::external::gtfsdb::Table;
 use anyhow::{anyhow, Context, Result};
 use itertools::Itertools;
@@ -63,13 +63,14 @@ impl CourseGenerator {
         }
     }
 
-    fn to_identify(&self, trip_with_stops: &[TripWithSequenceMeta]) -> Result<String> {
-        let first_stop = trip_with_stops.first().unwrap();
+    fn to_identify(&self, stop_time_details: &[StopTimeDetail]) -> Result<String> {
+        let first_stop = stop_time_details.first().unwrap();
         match self.identify_strategy {
-            IdentifyStrategy::StopIds => {
-                Ok(trip_with_stops.iter().map(|x| x.stop_id.clone()).join(","))
-            }
-            IdentifyStrategy::StopNames => Ok(trip_with_stops
+            IdentifyStrategy::StopIds => Ok(stop_time_details
+                .iter()
+                .map(|x| x.stop_id.clone())
+                .join(",")),
+            IdentifyStrategy::StopNames => Ok(stop_time_details
                 .iter()
                 .map(|x| x.stop_name.clone())
                 .join(",")),
@@ -93,25 +94,25 @@ impl CourseGenerator {
         }
     }
 
-    /// trip_with_stopsは 1つのtripに対し、sequence昇順
-    pub fn generate(&mut self, trip_with_stops: &[TripWithSequenceMeta]) -> Result<Course> {
+    /// stop_time_detailsは 1つのtripに対し、sequence昇順
+    pub fn generate(&mut self, stop_time_details: &[StopTimeDetail]) -> Result<Course> {
         let identify = self
-            .to_identify(trip_with_stops)
+            .to_identify(stop_time_details)
             .with_context(|| "courseのidentifyに失敗しました")?;
         match self.course_by_identify.get(&identify) {
             Some(c) => Ok(c.clone()),
             None => {
                 let course_name = format!(
                     "{}({}～{})",
-                    trip_with_stops
+                    stop_time_details
                         .first()
-                        .map_or("".into(), |x| x.clone().route_name()),
-                    trip_with_stops
+                        .map_or("".to_string(), |x| x.clone().route_name()),
+                    stop_time_details
                         .first()
-                        .map_or("".into(), |x| x.stop_name.clone()),
-                    trip_with_stops
+                        .map_or("".to_string(), |x| x.stop_name.clone()),
+                    stop_time_details
                         .last()
-                        .map_or("".into(), |x| x.stop_name.clone())
+                        .map_or("".to_string(), |x| x.stop_name.clone())
                 );
                 let course = Course {
                     course_id: self.current_id + 1,

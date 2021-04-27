@@ -11,9 +11,9 @@ use crate::external::gtfs::agency_jp::AgencyJp;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
 use crate::external::gtfs::extended::course::Course;
-use crate::external::gtfs::extended::trip_with_sequence_meta::{
-    select_trip_with_sequence_meta, select_trip_with_sequence_meta_by_ids,
-    select_trip_with_sequence_meta_by_name, TripWithSequenceMeta,
+use crate::external::gtfs::extended::stop_time_details::{
+    select_stop_time_details, select_stop_time_details_by_ids, select_stop_time_details_by_name,
+    StopTimeDetail,
 };
 use crate::external::gtfs::extended::trips2courses::Trip2Course;
 use crate::external::gtfs::fare_attributes::FareAttribute;
@@ -255,17 +255,17 @@ impl GtfsDbTrait for GtfsDb {
 
     /// ---------------------------extended--------------------------
 
-    fn select_trip_with_sequence_meta(
+    fn select_stop_time_details(
         &mut self,
         trip_ids: Option<Vec<TripId>>,
         stop_name_prefix: Option<String>,
-    ) -> Result<Vec<TripWithSequenceMeta>> {
+    ) -> Result<Vec<StopTimeDetail>> {
         match (trip_ids, stop_name_prefix) {
-            (Some(ids), _) => select_trip_with_sequence_meta_by_ids(&mut self.connection, ids),
+            (Some(ids), _) => select_stop_time_details_by_ids(&mut self.connection, ids),
             (_, Some(stop_name_prefix)) => {
-                select_trip_with_sequence_meta_by_name(&mut self.connection, stop_name_prefix)
+                select_stop_time_details_by_name(&mut self.connection, stop_name_prefix)
             }
-            _ => select_trip_with_sequence_meta(&mut self.connection),
+            _ => select_stop_time_details(&mut self.connection),
         }
         .context("Fail to select_trip_with_stops")
     }
