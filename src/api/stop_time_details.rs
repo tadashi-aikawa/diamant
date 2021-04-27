@@ -1,11 +1,8 @@
-use std::path::Path;
-
 use rocket_contrib::json::Json;
 use serde::{Deserialize, Serialize};
 
 use crate::api::utils::queries::CommaSeparatedValues;
 use crate::app::stop_time::StopTimeServiceDb;
-use crate::external;
 use crate::external::gtfs::extended::stop_time_details::StopTimeDetail;
 use crate::external::gtfsdb::GtfsDb;
 

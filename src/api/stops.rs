@@ -1,10 +1,7 @@
-use std::path::Path;
-
 use rocket_contrib::json::Json;
 use serde::{Deserialize, Serialize};
 
 use crate::app::stops::StopServiceDb;
-use crate::external;
 use crate::external::gtfs::stops::Stop;
 use crate::external::gtfsdb::GtfsDb;
 
