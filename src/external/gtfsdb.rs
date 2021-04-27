@@ -26,7 +26,7 @@ use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::routes_jp::RouteJp;
 use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stop_times::StopTime;
-use crate::external::gtfs::stops::Stop;
+use crate::external::gtfs::stops::{select_stops_by_name, Stop};
 use crate::external::gtfs::transfers::Transfer;
 use crate::external::gtfs::translations::Translation;
 use crate::external::gtfs::trips::{Trip, TripId};
@@ -183,6 +183,10 @@ impl GtfsDbTrait for GtfsDb {
 
     fn insert_stops(&mut self, stops: &[Stop]) -> Result<()> {
         insert(&mut self.connection, stops)
+    }
+
+    fn select_stops_by_name(&mut self, word: String) -> Result<Vec<Stop>> {
+        select_stops_by_name(&mut self.connection, word).context("Fail to select_stops_by_name")
     }
 
     fn insert_routes(&mut self, routes: &[Route]) -> Result<()> {

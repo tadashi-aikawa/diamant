@@ -1,5 +1,7 @@
+use rusqlite::{named_params, Connection};
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
+use serde_rusqlite::from_rows;
 
 use crate::external::gtfs::{Latitude, Longitude, Timezone, Url};
 use crate::external::gtfscsv::GTFSFile;
@@ -106,4 +108,27 @@ impl Table for Stop {
         platform_code text
         "
     }
+}
+
+/// stop_nameの部分一致で検索する
+pub fn select_stops_by_name(
+    conn: &mut Connection,
+    word: String,
+) -> serde_rusqlite::Result<Vec<Stop>> {
+    let mut stmt = conn.prepare(
+        format!(
+            "
+SELECT {} FROM {} WHERE stop_name like :word
+",
+            Stop::column_names().join(","),
+            Stop::table_name(),
+        )
+        .as_str(),
+    )?;
+
+    let result = from_rows(stmt.query_named(named_params! {
+        ":word": format!("%{}%", word)
+    })?)
+    .collect();
+    result
 }

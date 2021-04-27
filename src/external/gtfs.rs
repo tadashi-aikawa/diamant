@@ -141,6 +141,7 @@ pub trait GtfsDbTrait {
     fn insert_agencies(&mut self, agencies: &[Agency]) -> Result<()>;
     fn insert_agencies_jp(&mut self, agencies: &[AgencyJp]) -> Result<()>;
     fn insert_stops(&mut self, stops: &[Stop]) -> Result<()>;
+    fn select_stops_by_name(&mut self, word: String) -> Result<Vec<Stop>>;
     fn insert_routes(&mut self, routes: &[Route]) -> Result<()>;
     fn select_routes(&mut self) -> Result<Vec<Route>>;
     fn insert_routes_jp(&mut self, routes: &[RouteJp]) -> Result<()>;
