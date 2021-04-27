@@ -185,7 +185,7 @@ impl GtfsDbTrait for GtfsDb {
         insert(&mut self.connection, stops)
     }
 
-    fn select_stops_by_name(&mut self, word: String) -> Result<Vec<Stop>> {
+    fn select_stops(&mut self, word: String) -> Result<Vec<Stop>> {
         select_stops_by_name(&mut self.connection, word).context("Fail to select_stops_by_name")
     }
 

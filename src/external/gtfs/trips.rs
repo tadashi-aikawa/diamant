@@ -6,7 +6,6 @@ use serde_rusqlite::from_rows;
 use crate::external::gtfs::calendar::ServiceId;
 use crate::external::gtfs::office_jp::JpOfficeId;
 use crate::external::gtfs::routes::RouteId;
-use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::StopId;
 use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;

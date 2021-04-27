@@ -14,6 +14,6 @@ impl StopServiceDb {
     }
 
     pub fn fetch_stops(&mut self, word: String) -> Result<Vec<Stop>> {
-        self.gtfs.select_stops_by_name(word)
+        self.gtfs.select_stops(word)
     }
 }

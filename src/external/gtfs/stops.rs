@@ -116,14 +116,24 @@ pub fn select_stops_by_name(
     word: String,
 ) -> serde_rusqlite::Result<Vec<Stop>> {
     let mut stmt = conn.prepare(
-        format!(
-            "
-SELECT {} FROM {} WHERE stop_name like :word
+        "
+SELECT
+  stop_id,
+  stop_code,
+  stop_name,
+  stop_desc,
+  stop_lat,
+  stop_lon,
+  zone_id,
+  stop_url,
+  location_type,
+  parent_station,
+  stop_timezone,
+  wheelchair_boarding,
+  platform_code
+FROM stops
+WHERE stop_name like :word
 ",
-            Stop::column_names().join(","),
-            Stop::table_name(),
-        )
-        .as_str(),
     )?;
 
     let result = from_rows(stmt.query_named(named_params! {
