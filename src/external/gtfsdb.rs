@@ -26,10 +26,10 @@ use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::routes_jp::RouteJp;
 use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stop_times::StopTime;
-use crate::external::gtfs::stops::{select_stops_by_name, Stop};
+use crate::external::gtfs::stops::{select_stops_by_name, Stop, StopId};
 use crate::external::gtfs::transfers::Transfer;
 use crate::external::gtfs::translations::Translation;
-use crate::external::gtfs::trips::{Trip, TripId};
+use crate::external::gtfs::trips::{select_trips_by_stop, Trip, TripId};
 use crate::external::gtfs::GtfsDbTrait;
 
 pub struct GtfsDb {
@@ -205,8 +205,8 @@ impl GtfsDbTrait for GtfsDb {
         insert(&mut self.connection, trips)
     }
 
-    fn select_trips(&mut self) -> Result<Vec<Trip>> {
-        select_all::<Trip>(&mut self.connection).context("Fail to select_trips")
+    fn select_trips(&mut self, stop_id: StopId) -> Result<Vec<Trip>> {
+        select_trips_by_stop(&mut self.connection, stop_id).context("Fail to select_trips_by_stop")
     }
 
     fn insert_offices_jp(&mut self, offices: &[OfficeJp]) -> Result<()> {

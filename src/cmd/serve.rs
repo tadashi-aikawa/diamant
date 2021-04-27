@@ -47,7 +47,11 @@ pub fn run(opts: &Opts) {
         .mount("/config", routes![api::config::index])
         .mount(
             "/",
-            routes![api::stop_time_details::index, api::stops::index],
+            routes![
+                api::stop_time_details::index,
+                api::stops::index,
+                api::trips::index
+            ],
         );
 
     if opts.cors {

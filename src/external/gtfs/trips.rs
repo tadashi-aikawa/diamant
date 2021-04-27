@@ -1,9 +1,13 @@
+use rusqlite::{named_params, Connection};
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
+use serde_rusqlite::from_rows;
 
 use crate::external::gtfs::calendar::ServiceId;
 use crate::external::gtfs::office_jp::JpOfficeId;
 use crate::external::gtfs::routes::RouteId;
+use crate::external::gtfs::stop_times::StopTime;
+use crate::external::gtfs::stops::StopId;
 use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 
@@ -120,4 +124,36 @@ impl Table for Trip {
          jp_office_id text
         "
     }
+}
+
+/// stopを通るtripを検索する
+pub fn select_trips_by_stop(
+    conn: &mut Connection,
+    stop_id: StopId,
+) -> serde_rusqlite::Result<Vec<Trip>> {
+    let mut stmt = conn.prepare(
+        "
+SELECT
+  t.route_id,
+  t.service_id,
+  t.trip_id,
+  t.trip_headsign,
+  t.trip_short_name,
+  t.direction_id,
+  t.block_id,
+  t.shape_id,
+  t.wheelchair_accessible,
+  t.bikes_allowed
+FROM
+  trips t
+    INNER JOIN stop_times st ON t.trip_id = st.trip_id
+WHERE st.stop_id = :stop_id
+",
+    )?;
+
+    let result = from_rows(stmt.query_named(named_params! {
+        ":stop_id": stop_id
+    })?)
+    .collect();
+    result
 }

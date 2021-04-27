@@ -19,7 +19,7 @@ use crate::external::gtfs::routes::Route;
 use crate::external::gtfs::routes_jp::RouteJp;
 use crate::external::gtfs::shapes::Shape;
 use crate::external::gtfs::stop_times::StopTime;
-use crate::external::gtfs::stops::Stop;
+use crate::external::gtfs::stops::{Stop, StopId};
 use crate::external::gtfs::transfers::Transfer;
 use crate::external::gtfs::translations::Translation;
 use crate::external::gtfs::trips::{Trip, TripId};
@@ -146,7 +146,7 @@ pub trait GtfsDbTrait {
     fn select_routes(&mut self) -> Result<Vec<Route>>;
     fn insert_routes_jp(&mut self, routes: &[RouteJp]) -> Result<()>;
     fn insert_trips(&mut self, trips: &[Trip]) -> Result<()>;
-    fn select_trips(&mut self) -> Result<Vec<Trip>>;
+    fn select_trips(&mut self, stop_id: StopId) -> Result<Vec<Trip>>;
     fn insert_offices_jp(&mut self, offices: &[OfficeJp]) -> Result<()>;
     fn insert_stop_times(&mut self, stop_times: &[StopTime]) -> Result<()>;
     fn insert_calendars(&mut self, calendars: &[Calendar]) -> Result<()>;
