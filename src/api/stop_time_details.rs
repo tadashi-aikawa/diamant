@@ -7,6 +7,7 @@ use crate::api::utils::queries::CommaSeparatedValues;
 use crate::app::stop_time::StopTimeServiceDb;
 use crate::external;
 use crate::external::gtfs::extended::stop_time_details::StopTimeDetail;
+use crate::external::gtfsdb::GtfsDb;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Response {
@@ -20,10 +21,11 @@ pub fn index(
     stop_name_prefix: Option<String>,
 ) -> Json<Response> {
     // TODO: Remove unwrap
-    let gtfs =
-        external::gtfsdb::GtfsDb::new(Path::new("db").join(key).join("gtfs.db").as_path()).unwrap();
-    let metas = StopTimeServiceDb::new(gtfs)
+    let gtfs = GtfsDb::new(GtfsDb::get_default_path(key).as_path()).unwrap();
+    let stop_time_details = StopTimeServiceDb::new(gtfs)
         .fetch_stop_time_details(trip_ids.map(|x| x.unwrap()), stop_name_prefix)
         .unwrap();
-    Json(Response { items: metas })
+    Json(Response {
+        items: stop_time_details,
+    })
 }

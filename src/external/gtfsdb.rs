@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 use log::{debug, trace};
@@ -119,6 +119,10 @@ impl GtfsDb {
         rusqlite::vtab::array::load_module(&conn)?;
 
         Ok(GtfsDb { connection: conn })
+    }
+
+    pub fn get_default_path(key: String) -> PathBuf {
+        Path::new("db").join(key).join("gtfs.db")
     }
 }
 
