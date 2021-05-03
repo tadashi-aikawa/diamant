@@ -6,31 +6,31 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use strum_macros::{EnumString, EnumVariantNames};
 
-/// コースID (ex: 1)
-pub type CourseId = i32;
+/// サービスルートID (ex: 1)
+pub type ServiceRouteId = i32;
 
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
-pub struct Course {
-    /// コースID
-    pub course_id: CourseId,
-    /// コース名
-    pub course_name: String,
+pub struct ServiceRoute {
+    /// サービスルートID
+    pub service_route_id: ServiceRouteId,
+    /// サービスルート名
+    pub service_route_name: String,
 }
 
-impl Table for Course {
+impl Table for ServiceRoute {
     fn table_name() -> &'static str {
-        "courses"
+        "service_routes"
     }
 
     fn column_names() -> &'static [&'static str] {
-        &["course_id", "course_name"]
+        &["service_route_id", "service_route_name"]
     }
 
     fn create_sql() -> &'static str {
         "
-        course_id int,
-        course_name text,
-        PRIMARY KEY(course_id, course_name)
+        service_route_id int,
+        service_route_name text,
+        PRIMARY KEY(service_route_id, service_route_name)
         "
     }
 }
@@ -48,17 +48,17 @@ pub enum IdentifyStrategy {
     RouteLongName,
 }
 
-pub struct CourseGenerator {
-    current_id: CourseId,
-    pub course_by_identify: HashMap<Identify, Course>,
+pub struct ServiceRouteGenerator {
+    service_route_id: ServiceRouteId,
+    pub service_route_by_identify: HashMap<Identify, ServiceRoute>,
     identify_strategy: IdentifyStrategy,
 }
 
-impl CourseGenerator {
+impl ServiceRouteGenerator {
     pub fn new(strategy: &IdentifyStrategy) -> Self {
-        CourseGenerator {
-            current_id: 0,
-            course_by_identify: HashMap::new(),
+        ServiceRouteGenerator {
+            service_route_id: 0,
+            service_route_by_identify: HashMap::new(),
             identify_strategy: strategy.clone(),
         }
     }
@@ -95,14 +95,14 @@ impl CourseGenerator {
     }
 
     /// stop_time_detailsは 1つのtripに対し、sequence昇順
-    pub fn generate(&mut self, stop_time_details: &[StopTimeDetail]) -> Result<Course> {
+    pub fn generate(&mut self, stop_time_details: &[StopTimeDetail]) -> Result<ServiceRoute> {
         let identify = self
             .to_identify(stop_time_details)
-            .with_context(|| "courseのidentifyに失敗しました")?;
-        match self.course_by_identify.get(&identify) {
+            .with_context(|| "service_routeのidentifyに失敗しました")?;
+        match self.service_route_by_identify.get(&identify) {
             Some(c) => Ok(c.clone()),
             None => {
-                let course_name = format!(
+                let service_route_name = format!(
                     "{}({}～{})",
                     stop_time_details
                         .first()
@@ -114,18 +114,22 @@ impl CourseGenerator {
                         .last()
                         .map_or("".to_string(), |x| x.stop_name.clone())
                 );
-                let course = Course {
-                    course_id: self.current_id + 1,
-                    course_name,
+                let service_route = ServiceRoute {
+                    service_route_id: self.service_route_id + 1,
+                    service_route_name,
                 };
-                self.current_id += 1;
-                self.course_by_identify.insert(identify, course.clone());
-                Ok(course)
+                self.service_route_id += 1;
+                self.service_route_by_identify
+                    .insert(identify, service_route.clone());
+                Ok(service_route)
             }
         }
     }
 
-    pub fn all(&mut self) -> Vec<Course> {
-        self.course_by_identify.values().cloned().collect_vec()
+    pub fn all(&mut self) -> Vec<ServiceRoute> {
+        self.service_route_by_identify
+            .values()
+            .cloned()
+            .collect_vec()
     }
 }

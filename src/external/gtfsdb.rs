@@ -10,12 +10,12 @@ use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::agency_jp::AgencyJp;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
-use crate::external::gtfs::extended::course::Course;
+use crate::external::gtfs::extended::service_routes::ServiceRoute;
 use crate::external::gtfs::extended::stop_time_details::{
     select_stop_time_details, select_stop_time_details_by_ids, select_stop_time_details_by_name,
     StopTimeDetail,
 };
-use crate::external::gtfs::extended::trips2courses::Trip2Course;
+use crate::external::gtfs::extended::trips2service_routes::Trip2ServiceRoute;
 use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::feed_info::Feed;
@@ -147,8 +147,8 @@ impl GtfsDbTrait for GtfsDb {
         create::<Feed>(&self.connection)?;
         create::<Translation>(&self.connection)?;
         // ----------- extended ---------------
-        create::<Trip2Course>(&self.connection)?;
-        create::<Course>(&self.connection)?;
+        create::<Trip2ServiceRoute>(&self.connection)?;
+        create::<ServiceRoute>(&self.connection)?;
         Ok(())
     }
 
@@ -172,8 +172,8 @@ impl GtfsDbTrait for GtfsDb {
         drop::<Feed>(&self.connection)?;
         drop::<Translation>(&self.connection)?;
         // ----------- extended ---------------
-        drop::<Trip2Course>(&self.connection)?;
-        drop::<Course>(&self.connection)?;
+        drop::<Trip2ServiceRoute>(&self.connection)?;
+        drop::<ServiceRoute>(&self.connection)?;
         Ok(())
     }
 
@@ -278,11 +278,14 @@ impl GtfsDbTrait for GtfsDb {
         .context("Fail to select_trip_with_stops")
     }
 
-    fn insert_trips2courses(&mut self, trip2courses: &[Trip2Course]) -> Result<()> {
-        insert(&mut self.connection, trip2courses)
+    fn insert_trips2service_routes(
+        &mut self,
+        trip2service_routes: &[Trip2ServiceRoute],
+    ) -> Result<()> {
+        insert(&mut self.connection, trip2service_routes)
     }
 
-    fn insert_courses(&mut self, courses: &[Course]) -> Result<()> {
-        insert(&mut self.connection, courses)
+    fn insert_service_routes(&mut self, service_routes: &[ServiceRoute]) -> Result<()> {
+        insert(&mut self.connection, service_routes)
     }
 }

@@ -6,7 +6,7 @@ use strum::VariantNames;
 
 use crate::app::gtfs::GtfsService;
 use crate::external;
-use crate::external::gtfs::extended::course;
+use crate::external::gtfs::extended::service_routes;
 
 #[derive(Clap, Debug)]
 pub struct Opts {
@@ -19,9 +19,13 @@ pub struct Opts {
     /// translationsの古い定義を使うかどうか
     #[clap(short, long)]
     legacy_translations: bool,
-    /// courseの一意性戦略
-    #[clap(short, long, possible_values(course::IdentifyStrategy::VARIANTS))]
-    course_identify_strategy: course::IdentifyStrategy,
+    /// service_routeの一意性戦略
+    #[clap(
+        short,
+        long,
+        possible_values(service_routes::IdentifyStrategy::VARIANTS)
+    )]
+    service_route_identify_strategy: service_routes::IdentifyStrategy,
 }
 
 pub fn run(op: &Opts) -> Result<()> {
@@ -33,7 +37,7 @@ pub fn run(op: &Opts) -> Result<()> {
     service.drop_tables()?;
     service.create_tables()?;
     service.insert_tables(op.legacy_translations)?;
-    service.insert_origin_tables(&op.course_identify_strategy)?;
+    service.insert_origin_tables(&op.service_route_identify_strategy)?;
 
     Ok(())
 }

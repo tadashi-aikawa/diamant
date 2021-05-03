@@ -2,11 +2,11 @@ use anyhow::{Context, Result};
 use itertools::Itertools;
 use log::info;
 
-use crate::external::gtfs::extended::course::CourseGenerator;
+use crate::external::gtfs::extended::service_routes::ServiceRouteGenerator;
 
 use crate::external;
-use crate::external::gtfs::extended::course;
-use crate::external::gtfs::extended::trips2courses::Trip2Course;
+use crate::external::gtfs::extended::service_routes;
+use crate::external::gtfs::extended::trips2service_routes::Trip2ServiceRoute;
 use crate::external::gtfs::translations::Translation;
 
 pub struct GtfsService<CSV, DB>
@@ -199,38 +199,38 @@ where
 
     pub fn insert_origin_tables(
         &mut self,
-        course_identify_strategy: &course::IdentifyStrategy,
+        service_route_identify_strategy: &service_routes::IdentifyStrategy,
     ) -> Result<()> {
-        let mut course_generator = CourseGenerator::new(course_identify_strategy);
+        let mut service_route_generator = ServiceRouteGenerator::new(service_route_identify_strategy);
 
-        // trips2courses
+        // trips2service_routes
         let stop_time_details = self.gtfs_db.select_stop_time_details(None, None)?;
-        let trip_ids2course_ids = stop_time_details
+        let trip_ids2service_route_ids = stop_time_details
             .into_iter()
             .into_group_map_by(|x| x.trip_id.clone())
             .into_iter()
             .map(|(trip_id, stops)| {
                 // TODO: ちゃんと例外処理したい。。
-                let course = course_generator.generate(&stops).unwrap();
-                Trip2Course {
+                let service_route = service_route_generator.generate(&stops).unwrap();
+                Trip2ServiceRoute {
                     trip_id,
-                    course_id: course.course_id,
+                    service_route_id: service_route.service_route_id,
                 }
             })
-            .sorted_by_key(|x| x.course_id)
+            .sorted_by_key(|x| x.service_route_id)
             .collect_vec();
 
-        info!("ℹ️ [trips2courses] {} records", trip_ids2course_ids.len());
-        self.gtfs_db.insert_trips2courses(&trip_ids2course_ids)?;
+        info!("ℹ️ [trips2service_routes] {} records", trip_ids2service_route_ids.len());
+        self.gtfs_db.insert_trips2service_routes(&trip_ids2service_route_ids)?;
         info!("  ✨ Success");
 
-        let courses = course_generator
+        let service_routes = service_route_generator
             .all()
             .into_iter()
-            .sorted_by_key(|x| x.course_id)
+            .sorted_by_key(|x| x.service_route_id)
             .collect_vec();
-        info!("ℹ️ [courses] {} records", courses.len());
-        self.gtfs_db.insert_courses(&courses)?;
+        info!("ℹ️ [service_routes] {} records", service_routes.len());
+        self.gtfs_db.insert_service_routes(&service_routes)?;
         info!("  ✨ Success");
 
         Ok(())
