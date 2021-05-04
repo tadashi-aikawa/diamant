@@ -1,5 +1,5 @@
 use crate::external::gtfs::extended::stop_time_details::StopTimeDetail;
-use crate::external::gtfs::Direction;
+use crate::external::gtfs::DirectionId;
 use crate::external::gtfsdb::Table;
 use anyhow::{anyhow, Context, Result};
 use itertools::Itertools;
@@ -19,7 +19,7 @@ pub struct ServiceRoute {
     /// サービスルート名
     pub service_route_name: String,
     /// 上下区分
-    pub direction_id: Direction,
+    pub direction_id: DirectionId,
 }
 
 impl ServiceRoute {
@@ -137,7 +137,7 @@ impl ServiceRouteGenerator {
                     direction_id: first_detail
                         .direction_id
                         .clone()
-                        .unwrap_or(Direction::Outbound),
+                        .unwrap_or(DirectionId::Outbound),
                 };
                 self.service_route_id += 1;
                 self.service_route_by_identify

@@ -7,7 +7,7 @@ use crate::external::gtfs::calendar::ServiceId;
 use crate::external::gtfs::office_jp::JpOfficeId;
 use crate::external::gtfs::routes::RouteId;
 use crate::external::gtfs::stops::StopId;
-use crate::external::gtfs::Direction;
+use crate::external::gtfs::DirectionId;
 use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
 
@@ -51,7 +51,7 @@ pub struct Trip {
     /// 便名称
     trip_short_name: Option<String>,
     /// 上下区分
-    direction_id: Option<Direction>,
+    direction_id: Option<DirectionId>,
     /// 便結合区分
     block_id: Option<String>,
     /// 描画ID (ex: S_1001)

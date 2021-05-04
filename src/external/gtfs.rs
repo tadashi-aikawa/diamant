@@ -106,7 +106,7 @@ pub enum Lang {
 
 #[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
 #[repr(u8)]
-pub enum Direction {
+pub enum DirectionId {
     /// 往路
     Outbound = 0,
     /// 復路
