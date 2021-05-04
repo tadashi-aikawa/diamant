@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use crate::external::gtfs::stop_times::StopTime;
 use crate::external::gtfs::stops::{Stop, StopId};
 use crate::external::gtfs::trips::{Trip, TripId};
-use crate::external::gtfs::{Latitude, Longitude, Sequence};
+use crate::external::gtfs::{Direction, Latitude, Longitude, Sequence};
 
 use crate::external::gtfs::routes::{Route, RouteId};
 use crate::external::gtfsdb::Table;
@@ -16,6 +16,8 @@ use std::rc::Rc;
 pub struct StopTimeDetail {
     /// 便ID
     pub trip_id: TripId,
+    /// 上下区分
+    pub direction_id: Option<Direction>,
     /// 便行き先 (ex: 東京ビッグサイト（月島駅経由）)
     pub trip_headsign: Option<String>,
     /// 通過順位 (ex: 0)
@@ -59,6 +61,7 @@ pub fn select_stop_time_details(
             "
 SELECT
   stt.trip_id,
+  t.direction_id,
   t.trip_headsign,
   stt.stop_sequence,
   stt.stop_headsign,
@@ -103,6 +106,7 @@ pub fn select_stop_time_details_by_ids(
             "
 SELECT
   stt.trip_id,
+  t.direction_id,
   t.trip_headsign,
   stt.stop_sequence,
   stt.stop_headsign,
@@ -152,6 +156,7 @@ pub fn select_stop_time_details_by_name(
             "
 SELECT
   stt.trip_id,
+  t.direction_id,
   t.trip_headsign,
   stt.stop_sequence,
   stt.stop_headsign,
