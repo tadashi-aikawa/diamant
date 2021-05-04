@@ -118,23 +118,26 @@ impl ServiceRouteGenerator {
         match self.service_route_by_identify.get(&identify) {
             Some(c) => Ok(c.clone()),
             None => {
+                let first_detail = stop_time_details
+                    .first()
+                    .expect("stop_time_detailsが存在しません。予期せぬGTFSデータです。");
+                let last_detail = stop_time_details
+                    .last()
+                    .expect("stop_time_detailsが存在しません。予期せぬGTFSデータです。");
+
                 let service_route_name = format!(
                     "{}({}～{})",
-                    stop_time_details
-                        .first()
-                        .map_or("".to_string(), |x| x.clone().route_name()),
-                    stop_time_details
-                        .first()
-                        .map_or("".to_string(), |x| x.stop_name.clone()),
-                    stop_time_details
-                        .last()
-                        .map_or("".to_string(), |x| x.stop_name.clone())
+                    first_detail.route_name(),
+                    first_detail.stop_name.clone(),
+                    last_detail.stop_name.clone(),
                 );
                 let service_route = ServiceRoute {
                     service_route_id: self.service_route_id + 1,
                     service_route_name,
-                    // TODO: TripのDirectionを使う
-                    direction_id: Direction::Outbound,
+                    direction_id: first_detail
+                        .direction_id
+                        .clone()
+                        .unwrap_or(Direction::Outbound),
                 };
                 self.service_route_id += 1;
                 self.service_route_by_identify
