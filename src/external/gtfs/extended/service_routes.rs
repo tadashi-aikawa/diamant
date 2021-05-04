@@ -128,8 +128,8 @@ impl ServiceRouteGenerator {
                 let service_route_name = format!(
                     "{}({}～{})",
                     first_detail.route_name(),
-                    first_detail.stop_name.clone(),
-                    last_detail.stop_name.clone(),
+                    first_detail.stop_name,
+                    last_detail.stop_name,
                 );
                 let service_route = ServiceRoute {
                     service_route_id: self.service_route_id + 1,
@@ -147,10 +147,7 @@ impl ServiceRouteGenerator {
         }
     }
 
-    pub fn all(&mut self) -> Vec<ServiceRoute> {
-        self.service_route_by_identify
-            .values()
-            .cloned()
-            .collect_vec()
+    pub fn all(&self) -> Vec<&ServiceRoute> {
+        self.service_route_by_identify.values().collect_vec()
     }
 }

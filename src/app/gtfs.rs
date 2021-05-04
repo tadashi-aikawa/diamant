@@ -201,7 +201,8 @@ where
         &mut self,
         service_route_identify_strategy: &service_routes::IdentifyStrategy,
     ) -> Result<()> {
-        let mut service_route_generator = ServiceRouteGenerator::new(service_route_identify_strategy);
+        let mut service_route_generator =
+            ServiceRouteGenerator::new(service_route_identify_strategy);
 
         // trips2service_routes
         let stop_time_details = self.gtfs_db.select_stop_time_details(None, None)?;
@@ -220,13 +221,18 @@ where
             .sorted_by_key(|x| x.service_route_id)
             .collect_vec();
 
-        info!("ℹ️ [trips2service_routes] {} records", trip_ids2service_route_ids.len());
-        self.gtfs_db.insert_trips2service_routes(&trip_ids2service_route_ids)?;
+        info!(
+            "ℹ️ [trips2service_routes] {} records",
+            trip_ids2service_route_ids.len()
+        );
+        self.gtfs_db
+            .insert_trips2service_routes(&trip_ids2service_route_ids)?;
         info!("  ✨ Success");
 
         let service_routes = service_route_generator
             .all()
             .into_iter()
+            .cloned()
             .sorted_by_key(|x| x.service_route_id)
             .collect_vec();
         info!("ℹ️ [service_routes] {} records", service_routes.len());

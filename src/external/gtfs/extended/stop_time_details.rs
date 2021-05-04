@@ -45,10 +45,10 @@ pub struct StopTimeDetail {
 }
 
 impl StopTimeDetail {
-    pub fn route_name(&self) -> String {
-        match self.route_long_name.clone() {
+    pub fn route_name(&self) -> &String {
+        match &self.route_long_name {
             Some(n) => n,
-            _none => self.route_short_name.clone().unwrap(), // long_nameとshort_nameどちらかは値がある
+            _none => self.route_short_name.as_ref().unwrap(), // long_nameとshort_nameどちらかは値がある
         }
     }
 }
