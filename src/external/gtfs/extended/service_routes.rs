@@ -1,4 +1,5 @@
 use crate::external::gtfs::extended::stop_time_details::StopTimeDetail;
+use crate::external::gtfs::Direction;
 use crate::external::gtfsdb::Table;
 use anyhow::{anyhow, Context, Result};
 use itertools::Itertools;
@@ -8,6 +9,8 @@ use strum_macros::{EnumString, EnumVariantNames};
 
 /// サービスルートID (ex: 1)
 pub type ServiceRouteId = i32;
+/// サービスルートフルID (ex: 1^1)
+pub type ServiceRouteFullId = String;
 
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct ServiceRoute {
@@ -15,6 +18,18 @@ pub struct ServiceRoute {
     pub service_route_id: ServiceRouteId,
     /// サービスルート名
     pub service_route_name: String,
+    /// 上下区分
+    pub direction_id: Direction,
+}
+
+impl ServiceRoute {
+    fn full_id(self) -> ServiceRouteFullId {
+        format!(
+            "{}^{}",
+            self.service_route_id,
+            serde_json::to_string(&self.direction_id).unwrap()
+        )
+    }
 }
 
 impl Table for ServiceRoute {
@@ -23,14 +38,15 @@ impl Table for ServiceRoute {
     }
 
     fn column_names() -> &'static [&'static str] {
-        &["service_route_id", "service_route_name"]
+        &["service_route_id", "service_route_name", "direction_id"]
     }
 
     fn create_sql() -> &'static str {
         "
         service_route_id int,
         service_route_name text,
-        PRIMARY KEY(service_route_id, service_route_name)
+        direction_id int,
+        PRIMARY KEY(service_route_id, direction_id)
         "
     }
 }
@@ -117,7 +133,10 @@ impl ServiceRouteGenerator {
                 let service_route = ServiceRoute {
                     service_route_id: self.service_route_id + 1,
                     service_route_name,
+                    // TODO: TripのDirectionを使う
+                    direction_id: Direction::Outbound,
                 };
+                println!("{}", service_route.clone().full_id());
                 self.service_route_id += 1;
                 self.service_route_by_identify
                     .insert(identify, service_route.clone());

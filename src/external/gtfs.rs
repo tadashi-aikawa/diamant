@@ -1,6 +1,7 @@
 use anyhow::Result;
 use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
+use serde_repr::{Deserialize_repr, Serialize_repr};
 
 use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::agency_jp::AgencyJp;
@@ -101,6 +102,15 @@ pub enum Lang {
     #[serde(rename = "ja-Hrkt")]
     #[serde(alias = "ja-HrKt")] // ジョルダン用
     JaHrkt,
+}
+
+#[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
+#[repr(u8)]
+pub enum Direction {
+    /// 往路
+    Outbound = 0,
+    /// 復路
+    Inbound = 1,
 }
 
 /// GTFSのCSVファイルを扱うインタフェース

@@ -7,17 +7,9 @@ use crate::external::gtfs::calendar::ServiceId;
 use crate::external::gtfs::office_jp::JpOfficeId;
 use crate::external::gtfs::routes::RouteId;
 use crate::external::gtfs::stops::StopId;
+use crate::external::gtfs::Direction;
 use crate::external::gtfscsv::GTFSFile;
 use crate::external::gtfsdb::Table;
-
-#[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
-#[repr(u8)]
-enum Direction {
-    /// 往路
-    Outbound = 0,
-    /// 復路
-    Inbound = 1,
-}
 
 #[derive(Debug, Deserialize_repr, Serialize_repr, Eq, PartialEq, Clone, Hash)]
 #[repr(u8)]
