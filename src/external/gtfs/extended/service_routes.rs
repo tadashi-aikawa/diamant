@@ -136,7 +136,6 @@ impl ServiceRouteGenerator {
                     // TODO: TripのDirectionを使う
                     direction_id: Direction::Outbound,
                 };
-                println!("{}", service_route.clone().full_id());
                 self.service_route_id += 1;
                 self.service_route_by_identify
                     .insert(identify, service_route.clone());
