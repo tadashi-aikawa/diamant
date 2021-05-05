@@ -21,12 +21,15 @@ pub struct Opts {
     legacy_translations: bool,
     /// service_routeの一意性戦略
     #[clap(
-        short,
+        short = 'S',
         long,
         default_value = "stop_names",
         possible_values(service_routes::IdentifyStrategy::VARIANTS)
     )]
     service_route_identify_strategy: service_routes::IdentifyStrategy,
+    /// service_route識別ファイルのパス
+    #[clap(short = 's', long, parse(from_os_str))]
+    service_route_identify: Option<PathBuf>,
 }
 
 pub fn run(op: &Opts) -> Result<()> {
@@ -38,7 +41,11 @@ pub fn run(op: &Opts) -> Result<()> {
     service.drop_tables()?;
     service.create_tables()?;
     service.insert_tables(op.legacy_translations)?;
-    service.insert_origin_tables(&op.service_route_identify_strategy)?;
+
+    service.insert_origin_tables(
+        &op.service_route_identify_strategy,
+        op.service_route_identify.as_ref(),
+    )?;
 
     Ok(())
 }

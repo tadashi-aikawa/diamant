@@ -7,6 +7,7 @@ use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::agency_jp::AgencyJp;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
+use crate::external::gtfs::extended::service_route_identity::ServiceRouteIdentity;
 use crate::external::gtfs::fare_attributes::FareAttribute;
 use crate::external::gtfs::fare_rules::FareRule;
 use crate::external::gtfs::feed_info::Feed;
@@ -162,5 +163,10 @@ impl GtfsCsvTrait for GtfsCsv {
 
     fn load_legacy_translations(&mut self) -> Result<Vec<LegacyTranslation>> {
         load_gtfs::<_>(&self.gtfs_dir)
+    }
+
+    // --- extended ---
+    fn load_service_route_identity(&self, path: &PathBuf) -> Result<Vec<ServiceRouteIdentity>> {
+        io::read::<ServiceRouteIdentity>(path, &Format::Tsv)
     }
 }

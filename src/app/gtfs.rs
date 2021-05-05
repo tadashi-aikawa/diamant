@@ -1,11 +1,12 @@
+use std::path::PathBuf;
+
 use anyhow::{Context, Result};
 use itertools::Itertools;
 use log::info;
 
-use crate::external::gtfs::extended::service_routes::ServiceRouteGenerator;
-
 use crate::external;
 use crate::external::gtfs::extended::service_routes;
+use crate::external::gtfs::extended::service_routes::ServiceRouteGenerator;
 use crate::external::gtfs::extended::trips2service_routes::Trip2ServiceRoute;
 use crate::external::gtfs::translations::Translation;
 
@@ -200,9 +201,16 @@ where
     pub fn insert_origin_tables(
         &mut self,
         service_route_identify_strategy: &service_routes::IdentifyStrategy,
+        service_route_identity_path: Option<&PathBuf>,
     ) -> Result<()> {
-        let mut service_route_generator =
-            ServiceRouteGenerator::new(service_route_identify_strategy);
+        let service_route_identities = match service_route_identity_path {
+            Some(path) => Some(self.gtfs_csv.load_service_route_identity(path)?),
+            None => None,
+        };
+        let mut service_route_generator = ServiceRouteGenerator::new(
+            service_route_identify_strategy,
+            service_route_identities.as_ref(),
+        );
 
         // trips2service_routes
         let stop_time_details = self.gtfs_db.select_stop_time_details(None, None)?;

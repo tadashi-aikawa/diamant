@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use anyhow::Result;
 use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
@@ -143,6 +145,8 @@ pub trait GtfsCsvTrait {
     fn load_feeds(&mut self) -> Result<Vec<Feed>>;
     fn load_translations(&mut self) -> Result<Vec<Translation>>;
     fn load_legacy_translations(&mut self) -> Result<Vec<LegacyTranslation>>;
+    // --- extended ---
+    fn load_service_route_identity(&self, path: &PathBuf) -> Result<Vec<ServiceRouteIdentity>>;
 }
 
 /// GTFSのDBを扱うインタフェース

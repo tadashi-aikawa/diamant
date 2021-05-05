@@ -5,14 +5,15 @@ use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 use strum_macros::{EnumString, EnumVariantNames};
 
+use crate::external::gtfs::extended::service_route_identity::ServiceRouteIdentity;
 use crate::external::gtfs::extended::stop_time_details::StopTimeDetail;
 use crate::external::gtfs::DirectionId;
 use crate::external::gtfsdb::Table;
 
 /// サービスルートID (ex: 1)
 pub type ServiceRouteId = i32;
-/// サービスルートフルID (ex: 1^1)
-pub type ServiceRouteFullId = String;
+// /// サービスルートフルID (ex: 1^1)
+// pub type ServiceRouteFullId = String;
 
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct ServiceRoute {
@@ -24,15 +25,15 @@ pub struct ServiceRoute {
     pub direction_id: DirectionId,
 }
 
-impl ServiceRoute {
-    fn full_id(self) -> ServiceRouteFullId {
-        format!(
-            "{}^{}",
-            self.service_route_id,
-            serde_json::to_string(&self.direction_id).unwrap()
-        )
-    }
-}
+// impl ServiceRoute {
+//     fn full_id(self) -> ServiceRouteFullId {
+//         format!(
+//             "{}^{}",
+//             self.service_route_id,
+//             serde_json::to_string(&self.direction_id).unwrap()
+//         )
+//     }
+// }
 
 impl Table for ServiceRoute {
     fn table_name() -> &'static str {
@@ -54,7 +55,7 @@ impl Table for ServiceRoute {
 }
 
 /// 同一性
-type Identify = String;
+type Identifier = String;
 
 #[derive(Debug, Clone, EnumString, EnumVariantNames)]
 #[strum(serialize_all = "snake_case")]
@@ -65,36 +66,72 @@ pub enum IdentifyStrategy {
 
 pub struct ServiceRouteGenerator {
     service_route_id: ServiceRouteId,
-    pub service_route_by_identify: HashMap<Identify, ServiceRoute>,
+    pub service_route_by_identify: HashMap<Identifier, ServiceRoute>,
     identify_strategy: IdentifyStrategy,
 }
 
 impl ServiceRouteGenerator {
-    pub fn new(strategy: &IdentifyStrategy) -> Self {
-        ServiceRouteGenerator {
-            service_route_id: 0,
-            service_route_by_identify: HashMap::new(),
-            identify_strategy: strategy.clone(),
+    pub fn new(
+        strategy: &IdentifyStrategy,
+        identities_or: Option<&Vec<ServiceRouteIdentity>>,
+    ) -> Self {
+        match identities_or {
+            Some(identities) => {
+                let max_id = identities
+                    .iter()
+                    .map(|i| i.service_route_id)
+                    .max()
+                    .unwrap_or(0);
+
+                // 先にインスタンスを作成
+                let mut ins = ServiceRouteGenerator {
+                    service_route_id: max_id,
+                    service_route_by_identify: HashMap::new(),
+                    identify_strategy: strategy.clone(),
+                };
+
+                for identity in identities {
+                    let service_route = ServiceRoute {
+                        service_route_id: identity.service_route_id,
+                        service_route_name: String::from("TODO: あとで追加"),
+                        direction_id: identity.service_route_direction_id.clone(),
+                    };
+                    ins.service_route_by_identify
+                        .insert(ins.pick_identifier(&identity), service_route);
+                }
+
+                ins
+            }
+            None => ServiceRouteGenerator {
+                service_route_id: 0,
+                service_route_by_identify: HashMap::new(),
+                identify_strategy: strategy.clone(),
+            },
         }
     }
 
-    fn to_identify(&self, stop_time_details: &[StopTimeDetail]) -> Result<String> {
+    /// Identityファイルからidentifierを求める
+    fn pick_identifier(&self, identity: &ServiceRouteIdentity) -> Identifier {
         match self.identify_strategy {
-            IdentifyStrategy::StopIds => Ok(stop_time_details
-                .iter()
-                .map(|x| x.stop_id.clone())
-                .join(",")),
-            IdentifyStrategy::StopNames => Ok(stop_time_details
-                .iter()
-                .map(|x| x.stop_name.clone())
-                .join(",")),
+            IdentifyStrategy::StopIds => identity.stop_ids.clone(),
+            IdentifyStrategy::StopNames => identity.stop_names.clone(),
+        }
+    }
+
+    /// stop_time_detailsからidentifierを求める
+    fn to_identifier(&self, stop_time_details: &[StopTimeDetail]) -> Result<Identifier> {
+        match self.identify_strategy {
+            IdentifyStrategy::StopIds => Ok(stop_time_details.iter().map(|x| &x.stop_id).join(",")),
+            IdentifyStrategy::StopNames => {
+                Ok(stop_time_details.iter().map(|x| &x.stop_name).join(","))
+            }
         }
     }
 
     /// stop_time_detailsは 1つのtripに対し、sequence昇順
     pub fn generate(&mut self, stop_time_details: &[StopTimeDetail]) -> Result<ServiceRoute> {
         let identify = self
-            .to_identify(stop_time_details)
+            .to_identifier(stop_time_details)
             .with_context(|| "service_routeのidentifyに失敗しました")?;
         match self.service_route_by_identify.get(&identify) {
             Some(c) => Ok(c.clone()),
