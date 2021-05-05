@@ -218,9 +218,10 @@ where
             .into_iter()
             .into_group_map_by(|x| x.trip_id.clone())
             .into_iter()
-            .map(|(trip_id, stops)| {
+            .sorted_by_key(|(trip_id, _)| trip_id.clone())
+            .map(|(trip_id, details)| {
                 // TODO: ちゃんと例外処理したい。。
-                let service_route = service_route_generator.generate(&stops).unwrap();
+                let service_route = service_route_generator.generate(&details).unwrap();
                 Trip2ServiceRoute {
                     trip_id,
                     service_route_id: service_route.service_route_id,

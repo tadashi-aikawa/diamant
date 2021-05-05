@@ -11,6 +11,8 @@ pub struct ServiceRouteIdentity {
     pub service_route_id: ServiceRouteId,
     /// サービスルートの上下区分
     pub service_route_direction_id: DirectionId,
+    /// サービスルート名称
+    pub service_route_name: String,
     /// 複数の 便 IDのカンマ区切り (ex: 1001_WD_001, 1001_WD_002)
     pub trip_ids: String,
     /// 複数の 停留所/標柱 IDのカンマ区切り (ex: [停]100,200 [柱]100_10,200_20)
@@ -27,6 +29,7 @@ pub fn select_service_route_identity(
 SELECT
   service_route_id,
   service_route_direction_id,
+  service_route_name,
   GROUP_CONCAT(trip_id, ',') AS trip_ids,
   stop_names,
   stop_ids
@@ -36,6 +39,7 @@ FROM
       trip_id,
       service_route_id,
       service_route_direction_id,
+      service_route_name,
       GROUP_CONCAT(stop_name, ',') AS stop_names,
       GROUP_CONCAT(stop_id, ',')   AS stop_ids
     FROM
@@ -43,6 +47,7 @@ FROM
         SELECT
           sr.service_route_id AS service_route_id,
           sr.direction_id     AS service_route_direction_id,
+          sr.service_route_name AS service_route_name,
           st.stop_name        AS stop_name,
           st.stop_id          AS stop_id,
           stt.trip_id         AS trip_id

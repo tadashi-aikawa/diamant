@@ -93,7 +93,7 @@ impl ServiceRouteGenerator {
                 for identity in identities {
                     let service_route = ServiceRoute {
                         service_route_id: identity.service_route_id,
-                        service_route_name: String::from("TODO: あとで追加"),
+                        service_route_name: identity.service_route_name.clone(),
                         direction_id: identity.service_route_direction_id.clone(),
                     };
                     ins.service_route_by_identify
