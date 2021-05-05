@@ -23,6 +23,7 @@ pub struct Opts {
     #[clap(
         short,
         long,
+        default_value = "stop_names",
         possible_values(service_routes::IdentifyStrategy::VARIANTS)
     )]
     service_route_identify_strategy: service_routes::IdentifyStrategy,
