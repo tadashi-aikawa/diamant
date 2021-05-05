@@ -10,6 +10,9 @@ use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::agency_jp::AgencyJp;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
+use crate::external::gtfs::extended::service_route_identity::{
+    select_service_route_identity, ServiceRouteIdentity,
+};
 use crate::external::gtfs::extended::service_routes::ServiceRoute;
 use crate::external::gtfs::extended::stop_time_details::{
     select_stop_time_details, select_stop_time_details_by_ids, select_stop_time_details_by_name,
@@ -276,6 +279,11 @@ impl GtfsDbTrait for GtfsDb {
             _ => select_stop_time_details(&mut self.connection),
         }
         .context("Fail to select_trip_with_stops")
+    }
+
+    fn select_service_route_identity(&mut self) -> Result<Vec<ServiceRouteIdentity>> {
+        select_service_route_identity(&mut self.connection)
+            .context("Fail to select_service_route_identity")
     }
 
     fn insert_trips2service_routes(

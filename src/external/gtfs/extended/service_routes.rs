@@ -1,11 +1,13 @@
+use std::collections::HashMap;
+
+use anyhow::{Context, Result};
+use itertools::Itertools;
+use serde::{Deserialize, Serialize};
+use strum_macros::{EnumString, EnumVariantNames};
+
 use crate::external::gtfs::extended::stop_time_details::StopTimeDetail;
 use crate::external::gtfs::DirectionId;
 use crate::external::gtfsdb::Table;
-use anyhow::{anyhow, Context, Result};
-use itertools::Itertools;
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use strum_macros::{EnumString, EnumVariantNames};
 
 /// サービスルートID (ex: 1)
 pub type ServiceRouteId = i32;
@@ -59,9 +61,6 @@ type Identify = String;
 pub enum IdentifyStrategy {
     StopIds,
     StopNames,
-    RouteId,
-    RouteShortName,
-    RouteLongName,
 }
 
 pub struct ServiceRouteGenerator {
@@ -80,7 +79,6 @@ impl ServiceRouteGenerator {
     }
 
     fn to_identify(&self, stop_time_details: &[StopTimeDetail]) -> Result<String> {
-        let first_stop = stop_time_details.first().unwrap();
         match self.identify_strategy {
             IdentifyStrategy::StopIds => Ok(stop_time_details
                 .iter()
@@ -90,23 +88,6 @@ impl ServiceRouteGenerator {
                 .iter()
                 .map(|x| x.stop_name.clone())
                 .join(",")),
-            IdentifyStrategy::RouteId => Ok(first_stop.route_id.clone()),
-            IdentifyStrategy::RouteShortName => {
-                first_stop.route_short_name.clone().ok_or_else(|| {
-                    anyhow!(
-                        "route_short_nameが空です. route_id = {}",
-                        first_stop.route_id
-                    )
-                })
-            }
-            IdentifyStrategy::RouteLongName => {
-                first_stop.route_long_name.clone().ok_or_else(|| {
-                    anyhow!(
-                        "route_long_nameが空です. route_id = {}",
-                        first_stop.route_id
-                    )
-                })
-            }
         }
     }
 
@@ -125,6 +106,7 @@ impl ServiceRouteGenerator {
                     .last()
                     .expect("stop_time_detailsが存在しません。予期せぬGTFSデータです。");
 
+                // service_route_nameは参考程度で表示に使う想定はしていない
                 let service_route_name = format!(
                     "{}({}～{})",
                     first_detail.route_name(),

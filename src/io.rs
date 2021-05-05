@@ -1,12 +1,12 @@
 use std::io;
 use std::path::PathBuf;
 
-use anyhow::{Context, Result};
+use anyhow::{bail, Context, Result};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
-use strum_macros::{EnumString, EnumVariantNames};
+use strum_macros::{Display, EnumString, EnumVariantNames};
 
-#[derive(Debug, EnumString, EnumVariantNames)]
+#[derive(Debug, EnumString, EnumVariantNames, Display)]
 #[strum(serialize_all = "lowercase")]
 pub enum Format {
     Csv,
@@ -16,11 +16,24 @@ pub enum Format {
     Yaml,
 }
 
-pub fn read<T>(path: &PathBuf) -> Result<Vec<T>>
+pub fn read<T>(path: &PathBuf, format: &Format) -> Result<Vec<T>>
 where
     T: DeserializeOwned,
 {
-    let r: Result<Vec<_>, _> = csv::Reader::from_path(path)
+    match format {
+        Format::Csv => read_csv(path, b','),
+        Format::Tsv => read_csv(path, b'\t'),
+        _ => bail!("{}形式の読みこみには対応していません", format),
+    }
+}
+
+fn read_csv<T>(path: &PathBuf, delimiter: u8) -> Result<Vec<T>>
+where
+    T: DeserializeOwned,
+{
+    let r: Result<Vec<_>, _> = csv::ReaderBuilder::new()
+        .delimiter(delimiter)
+        .from_path(path)
         .with_context(|| format!("{:?} が読み込めませんでした", &path.to_str()))?
         .deserialize()
         .collect();

@@ -1,6 +1,7 @@
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
+use serde::de::DeserializeOwned;
 
 use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::agency_jp::AgencyJp;
@@ -22,7 +23,7 @@ use crate::external::gtfs::translations::Translation;
 use crate::external::gtfs::trips::Trip;
 use crate::external::gtfs::GtfsCsvTrait;
 use crate::io;
-use serde::de::DeserializeOwned;
+use crate::io::Format;
 
 pub struct GtfsCsv {
     gtfs_dir: PathBuf,
@@ -36,7 +37,7 @@ fn load_gtfs<T>(gtfs_dir: &Path) -> Result<Vec<T>>
 where
     T: GTFSFile + DeserializeOwned,
 {
-    io::read::<T>(&gtfs_dir.join(T::file_name()))
+    io::read::<T>(&gtfs_dir.join(T::file_name()), &Format::Csv)
 }
 
 fn has_gtfs<T>(gtfs_dir: &Path) -> bool

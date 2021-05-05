@@ -7,6 +7,7 @@ use crate::external::gtfs::agency::Agency;
 use crate::external::gtfs::agency_jp::AgencyJp;
 use crate::external::gtfs::calendar::Calendar;
 use crate::external::gtfs::calendar_dates::CalendarDate;
+use crate::external::gtfs::extended::service_route_identity::ServiceRouteIdentity;
 use crate::external::gtfs::extended::service_routes::ServiceRoute;
 use crate::external::gtfs::extended::stop_time_details::StopTimeDetail;
 use crate::external::gtfs::extended::trips2service_routes::Trip2ServiceRoute;
@@ -177,9 +178,13 @@ pub trait GtfsDbTrait {
         trip_ids: Option<Vec<TripId>>,
         stop_name_prefix: Option<String>,
     ) -> Result<Vec<StopTimeDetail>>;
+
+    fn select_service_route_identity(&mut self) -> Result<Vec<ServiceRouteIdentity>>;
+
     fn insert_trips2service_routes(
         &mut self,
         trip2service_routes: &[Trip2ServiceRoute],
     ) -> Result<()>;
+
     fn insert_service_routes(&mut self, service_routes: &[ServiceRoute]) -> Result<()>;
 }
