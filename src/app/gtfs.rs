@@ -216,6 +216,7 @@ where
                 Trip2ServiceRoute {
                     trip_id,
                     service_route_id: service_route.service_route_id,
+                    service_route_direction_id: service_route.direction_id,
                 }
             })
             .sorted_by_key(|x| x.service_route_id)

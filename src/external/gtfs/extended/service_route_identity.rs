@@ -51,7 +51,7 @@ FROM
             INNER JOIN trips2service_routes t2sr
             ON stt.trip_id = t2sr.trip_id
             INNER JOIN service_routes sr
-            ON t2sr.service_route_id = sr.service_route_id
+            ON t2sr.service_route_id = sr.service_route_id AND t2sr.service_route_direction_id = sr.direction_id
             INNER JOIN stops st
             ON stt.stop_id = st.stop_id
         ORDER BY stt.trip_id, stt.stop_sequence
