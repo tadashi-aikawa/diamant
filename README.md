@@ -135,6 +135,16 @@ diamant serve
 cargo run -- -h
 ```
 
+### Integration Test
+
+DBファイルを作成するため並列数の制御が必要です。
+
+```shell
+cargo test -- --test-threads=1
+```
+
+オンメモリに切り替えられるようになれば不要になります。
+
 ### リリース
 
 1. `cargo.toml`のversionを更新
