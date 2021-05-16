@@ -1,0 +1,4 @@
+﻿route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_color,route_text_color
+系統1,33,,みみぞう線 日本橋～清澄白河～門前仲町,,3,FF0000,000000
+系統2,33,,みみぞう線 日本橋～門前仲町,,3,0000FF,000000
+系統3,33,,みみぞう線 門前仲町～日本橋,,3,00FF00,000000

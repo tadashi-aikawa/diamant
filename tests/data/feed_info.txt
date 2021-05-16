@@ -1,0 +1,2 @@
+﻿feed_publisher_name,feed_publisher_url,feed_lang,feed_start_date,feed_end_date,feed_version
+MAMANSOFT,https://minerva.mamansoft.net/,ja,20210501,20210630,20210501_v1

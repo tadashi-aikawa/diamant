@@ -1,0 +1,8 @@
+﻿fare_id,price,currency_type,payment_method,transfers
+100_00,100,JPY,0,0
+150_00,150,JPY,0,0
+200_00,200,JPY,0,0
+220_00,220,JPY,0,0
+250_00,250,JPY,0,0
+300_00,300,JPY,0,0
+500_00,500,JPY,0,0

@@ -1,0 +1,9 @@
+﻿table_name,field_name,field_value,language,translation
+stops,stop_name,日本橋,ja-Hrkt,にほんばし
+stops,stop_name,日本橋,en,Nihonbashi
+stops,stop_name,茅場町,ja-Hrkt,かやばちょう
+stops,stop_name,茅場町,en,Kayabacho
+stops,stop_name,清澄白河,ja-Hrkt,きよすみしらかわ
+stops,stop_name,清澄白河,en,KiyosumiShirakawa
+stops,stop_name,門前仲町,ja-Hrkt,もんぜんなかちょう
+stops,stop_name,門前仲町,en,Monzennakacho
