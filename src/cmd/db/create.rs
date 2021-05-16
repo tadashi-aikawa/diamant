@@ -12,13 +12,13 @@ use crate::external::gtfs::extended::service_routes;
 pub struct Opts {
     /// 読みこむGTFSが配置されたディレクトリのパス
     #[clap(parse(from_os_str))]
-    gtfs_dir: PathBuf,
+    pub gtfs_dir: PathBuf,
     /// 作成するデータベースファイルのパス
     #[clap(short, long, parse(from_os_str), default_value = "gtfs.db")]
-    database: PathBuf,
+    pub database: PathBuf,
     /// translationsの古い定義を使うかどうか
     #[clap(short, long)]
-    legacy_translations: bool,
+    pub legacy_translations: bool,
     /// service_routeの一意性戦略
     #[clap(
         short = 'S',
@@ -26,10 +26,10 @@ pub struct Opts {
         default_value = "stop_names",
         possible_values(service_routes::IdentifyStrategy::VARIANTS)
     )]
-    service_route_identify_strategy: service_routes::IdentifyStrategy,
+    pub service_route_identify_strategy: service_routes::IdentifyStrategy,
     /// service_route識別ファイルのパス
     #[clap(short = 's', long, parse(from_os_str))]
-    service_route_identify: Option<PathBuf>,
+    pub service_route_identify: Option<PathBuf>,
 }
 
 pub fn run(op: &Opts) -> Result<()> {

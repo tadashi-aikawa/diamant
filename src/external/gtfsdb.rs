@@ -127,6 +127,15 @@ impl GtfsDb {
     pub fn get_default_path(key: String) -> PathBuf {
         Path::new("db").join(key).join("gtfs.db")
     }
+
+    /// テストのために使用します. それ以外の用途では適切なインタフェースを作成してください
+    pub fn select_all<T>(&mut self) -> Result<Vec<T>>
+    where
+        T: serde::de::DeserializeOwned + Table,
+    {
+        select_all::<T>(&mut self.connection)
+            .context(format!("Fail to select_all {}", T::table_name()))
+    }
 }
 
 impl GtfsDbTrait for GtfsDb {

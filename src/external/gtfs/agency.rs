@@ -13,21 +13,21 @@ pub type AgencyId = String;
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Hash)]
 pub struct Agency {
     /// 事業者ID
-    agency_id: AgencyId,
+    pub agency_id: AgencyId,
     /// 事業者名称 (ex: 都営バス)
-    agency_name: String,
+    pub agency_name: String,
     /// 事業者URL (ex: http://www.kotsu.metro.tokyo.jp/bus/)
-    agency_url: Url,
+    pub agency_url: Url,
     /// タイムゾーン (ex: Asia/Tokyo)
-    agency_timezone: Timezone,
+    pub agency_timezone: Timezone,
     /// 言語
-    agency_lang: Option<Lang>,
+    pub agency_lang: Option<Lang>,
     /// 電話番号
-    agency_phone: Option<TelephoneNumber>,
+    pub agency_phone: Option<TelephoneNumber>,
     /// オンライン購入URL
-    agency_fare_url: Option<Url>,
+    pub agency_fare_url: Option<Url>,
     /// 事業者Eメール
-    agency_email: Option<MailAddress>,
+    pub agency_email: Option<MailAddress>,
 }
 
 impl GTFSFile for Agency {
