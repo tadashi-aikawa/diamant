@@ -14,6 +14,9 @@
   <a href="https://github.com/tadashi-aikawa/diamant/releases/latest">
     <img alt="Version" src="https://img.shields.io/github/v/release/tadashi-aikawa/diamant?label=%F0%9F%93%A6release" />
   </a>
+  <a href="https://github.com/tadashi-aikawa/diamant/actions/workflows/test.yaml">
+    <img alt="Release" src="https://github.com/tadashi-aikawa/diamant/actions/workflows/test.yaml/badge.svg" />
+  </a>
   <a href="https://github.com/tadashi-aikawa/diamant/actions/workflows/release.yaml">
     <img alt="Release" src="https://github.com/tadashi-aikawa/diamant/actions/workflows/release.yaml/badge.svg" />
   </a>
