@@ -5,6 +5,7 @@ use itertools::Itertools;
 use log::info;
 
 use crate::external;
+use crate::external::gtfs::extended::nodes::Node;
 use crate::external::gtfs::extended::service_routes;
 use crate::external::gtfs::extended::service_routes::ServiceRouteGenerator;
 use crate::external::gtfs::extended::trips2service_routes::Trip2ServiceRoute;
@@ -36,6 +37,8 @@ where
         Ok(())
     }
 
+    /// GTFS-JPの仕様に含まれるテーブルにすべてのレコードを挿入する
+    /// table_nameの指定がないtranslationテーブルを使っている場合はlegacy_translationsをtrueにする。
     pub fn insert_tables(&mut self, legacy_translations: bool) -> Result<()> {
         // translationのlegacyフラグが間違っている場合に失敗するため最初に実行
         if legacy_translations {
@@ -198,7 +201,8 @@ where
         Ok(())
     }
 
-    pub fn insert_origin_tables(
+    /// 独自の概念service_routeに関するテーブルにすべてのレコードを挿入する
+    pub fn insert_service_routes_tables(
         &mut self,
         service_route_identify_strategy: &service_routes::IdentifyStrategy,
         service_route_identity_path: Option<&PathBuf>,
@@ -239,6 +243,7 @@ where
             .insert_trips2service_routes(&trip_ids2service_route_ids)?;
         info!("  ✨ Success");
 
+        // service_routes
         let service_routes = service_route_generator
             .all()
             .into_iter()
@@ -247,6 +252,29 @@ where
             .collect_vec();
         info!("ℹ️ [service_routes] {} records", service_routes.len());
         self.gtfs_db.insert_service_routes(&service_routes)?;
+        info!("  ✨ Success");
+
+        Ok(())
+    }
+
+    /// 独自の概念nodeに関するテーブルにすべてのレコードを挿入する
+    pub fn insert_nodes_tables(&mut self) -> Result<()> {
+        let stop_details = self.gtfs_db.select_stop_details()?;
+        let mut i = 0;
+        let nodes = stop_details
+            .into_iter()
+            .filter(|x| x.parent_station.is_none())
+            .map(|x| {
+                i += 1;
+                Node {
+                    node_id: i,
+                    node_name: x.stop_name.clone(),
+                    node_ruby: x.stop_ruby,
+                }
+            })
+            .collect_vec();
+        info!("ℹ️ [nodes] {} records", nodes.len());
+        self.gtfs_db.insert_nodes(&nodes)?;
         info!("  ✨ Success");
 
         Ok(())

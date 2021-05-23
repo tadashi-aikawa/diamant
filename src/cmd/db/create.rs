@@ -42,10 +42,11 @@ pub fn run(op: &Opts) -> Result<()> {
     service.create_tables()?;
     service.insert_tables(op.legacy_translations)?;
 
-    service.insert_origin_tables(
+    service.insert_service_routes_tables(
         &op.service_route_identify_strategy,
         op.service_route_identify.as_ref(),
     )?;
+    service.insert_nodes_tables()?;
 
     Ok(())
 }
